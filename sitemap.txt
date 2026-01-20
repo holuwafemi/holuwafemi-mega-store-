@@ -1,9 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://holuwafemi.github.io/holuwafemi-mega-store-/</loc>
-    <lastmod>2026-01-20</lastmod>
-    <priority>1.0</priority>
-  </url>
-</urlset>
-
+https://holuwafemi.github.io/holuwafemi-mega-store-/
+https://holuwafemi.github.io/holuwafemi-mega-store-/#solar
+https://holuwafemi.github.io/holuwafemi-mega-store-/#electronics
+https://holuwafemi.github.io/holuwafemi-mega-store-/#appliances
