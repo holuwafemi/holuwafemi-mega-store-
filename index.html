@@ -2,133 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>HOLUWAFEMI MEGA STORE </title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f9f9f8;
-      color: #333;
-    }
-    header {
-      background: #f39c12;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-    nav {
-      background: #222;
-      padding: 10px;
-      text-align: center;
-    }
-    nav a {
-      color: white;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    .hero {
-      background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
-                  url("solar-bg.jpg") no-repeat center/cover;
-      color: white;
-      padding: 120px 20px;
-      text-align: center;
-    }
-    .hero h1 { font-size: 48px; margin-bottom: 15px; }
-    .hero p { font-size: 20px; }
-    .products {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      padding: 20px;
-    }
-    .product {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      padding: 15px;
-      text-align: center;
-      transition: transform 0.3s ease;
-    }
-    .product:hover { transform: scale(1.05); }
-    .product img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 10px;
-    }
-    details {
-      background: white;
-      margin: 20px;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      overflow: hidden;
-    }
-    summary {
-      background: #f39c12;
-      color: white;
-      padding: 15px;
-      font-size: 20px;
-      font-weight: bold;
-      cursor: pointer;
-      list-style: none;
-    }
-    summary::-webkit-details-marker {
-      display: none;
-    }
-    summary::after {
-      content: ' +';
-      float: right;
-      font-size: 22px;
-    }
-    details[open] summary::after {
-      content: ' −';
-    }
-    .contact {
-      background: #eee;
-      padding: 20px;
-      text-align: center;
-    }
-    footer {
-      background: #222;
-      color: white;
-      text-align: center;
-      padding: 10px;
-      margin-top: 20px;
-    }
-    button {
-      background: #f39c12;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      margin-top: 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    button:hover { background: #e67e22; }
-  </style>
-<head>
-  <meta charset="UTF-8">
-  <title>Holuwafemi Mega Store</title>
-
-  <!-- ✅ Add this line with your unique verification code -->
-  <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE_HERE" />
+  <title>Holuwafemi Mega Store | Solar, Electronics & Home Appliances</title>
+  
+  <meta name="google-site-verification" content="UhQWXui2QJo2rJvnBkdxPkTusL0qkpXromcdVIwDHMY" />
 
   <meta name="title" content="Holuwafemi Mega Store | Solar, Electronics & Home Appliances in Nigeria">
-  <meta name="description" content="Holuwafemi Mega Store– reliable solar panels...">
-  <meta name="keywords" content="solar energy, electronics, home appliances...">
-  <meta name="author" content="Holuwafemi Mega Store">
+  <meta name="description" content="Holuwafemi Mega Store – Reliable solar panels, inverters, smart TVs, and home gadgets in Ibadan, Nigeria.">
+  <meta name="keywords" content="solar energy, electronics, home appliances, Ibadan, Oyo State, solar panels, inverters">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #f9f9f8; color: #333; line-height: 1.6; }
+    header { background: #f39c12; color: white; padding: 25px; text-align: center; }
+    nav { background: #222; padding: 12px; text-align: center; position: sticky; top: 0; z-index: 1000; }
+    nav a { color: white; margin: 0 15px; text-decoration: none; font-weight: bold; font-size: 14px; text-transform: uppercase; }
+    
+    .search-box { text-align: center; padding: 20px; background: #fff; border-bottom: 2px solid #f39c12; }
+    #shopSearch { width: 85%; max-width: 500px; padding: 12px; border-radius: 25px; border: 2px solid #ddd; outline: none; font-size: 16px; }
+    #shopSearch:focus { border-color: #f39c12; }
+
+    .hero { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("solar-bg.jpg") no-repeat center/cover; color: white; padding: 80px 20px; text-align: center; }
+    .hero h1 { font-size: 40px; margin-bottom: 10px; }
+    
+    .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 20px; max-width: 1200px; margin: auto; }
+    .product { background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 15px; text-align: center; transition: 0.3s; }
+    .product img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; }
+    .price { color: #27ae60; font-weight: bold; font-size: 1.2em; display: block; margin-bottom: 10px; }
+    
+    details { background: white; margin: 20px auto; max-width: 1200px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow: hidden; }
+    summary { background: #f39c12; color: white; padding: 18px; font-size: 22px; font-weight: bold; cursor: pointer; list-style: none; }
+    
+    button { background: #25D366; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; font-size: 16px; }
+    button:hover { background: #128C7E; }
+
+    .about-section { padding: 50px 20px; background: #fff; text-align: center; border-top: 4px solid #f39c12; }
+    .contact { background: #eee; padding: 40px 20px; text-align: center; }
+    footer { background: #222; color: white; text-align: center; padding: 20px; }
+    a { text-decoration: none; }
+  </style>
 </head>
 <body>
+
   <header>
     <h1>Holuwafemi Mega Store</h1>
-    <p>Affordable & Reliable Solar Products, Electronics, Appliances & Phone Accessories</p>
+    <p>Affordable & Reliable Solar Products, Electronics & Home Appliances</p>
   </header>
 
   <nav>
-    <a href="#home">Home</a>
     <a href="#solar">Solar</a>
     <a href="#electronics">Electronics</a>
     <a href="#appliances">Appliances</a>
@@ -136,402 +56,88 @@
     <a href="#contact">Contact</a>
   </nav>
 
-  <section class="hero" id="home">
-    <h1>Power Your World — Solar & More!</h1>
-    <p>Shop solar equipment, home gadgets, and phone accessories with ease.</p>
+  <div class="search-box">
+    <input type="text" id="shopSearch" onkeyup="filterProducts()" placeholder="Search (Inverter, TV, Fan)...">
+  </div>
+
+  <section class="hero">
+    <h1>Power Your World</h1>
+    <p>Premium Solar Equipment & Quality Gadgets in Ibadan.</p>
   </section>
 
-
-<style>
-#bg-video {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -1;
-}
-.overlay {
-  position: relative;
-  color: white;
-  text-align: center;
-  padding: 150px 20px;
-  background: rgba(0, 0, 0, 0.4);
-}
-</style>
-    <div class="product">
-    <section class="product-video">
-  <h2>DON'T GO WITHOUT BUYING SOMETHING HERE</h2>
-  <video autoplay muted loop playsinline>
-    <source src="video.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-</section>
-
-<style>
-.product-video {
-  background: #f8f8f8;
-  padding: 20px;
-  text-align: center;
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  max-width: 500px; /* Reduced width */
-  margin: 40px auto;
-}
-
-.product-video h2 {
-  margin-bottom: 15px;
-  color: #ffb400;
-  font-size: 1.5em;
-}
-
-.product-video video {
-  width: 80%; /* Make the video smaller */
-  max-width: 400px; /* Optional: limit video width */
-  border-radius: 10px;
-  outline: none;
-}
-</style>
-  <!-- SOLAR PRODUCTS -->
   <details open id="solar">
-    <summary>☀️ Solar Products</summary>
+    <summary>☀️ SOLAR ENERGY PRODUCTS</summary>
     <section class="products">
-      <div class="product"><img src="Solar Panel.jpg" alt="Solar Panel"><h2>300W Solar Panel</h2><p><strong>₦65,000</strong></p><a href="https://wa.me/2349061989529?text=Interested+in+the+300W+Solar+Panel"><button>Order</button></a></div>
-      <div class="product"><img src="inverter.jpg" alt="Inverter"><h2>2.5KVA Inverter</h2><p><strong>₦120,000</strong></p><a href="https://wa.me/2349061989529?text=Interested+in+the+2.5KVA+Inverter"><button>Order</button></a></div>
-      <div class="product"><img src="battery.jpg" alt="Battery"><h2>200Ah Battery</h2><p><strong>₦280,000</strong></p><a href="https://wa.me/2349061989529?text=Interested+in+the+200Ah+Battery"><button>Order</button></a></div>
-      <div class="product"><img src="charge.jpg" alt="Charge Controller"><h2>60A MPPT Charge Controller</h2><p><strong>₦45,000</strong></p><a href="https://wa.me/2349061989529?text=Interested+in+the+Charge+Controller"><button>Order</button></a></div>
-      <section class="products" id="products">  
-    <div class="product"><img src="Solar Panel.jpg" alt="Solar Panel"><h2>300W Solar Panel</h2> <p><strong>₦65,000</strong></p> <a href="https://wa.me/2349061989529?text=Hello,+I'm+interested+in+the+300W+Solar+Panel" target="_blank"><button>Order on WhatsApp</button></a></div> 
-    <div class="product">  
-      <img src="inverter.jpg" alt="Inverter">  
-      <h2>2.5KVA Inverter</h2>  
-      <p><strong>₦120,000</strong></p>  
-      <a href="https://wa.me/2349061989529?text=Hello,+I'm+interested+in+the+2.5KVA+Inverter" target="_blank">  
-        <button>Order on WhatsApp</button>  
-      </a>  
-    </div>  
-    <div class="product">  
-      <img src="Solarf2.jpg" alt="Inverter">  
-      <h2>Solar Fan</h2>  
-      <p><strong>₦180,000</strong></p>  
-      <a href="https://wa.me/2349061989529?text=Hello,+I'm+interested+in+the+2.5KVA+Inverter" target="_blank">  
-        <button>Order on WhatsApp</button>  
-      </a>  
-    </div>  
-    <div class="product">  
-      <img src="SolarF.jpg" alt="Inverter">  
-      <h2>Solar Fan</h2>  
-      <p><strong>₦180,000</strong></p>  
-      <a href="https://wa.me/2349061989529?text=Hello,+I'm+interested+in+the+2.5KVA+Inverter" target="_blank">  
-        <button>Order on WhatsApp</button>  
-      </a>  
-    </div>  
-    <div class="product">  
-      <img src="SolarG1.jpg" alt="Solar">  
-      <h2>Solar Generator 500W</h2>  
-      <p><strong>₦320,000</strong></p>  
-      <a href="https://wa.me/2349061989529?text=Hello,+I'm+interested+in+the+2.5KVA+Inverter" target="_blank">  
-        <button>Order on WhatsApp</button>  
-      </a>  
-    </div>  
-    <div class="product">  
-      <img src="battery.jpg" alt="Battery">  
-      <h2>200Ah Battery</h2>  
-      <p><strong>₦280,000</strong></p>  
-      <a href="https://wa.me/2349061989529?text=Hello,+I'm+interested+in+the+200Ah+Battery" target="_blank">  
-        <button>Order on WhatsApp</button>  
-      </a>  
-    </div>  
-    <div class="product">  
-      <img src="charge.jpg" alt="Charge Controller">  
-      <h2>60A MPPT Charge Controller</h2>  
-      <p><strong>₦45,000</strong></p>  
-      <a href="https://wa.me/2349061989529?text=Hello,+I'm+interested+in+the+60A+MPPT+Charge+Controller" target="_blank">  
-        <button>Order on WhatsApp</button>  
-      </a>  
-    </div>  
-     <div class="product">  
-      <img src="charge1.jpg" alt="Charge Controller">  
-      <h2>60A MPPT Charge Controller</h2>  
-      <p><strong>₦45,000</strong></p>  
-      <a href="https://wa.me/2349061989529?text=Hello,+I'm+interested+in+the+60A+MPPT+Charge+Controller" target="_blank">  
-        <button>Order on WhatsApp</button>  
-      </a>  
-     </div>  
-    <div class="product">  
-      <img src="ceiling.jpg" alt="Solar Fan">  
-      <h2>Solar Ceiling Fan</h2>  
-      <p><strong>₦35,000</strong></p>  
-      <a href="https://wa.me/2349061989529?text=Hello,+I'm+interested+in+the+Solar+Powered+Fan" target="_blank">  
-        <button>Order on WhatsApp</button>  
-      </a>  
-    </div>  
-        <div class="product">  
-      <img src="ceiling1.jpg" alt="Solar Fan">  
-      <h2>Solar Ceiling Fan</h2>  
-      <p><strong>₦35,000</strong></p>  
-      <a href="https://wa.me/2349061989529?text=Hello,+I'm+interested+in+the+Solar+Powered+Fan" target="_blank">  
-        <button>Order on WhatsApp</button>  
-      </a>  
-        </div>  
-    <div class="product">  
-      <img src="cctv1.webp" alt="Solar Fan">  
-      <h2>Solar CCTV Camera</h2>  
-      <p><strong>₦95,000</strong></p>  
-      <a href="https://wa.me/2349061989529?text=Hello,+I'm+interested+in+the+Solar+Powered+Fan" target="_blank">  
-        <button>Order on WhatsApp</button>  
-      </a>  
-    </div>  
-    <div class="product">  
-      <img src="cctv.jpg" alt="Solar Fan">  
-      <h2>SOLAR CCTV CAMERA</h2>  
-      <p><strong>₦85,000</strong></p>  
-      <a href="https://wa.me/2349061989529?text=Hello,+I'm+interested+in+the+Solar+Powered+Fan" target="_blank">  
-        <button>Order on WhatsApp</button>  
-      </a>  
-    </div>  
-    <div class="product">  
-      <img src="King.jpg" alt="Solar Fan">  
-      <h2>Sunking complete home kit</h2>  
-      <p><strong>₦310,000</strong></p>  
-      <a href="https://wa.me/2349061989529?text=Hello,+I'm+interested+in+the+Solar+Powered+Fan" target="_blank">  
-        <button>Order on WhatsApp</button>  
-      </a>  
-    </div>  
-    <div class="product">  
-      <img src="Home.jpg" alt="Solar Kit">  
-      <h2>Complete Solar Home Kit</h2>  
-      <p><strong>₦350,000</strong></p>  
-      <a href="https://wa.me/2349061989529?text=Hello,+I'm+interested+in+the+Complete+Solar+Home+Kit" target="_blank">  
-        <button>Order on WhatsApp</button>  
-      </a>  
-    </div>  
-    <div class="product">  
-      <img src="Home1.jpg" alt="Solar Kit">  
-      <h2>Complete Solar Home Kit</h2>  
-      <p><strong>₦320,000</strong></p>  
-      <a href="https://wa.me/2349061989529?text=Hello,+I'm+interested+in+the+Complete+Solar+Home+Kit" target="_blank">  
-        <button>Order on WhatsApp</button>  
-      </a>  
-    </div>  
-    <div class="product">  
-      <img src="street.jpg" alt="Solar Kit">  
-      <h2> Street Solar Light</h2>  
-      <p><strong>₦150,000</strong></p>  
-      <a href="https://wa.me/2349061989529?text=Hello,+I'm+interested+in+the+Complete+Solar+Home+Kit" target="_blank">  
-        <button>Order on WhatsApp</button>  
-      </a>  
-    </div>  
-    <div class="product">  
-      <img src="street1.jpg" alt="Solar Kit">  
-      <h2> Street Solar Light</h2>  
-      <p><strong>₦150,000</strong></p>  
-      <a href="https://wa.me/2349061989529?text=Hello,+I'm+interested+in+the+Complete+Solar+Home+Kit" target="_blank">  
-        <button>Order on WhatsApp</button>  
-      </a>  
-    </div>  
-    <div class="product">  
-      <img src="streetcctv.jpg" alt="Solar Kit">  
-      <h2> Street Light with camera</h2>  
-      <p><strong>₦150,000</strong></p>  
-      <a href="https://wa.me/2349061989529?text=Hello,+I'm+interested+in+the+Complete+Solar+Home+Kit" target="_blank">  
-        <button>Order on WhatsApp</button>  
-      </a>  
-    </div>  
-    <div class="product">  
-      <img src="4g.jpg" alt="Solar Kit">  
-      <h2> 4G CCTV camera</h2>  
-      <p><strong>₦50,000</strong></p>  
-      <a href="https://wa.me/2349061989529?text=Hello,+I'm+interested+in+the+Complete+Solar+Home+Kit" target="_blank">  
-        <button>Order on WhatsApp</button>  
-      </a>  
-    </div>  
-  </section>
-      <div class="product"><img src="Home.jpg" alt="Solar Kit"><h2>Complete Solar Home Kit</h2><p><strong>₦350,000</strong></p><a href="https://wa.me/2349061989529?text=Interested+in+the+Solar+Home+Kit"><button>Order</button></a></div>
-      <div class="product"><img src="street1.jpg" alt="Street Light"><h2>Street Solar Light</h2><p><strong>₦150,000</strong></p><a href="https://wa.me/2349061989529?text=Interested+in+the+Street+Light"><button>Order</button></a></div>
+      <div class="product"><img src="Solar Panel.jpg"><h3>300W Solar Panel</h3><span class="price">₦65,000</span><a href="https://wa.me/2349061989529?text=Interested+300W+Solar+Panel"><button>Order</button></a></div>
+      <div class="product"><img src="inverter.jpg"><h3>2.5KVA Inverter</h3><span class="price">₦120,000</span><button>Order</button></div>
+      <div class="product"><img src="battery.jpg"><h3>200Ah Battery</h3><span class="price">₦280,000</span><button>Order</button></div>
+      <div class="product"><img src="charge.jpg"><h3>60A MPPT Controller</h3><span class="price">₦45,000</span><button>Order</button></div>
+      <div class="product"><img src="Solarf2.jpg"><h3>Solar Fan A</h3><span class="price">₦180,000</span><button>Order</button></div>
+      <div class="product"><img src="SolarF.jpg"><h3>Solar Fan B</h3><span class="price">₦180,000</span><button>Order</button></div>
+      <div class="product"><img src="SolarG1.jpg"><h3>Solar Generator 500W</h3><span class="price">₦320,000</span><button>Order</button></div>
+      <div class="product"><img src="ceiling.jpg"><h3>Solar Ceiling Fan</h3><span class="price">₦35,000</span><button>Order</button></div>
+      <div class="product"><img src="cctv1.webp"><h3>Solar CCTV Camera</h3><span class="price">₦95,000</span><button>Order</button></div>
+      <div class="product"><img src="King.jpg"><h3>Sunking Home Kit</h3><span class="price">₦310,000</span><button>Order</button></div>
+      <div class="product"><img src="Home.jpg"><h3>Complete Home Kit</h3><span class="price">₦350,000</span><button>Order</button></div>
+      <div class="product"><img src="street.jpg"><h3>Street Solar Light</h3><span class="price">₦150,000</span><button>Order</button></div>
+      <div class="product"><img src="streetcctv.jpg"><h3>Street Light w/ Camera</h3><span class="price">₦150,000</span><button>Order</button></div>
+      <div class="product"><img src="4g.jpg"><h3>4G CCTV Camera</h3><span class="price">₦50,000</span><button>Order</button></div>
     </section>
   </details>
 
-  <!-- ELECTRONICS -->
   <details id="electronics">
-    <summary>🖥️ Electronics & Gadgets</summary>
+    <summary>🖥️ ELECTRONICS</summary>
     <section class="products">
-      <section class="hero">
-        
-      <div class="product"><img src="smarttv.jpg" alt="Smart TV"><h2>32-inch Smart TV</h2><p><strong>₦145,000</strong></p><a href="https://wa.me/2349061989529?text=Interested+in+the+Smart+TV"><button>Order</button></a></div>
-      <div class="product"><img src="bluetooth.jpg" alt="Bluetooth Speaker"><h2>Bluetooth Speaker</h2><p><strong>₦25,000</strong></p><a href="https://wa.me/2349061989529?text=Interested+in+the+Bluetooth+Speaker"><button>Order</button></a></div>
-      <div class="product"><img src="laptop.jpg" alt="Laptop"><h2>HP Laptop 15"</h2><p><strong>₦420,000</strong></p><a href="https://wa.me/2349061989529?text=Interested+in+the+Laptop"><button>Order</button></a></div
-<section class="products">
-  <div class="product">
-    <img src="smarttv.jpg" alt="Smart TV">
-    <h2>32-inch Smart TV</h2>
-    <p><strong>₦145,000</strong></p>
-    <a href="https://wa.me/2349061989529?text=I'm+interested+in+the+32-inch+Smart+TV"><button>Order on WhatsApp</button></a>
-  </div>
-  <div class="product">
-    <img src="tv43.jpg" alt="Smart TV 43 inch">
-    <h2>43-inch Smart TV</h2>
-    <p><strong>₦200,000</strong></p>
-    <a href="https://wa.me/2349061989529?text=I'm+interested+in+the+43-inch+Smart+TV"><button>Order on WhatsApp</button></a>
-  </div>
-  <div class="product">
-    <img src="tv55.jpg" alt="55-inch Smart TV">
-    <h2>55-inch Smart TV (4K)</h2>
-    <p><strong>₦370,000</strong></p>
-    <a href="https://wa.me/2349061989529?text=I'm+interested+in+the+55-inch+Smart+TV"><button>Order on WhatsApp</button></a>
-  </div>
-  <div class="product">
-    <img src="soundbar.jpg" alt="Soundbar">
-    <h2>Bluetooth Soundbar</h2>
-    <p><strong>₦45,000</strong></p>
-    <a href="https://wa.me/2349061989529?text=I'm+interested+in+the+Bluetooth+Soundbar"><button>Order on WhatsApp</button></a>
-  </div>
-  <div class="product">
-    <img src="theater.jpg" alt="Home Theater">
-    <h2>LG Home Theater System</h2>
-    <p><strong>₦180,000</strong></p>
-    <a href="https://wa.me/2349061989529?text=I'm+interested+in+the+Home+Theater+System"><button>Order on WhatsApp</button></a>
-  </div>
-  <div class="product">
-    <img src="laptop.jpg" alt="Laptop">
-    <h2>HP Laptop 15"</h2>
-    <p><strong>₦420,000</strong></p>
-    <a href="https://wa.me/2349061989529?text=I'm+interested+in+the+HP+Laptop"><button>Order on WhatsApp</button></a>
-  </div>
-
-  <div class="product">
-    <img src="dell.jpg" alt="Dell Laptop">
-    <h2>Dell Core i5 Laptop</h2>
-    <p><strong>₦390,000</strong></p>
-    <a href="https://wa.me/2349061989529?text=I'm+interested+in+the+Dell+Laptop"><button>Order on WhatsApp</button></a>
-  </div>
-
-  <div class="product">
-    <img src="projector.jpg" alt="Projector">
-    <h2>Portable Mini Projector</h2>
-    <p><strong>₦65,000</strong></p>
-    <a href="https://wa.me/2349061989529?text=I'm+interested+in+the+Mini+Projector"><button>Order on WhatsApp</button></a>
-  </div>
-
-  <div class="product">
-    <img src="cctv.jpg" alt="CCTV Set">
-    <h2>Complete 4-Camera CCTV Set</h2>
-    <p><strong>₦95,000</strong></p>
-    <a href="https://wa.me/2349061989529?text=I'm+interested+in+the+CCTV+Set"><button>Order on WhatsApp</button></a>
-  </div>
-  <div class="product">
-    <img src="bluetooth.jpg" alt="Bluetooth Speaker">
-    <h2>Bluetooth Speaker</h2>
-    <p><strong>₦25,000</strong></p>
-    <a href="https://wa.me/2349061989529?text=I'm+interested+in+the+Bluetooth+Speaker"><button>Order on WhatsApp</button></a>
-  </div>
-  <div class="product">
-    <img src="earbuds.jpg" alt="Wireless Earbuds">
-    <h2>Wireless Earbuds</h2>
-    <p><strong>₦18,000</strong></p>
-    <a href="https://wa.me/2349061989529?text=I'm+interested+in+the+Wireless+Earbuds"><button>Order on WhatsApp</button></a>
-  </div>
-  <div class="product">
-    <img src="smartwatch.jpg" alt="Smart Watch">
-    <h2>Smart Watch (Series 8)</h2>
-    <p><strong>₦25,000</strong></p>
-    <a href="https://wa.me/2349061989529?text=I'm+interested+in+the+Smart+Watch"><button>Order on WhatsApp</button></a>
-  </div>
-  <div class="product">
-    <img src="headphones.jpg" alt="Headphones">
-    <h2>Wireless Headphones</h2>
-    <p><strong>₦22,000</strong></p>
-    <a href="https://wa.me/2349061989529?text=I'm+interested+in+the+Wireless+Headphones"><button>Order on WhatsApp</button></a>
-  </div>
-  <div class="product">
-    <img src="gamepad.jpg" alt="Gamepad">
-    <h2>Wireless Gamepad Controller</h2>
-    <p><strong>₦15,000</strong></p>
-    <a href="https://wa.me/2349061989529?text=I'm+interested+in+the+Gamepad+Controller"><button>Order on WhatsApp</button></a>
-  </div>
-  <div class="product">
-    <img src="torch.jpg" alt="Rechargeable Torch">
-    <h2>Rechargeable Torch Light</h2>
-    <p><strong>₦9,000</strong></p>
-    <a href="https://wa.me/2349061989529?text=I'm+interested+in+the+Rechargeable+Torch"><button>Order on WhatsApp</button></a>
-  </div>
-</section>
+      <div class="product"><img src="smarttv.jpg"><h3>32-inch Smart TV</h3><span class="price">₦145,000</span><button>Order</button></div>
+      <div class="product"><img src="tv43.jpg"><h3>43-inch Smart TV</h3><span class="price">₦200,000</span><button>Order</button></div>
+      <div class="product"><img src="tv55.jpg"><h3>55-inch Smart TV</h3><span class="price">₦370,000</span><button>Order</button></div>
+      <div class="product"><img src="laptop.jpg"><h3>HP Laptop 15"</h3><span class="price">₦420,000</span><button>Order</button></div>
+      <div class="product"><img src="dell.jpg"><h3>Dell i5 Laptop</h3><span class="price">₦390,000</span><button>Order</button></div>
+      <div class="product"><img src="earbuds.jpg"><h3>Wireless Earbuds</h3><span class="price">₦18,000</span><button>Order</button></div>
+      <div class="product"><img src="smartwatch.jpg"><h3>Smart Watch</h3><span class="price">₦25,000</span><button>Order</button></div>
     </section>
   </details>
 
-  <!-- HOME APPLIANCES -->
   <details id="appliances">
-    <summary>🏠 Home Appliances</summary>
+    <summary>🏠 HOME APPLIANCES</summary>
     <section class="products">
-        <div class="product">
-    <section class="product-video">
-  <h2>DON'T GO WITHOUT BUYING SOMETHING HERE</h2>
-  <video autoplay muted loop playsinline>
-    <source src="video1.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-</section>
-
-<style>
-.product-video {
-  background: #f8f8f8;
-  padding: 20px;
-  text-align: center;
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-  max-width: 500px; /* Reduced width */
-  margin: 40px auto;
-}
-
-.product-video h2 {
-  margin-bottom: 15px;
-  color: #ffb400;
-  font-size: 1.5em;
-}
-
-.product-video video {
-  width: 80%; /* Make the video smaller */
-  max-width: 400px; /* Optional: limit video width */
-  border-radius: 10px;
-  outline: none;
-}
-</style>
-      <div class="product"><img src="blender.jpg" alt="Blender"><h2>Electric Blender</h2><p><strong>₦18,000</strong></p><a href="https://wa.me/2349061989529?text=Interested+in+the+Blender"><button>Order</button></a></div>
-      <div class="product"><img src="iron.jpg" alt="Dry Iron"><h2>Dry Iron</h2><p><strong>₦10,000</strong></p><a href="https://wa.me/2349061989529?text=Interested+in+the+Dry+Iron"><button>Order</button></a></div>
-      <div class="product"><img src="fan.jpg" alt="Standing Fan"><h2>Rechargeable Standing Fan</h2><p><strong>₦45,000</strong></p><a href="https://wa.me/2349061989529?text=Interested+in+the+Fan"><button>Order</button></a></div>
-      <div class="product"><img src="microwave.jpg" alt="Microwave Oven"><h2>Microwave Oven</h2><p><strong>₦70,000</strong></p><a href="https://wa.me/2349061989529?text=Interested+in+the+Microwave"><button>Order</button></a></div>
+      <div class="product"><img src="blender.jpg"><h3>Electric Blender</h3><span class="price">₦18,000</span><button>Order</button></div>
+      <div class="product"><img src="iron.jpg"><h3>Dry Iron</h3><span class="price">₦10,000</span><button>Order</button></div>
+      <div class="product"><img src="fan.jpg"><h3>Rechargeable Fan</h3><span class="price">₦45,000</span><button>Order</button></div>
+      <div class="product"><img src="microwave.jpg"><h3>Microwave Oven</h3><span class="price">₦70,000</span><button>Order</button></div>
     </section>
   </details>
 
-  <!-- PHONE ACCESSORIES -->
-  <details id="accessories">
-    <summary>📱 Phone Accessories</summary>
-    <section class="products">
-      <div class="product"><img src="charger.jpg" alt="Fast Charger"><h2>Fast Charger</h2><p><strong>₦5,000</strong></p><a href="https://wa.me/2349061989529?text=Interested+in+the+Charger"><button>Order</button></a></div>
-      <div class="product"><img src="powerbank.jpg" alt="Power Bank"><h2>20000mAh Power Bank</h2><p><strong>₦15,000</strong></p><a href="https://wa.me/2349061989529?text=Interested+in+the+Power+Bank"><button>Order</button></a></div>
-      <div class="product"><img src="usb.jpg" alt="USB Cable"><h2>USB Cable (Type-C)</h2><p><strong>₦3,000</strong></p><a href="https://wa.me/2349061989529?text=Interested+in+the+USB+Cable"><button>Order</button></a></div>
-      <div class="product"><img src="earbuds.jpg" alt="Wireless Earbuds"><h2>Wireless Earbuds</h2><p><strong>₦18,000</strong></p><a href="https://wa.me/2349061989529?text=Interested+in+the+Earbuds"><button>Order</button></a></div
-      <div class="product"><img src="phoneholder.jpg" alt="Phone Holder"><h2>Car Phone Holder</h2><p><strong>₦4,500</strong></p><a href="https://wa.me/2349061989529?text=Interested+in+the+Phone+Holder"><button>Order</button></a></div>
-    </section>
-  </details>
-      <!-- PHONE-->
-  <details id="phone">
-    <summary> phones & Gadgets</summary>
-    <img src="smartwatch.jpg" alt="Smart Watch">
-    <h2>Smart Watch (Series 8)</h2>
-    <p><strong>₦25,000</strong></p>
-    <a href="https://wa.me/2349061989529?text=I'm+interested+in+the+Smart+Watch"><button>Order on WhatsApp</button></a>
-  </div>
-  </details>
+  <section class="about-section">
+    <h2>About Holuwafemi Mega Store</h2>
+    <p style="max-width: 900px; margin: auto; color: #555;">
+      Trusted dealer for <strong>solar energy equipment</strong> and <strong>home appliances in Ibadan</strong>. 
+      Serving Oyo State with quality panels, inverters, and electronics.
+    </p>
+  </section>
+
   <section class="contact" id="contact">
     <h2>Contact Us</h2>
-    <p>📞 Call: 09061989529 or 09159740200</p>
-    <p>💬 WhatsApp: <a href="https://wa.me/2347088877560" target="_blank">Chat with us</a></p>
-    <p>📧 femitaiwo228@gmail.com </p>
-    <p>📍 Ibadan, Oyo State, Nigeria</p>
+    <p>📞 09061989529 | 📍 Ibadan, Oyo State</p>
+    <br>
+    <a href="https://wa.me/2349061989529?text=Hello+Holuwafemi+Mega+Store" target="_blank">
+      <button style="width: auto; padding: 15px 40px; border-radius: 50px;">Chat on WhatsApp</button>
+    </a>
   </section>
 
   <footer>
-    <p>© 2025 Holuwafmi Mega Store. All Rights Reserved.</p>
+    <p>© 2026 Holuwafemi Mega Store.</p>
   </footer>
+
+  <script>
+    function filterProducts() {
+      let input = document.getElementById('shopSearch').value.toLowerCase();
+      let products = document.getElementsByClassName('product');
+      for (let i = 0; i < products.length; i++) {
+        let title = products[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
+        products[i].style.display = title.includes(input) ? "" : "none";
+      }
+    }
+  </script>
 </body>
 </html>
