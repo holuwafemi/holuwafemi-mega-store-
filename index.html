@@ -153,6 +153,44 @@
         products[i].style.display = title.includes(input) ? "" : "none";
       }
     }
+    <script>
+function filterProducts() {
+  let input = document.getElementById('shopSearch').value.toLowerCase();
+  let products = document.getElementsByClassName('product');
+  for (let i = 0; i < products.length; i++) {
+    let title = products[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
+    products[i].style.display = title.includes(input) ? "" : "none";
+  }
+}
+
+/* 🔥 PASTE YOUR NEW CODE HERE 👇 */
+
+function showSummary(){
+  if(cart.length === 0){
+    alert("Cart is empty");
+    return;
+  }
+
+  let summaryDiv = document.getElementById("summaryItems");
+  summaryDiv.innerHTML = "";
+
+  cart.forEach(item => {
+    summaryDiv.innerHTML += `<p>${item.name} - ₦${item.price}</p>`;
+  });
+
+  document.getElementById("summaryTotal").innerText = total;
+
+  document.getElementById("summaryBox").style.display = "block";
+}
+
+function closeSummary(){
+  document.getElementById("summaryBox").style.display = "none";
+}
+
+function confirmPayment(){
+  document.getElementById("summaryBox").style.display = "none";
+  payWithPaystack();
+}
   </script>
 </body>
 </html>
