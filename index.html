@@ -55,6 +55,16 @@
     <a href="#accessories">Accessories</a>
     <a href="#contact">Contact</a>
   </nav>
+  <div id="summaryBox" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7);">
+  <div style="background:#fff; margin:10% auto; padding:20px; max-width:400px; border-radius:10px;">
+    <h2>Order Summary</h2>
+    <div id="summaryItems"></div>
+    <h3>Total: ₦<span id="summaryTotal"></span></h3>
+    
+    <button onclick="confirmPayment()">Confirm & Pay</button>
+    <button onclick="closeSummary()" style="background:red; margin-top:10px;">Cancel</button>
+  </div>
+  </div>
 
   <div class="search-box">
     <input type="text" id="shopSearch" onkeyup="filterProducts()" placeholder="Search (Inverter, TV, Fan)...">
