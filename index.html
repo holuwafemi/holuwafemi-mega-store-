@@ -5,11 +5,10 @@
   <title>Holuwafemi Mega Store | Solar, Electronics & Home Appliances</title>
   
   <meta name="google-site-verification" content="UhQWXui2QJo2rJvnBkdxPkTusL0qkpXromcdVIwDHMY" />
-
-  <meta name="title" content="Holuwafemi Mega Store | Solar, Electronics & Home Appliances in Nigeria">
-  <meta name="description" content="Holuwafemi Mega Store – Reliable solar panels, inverters, smart TVs, and home gadgets in Ibadan, Nigeria.">
-  <meta name="keywords" content="solar energy, electronics, home appliances, Ibadan, Oyo State, solar panels, inverters">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Holuwafemi Mega Store – Reliable solar panels, inverters, and home gadgets in Nigeria.">
+
+  <script src="https://js.paystack.co/v1/inline.js"></script>
 
   <style>
     body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #f9f9f8; color: #333; line-height: 1.6; }
@@ -19,26 +18,22 @@
     
     .search-box { text-align: center; padding: 20px; background: #fff; border-bottom: 2px solid #f39c12; }
     #shopSearch { width: 85%; max-width: 500px; padding: 12px; border-radius: 25px; border: 2px solid #ddd; outline: none; font-size: 16px; }
-    #shopSearch:focus { border-color: #f39c12; }
 
-    .hero { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("solar-bg.jpg") no-repeat center/cover; color: white; padding: 80px 20px; text-align: center; }
-    .hero h1 { font-size: 40px; margin-bottom: 10px; }
+    .hero { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url("solar-bg.jpg") no-repeat center/cover; color: white; padding: 60px 20px; text-align: center; }
     
     .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 20px; max-width: 1200px; margin: auto; }
-    .product { background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 15px; text-align: center; transition: 0.3s; }
+    .product { background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 15px; text-align: center; }
     .product img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; }
     .price { color: #27ae60; font-weight: bold; font-size: 1.2em; display: block; margin-bottom: 10px; }
     
-    details { background: white; margin: 20px auto; max-width: 1200px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); overflow: hidden; }
-    summary { background: #f39c12; color: white; padding: 18px; font-size: 22px; font-weight: bold; cursor: pointer; list-style: none; }
+    details { background: white; margin: 20px auto; max-width: 1200px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    summary { background: #f39c12; color: white; padding: 18px; font-size: 20px; font-weight: bold; cursor: pointer; list-style: none; border-radius: 10px 10px 0 0; }
     
-    button { background: #25D366; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; font-size: 16px; }
-    button:hover { background: #128C7E; }
+    .btn-pay { background: #25D366; color: white; border: none; padding: 12px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold; font-size: 16px; }
+    .btn-pay:hover { background: #128C7E; }
 
-    .about-section { padding: 50px 20px; background: #fff; text-align: center; border-top: 4px solid #f39c12; }
     .contact { background: #eee; padding: 40px 20px; text-align: center; }
-    footer { background: #222; color: white; text-align: center; padding: 20px; }
-    a { text-decoration: none; }
+    footer { background: #222; color: white; text-align: center; padding: 20px; font-size: 14px; }
   </style>
 </head>
 <body>
@@ -52,19 +47,8 @@
     <a href="#solar">Solar</a>
     <a href="#electronics">Electronics</a>
     <a href="#appliances">Appliances</a>
-    <a href="#accessories">Accessories</a>
     <a href="#contact">Contact</a>
   </nav>
-  <div id="summaryBox" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7);">
-  <div style="background:#fff; margin:10% auto; padding:20px; max-width:400px; border-radius:10px;">
-    <h2>Order Summary</h2>
-    <div id="summaryItems"></div>
-    <h3>Total: ₦<span id="summaryTotal"></span></h3>
-    
-    <button onclick="confirmPayment()">Confirm & Pay</button>
-    <button onclick="closeSummary()" style="background:red; margin-top:10px;">Cancel</button>
-  </div>
-  </div>
 
   <div class="search-box">
     <input type="text" id="shopSearch" onkeyup="filterProducts()" placeholder="Search (Inverter, TV, Fan)...">
@@ -72,79 +56,81 @@
 
   <section class="hero">
     <h1>Power Your World</h1>
-    <p>Premium Solar Equipment & Quality Gadgets in Ibadan.</p>
+    <p>Premium Solar Equipment & Quality Gadgets. Nationwide Delivery Available.</p>
   </section>
 
   <details open id="solar">
     <summary>☀️ SOLAR ENERGY PRODUCTS</summary>
     <section class="products">
-      <div class="product"><img src="Solar Panel.jpg"><h3>300W Solar Panel</h3><span class="price">₦65,000</span><a href="https://paystack.shop/pay/1ukghja9o3?text=Interested+300W+Solar+Panel"><button>PAY NOW</button></a></div>
-      <div class="product"><img src="inverter.jpg"><h3>2.5KVA Inverter</h3><span class="price">₦120,000</span><button>PAY NOW</button></div>
-      <div class="product"><img src="battery.jpg"><h3>200Ah Battery</h3><span class="price">₦280,000</span><button>PAY NOW</button></div>
-      <div class="product"><img src="charge.jpg"><h3>60A MPPT Controller</h3><span class="price">₦45,000</span><button>PAY NOW</button></div>
-      <div class="product"><img src="Solarf2.jpg"><h3>Solar Fan A</h3><span class="price">₦180,000</span><button>PAY NOW</button></div>
-      <div class="product"><img src="SolarF.jpg"><h3>Solar Fan B</h3><span class="price">₦180,000</span><button>PAY NOW</button></div>
-      <div class="product"><img src="SolarG1.jpg"><h3>Solar Generator 500W</h3><span class="price">₦320,000</span><button>PAY NOW</button></div>
-      <div class="product"><img src="ceiling.jpg"><h3>Solar Ceiling Fan</h3><span class="price">₦35,000</span><button>PAY NOW</button></div>
-      <div class="product"><img src="cctv1.webp"><h3>Solar CCTV Camera</h3><span class="price">₦95,000</span><button>PAY NOW</button></div>
-      <div class="product"><img src="King.jpg"><h3>Sunking Home Kit</h3><span class="price">₦310,000</span><button>PAY NOW</button></div>
-      <div class="product"><img src="Home.jpg"><h3>Complete Home Kit</h3><span class="price">₦350,000</span><button>PAY NOWr</button></div>
-      <div class="product"><img src="street.jpg"><h3>Street Solar Light</h3><span class="price">₦150,000</span><button>Order</button></div>
-      <div class="product"><img src="streetcctv.jpg"><h3>Street Light w/ Camera</h3><span class="price">₦150,000</span><button>PAY NOW</button></div>
-      <div class="product"><img src="4g.jpg"><h3>4G CCTV Camera</h3><span class="price">₦50,000</span><button>PAY NOW</button></div>
+      <div class="product"><img src="Solar Panel.jpg"><h3>300W Solar Panel</h3><span class="price">₦65,000</span><button class="btn-pay" onclick="payNow('300W Solar Panel', 65000)">PAY NOW</button></div>
+      <div class="product"><img src="inverter.jpg"><h3>2.5KVA Inverter</h3><span class="price">₦120,000</span><button class="btn-pay" onclick="payNow('2.5KVA Inverter', 120000)">PAY NOW</button></div>
+      <div class="product"><img src="battery.jpg"><h3>200Ah Battery</h3><span class="price">₦280,000</span><button class="btn-pay" onclick="payNow('200Ah Battery', 280000)">PAY NOW</button></div>
+      <div class="product"><img src="charge.jpg"><h3>60A MPPT Controller</h3><span class="price">₦45,000</span><button class="btn-pay" onclick="payNow('60A MPPT Controller', 45000)">PAY NOW</button></div>
+      <div class="product"><img src="SolarG1.jpg"><h3>Solar Generator 500W</h3><span class="price">₦320,000</span><button class="btn-pay" onclick="payNow('Solar Generator 500W', 320000)">PAY NOW</button></div>
+      <div class="product"><img src="streetcctv.jpg"><h3>Street Light w/ Camera</h3><span class="price">₦150,000</span><button class="btn-pay" onclick="payNow('Street Light w/ Camera', 150000)">PAY NOW</button></div>
     </section>
   </details>
 
   <details id="electronics">
     <summary>🖥️ ELECTRONICS</summary>
     <section class="products">
-      <div class="product"><img src="smarttv.jpg"><h3>32-inch Smart TV</h3><span class="price">₦145,000</span><button>Order</button></div>
-      <div class="product"><img src="tv43.jpg"><h3>43-inch Smart TV</h3><span class="price">₦200,000</span><button>Order</button></div>
-      <div class="product"><img src="tv55.jpg"><h3>55-inch Smart TV</h3><span class="price">₦370,000</span><button>Order</button></div>
-      <div class="product"><img src="laptop.jpg"><h3>HP Laptop 15"</h3><span class="price">₦420,000</span><button>Order</button></div>
-      <div class="product"><img src="dell.jpg"><h3>Dell i5 Laptop</h3><span class="price">₦390,000</span><button>Order</button></div>
-      <div class="product"><img src="earbuds.jpg"><h3>Wireless Earbuds</h3><span class="price">₦18,000</span><button>Order</button></div>
-      <div class="product"><img src="smartwatch.jpg"><h3>Smart Watch</h3><span class="price">₦25,000</span><button>Order</button></div>
-    <div class="product"><img src="smartwatch.jpg"><h3>Smart Watch</h3><span class="price">₦25,000</span><button>Order</button></div>
-   <div class="product"><img src="smartwatch.jpg"><h3>Smart Watch</h3><span class="price">₦25,000</span><button>Order</button></div>
-    <div class="product"><img src="smartwatch.jpg"><h3>Smart Watch</h3><span class="price">₦25,000</span><button>Order</button></div>
-    <div class="product"><img src="smartwatch.jpg"><h3>Smart Watch</h3><span class="price">₦25,000</span><button>Order</button></div>
-   <div class="product"><img src="smartwatch.jpg"><h3>Smart Watch</h3><span class="price">₦25,000</span><button>Order</button></div>
+      <div class="product"><img src="smarttv.jpg"><h3>32-inch Smart TV</h3><span class="price">₦145,000</span><button class="btn-pay" onclick="payNow('32-inch Smart TV', 145000)">PAY NOW</button></div>
+      <div class="product"><img src="tv43.jpg"><h3>43-inch Smart TV</h3><span class="price">₦200,000</span><button class="btn-pay" onclick="payNow('43-inch Smart TV', 200000)">PAY NOW</button></div>
+      <div class="product"><img src="laptop.jpg"><h3>HP Laptop 15"</h3><span class="price">₦420,000</span><button class="btn-pay" onclick="payNow('HP Laptop 15', 420000)">PAY NOW</button></div>
     </section>
   </details>
-
-  <details id="appliances">
-    <summary>🏠 HOME APPLIANCES</summary>
-    <section class="products">
-      <div class="product"><img src="blender.jpg"><h3>Electric Blender</h3><span class="price">₦18,000</span><button>Order</button></div>
-      <div class="product"><img src="iron.jpg"><h3>Dry Iron</h3><span class="price">₦10,000</span><button>Order</button></div>
-      <div class="product"><img src="fan.jpg"><h3>Rechargeable Fan</h3><span class="price">₦45,000</span><button>Order</button></div>
-      <div class="product"><img src="microwave.jpg"><h3>Microwave Oven</h3><span class="price">₦70,000</span><button>Order</button></div>
-    </section>
-  </details>
-
-  <section class="about-section">
-    <h2>About Holuwafemi Mega Store</h2>
-    <p style="max-width: 900px; margin: auto; color: #555;">
-      Trusted dealer for <strong>solar energy equipment</strong> and <strong>home appliances in Ibadan</strong>. 
-      Serving Oyo State with quality panels, inverters, and electronics.
-    </p>
-  </section>
 
   <section class="contact" id="contact">
-    <h2>Contact Us</h2>
-    <p>📞 09061989529 | 📍 Ibadan, Oyo State</p>
-    <br>
+    <h2>Contact & Support</h2>
+    <p>📞 09061989529 | 📍 Ibadan & Osogbo</p>
     <a href="https://wa.me/2349061989529?text=Hello+Holuwafemi+Mega+Store" target="_blank">
-      <button style="width: auto; padding: 15px 40px; border-radius: 50px;">Chat on WhatsApp</button>
+      <button style="width: auto; padding: 15px 40px; border-radius: 50px; background:#25D366; color:white; cursor:pointer; font-weight:bold; border:none;">Chat on WhatsApp</button>
     </a>
   </section>
 
   <footer>
-    <p>© 2026 Holuwafemi Mega Store.</p>
+    <p>© 2026 Holuwafemi Mega Store. Secure Payments by Paystack.</p>
   </footer>
 
   <script>
+    const PAYSTACK_PUBLIC_KEY = 'pk_live_74b79dcbb6afc98ea13aa66c2c0f154e923643bc';
+
+    function payNow(productName, baseAmount) {
+      const email = prompt("Enter your email for the receipt:");
+      if (!email || !email.includes('@')) { alert("Valid email required."); return; }
+
+      const zone = prompt("Select Delivery:\n1. Ibadan/Osogbo (₦3k)\n2. Other SW (₦7k)\n3. Nationwide (₦15k)\n4. Store Pickup (Free)");
+      
+      let fee = 0;
+      let zoneName = "Pickup";
+      
+      if (zone === "1") { fee = 3000; zoneName = "Ibadan/Osogbo"; }
+      else if (zone === "2") { fee = 7000; zoneName = "South-West"; }
+      else if (zone === "3") { fee = 15000; zoneName = "Nationwide"; }
+      else if (zone !== "4") { alert("Invalid selection."); return; }
+
+      const finalAmount = baseAmount + fee;
+
+      let handler = PaystackPop.setup({
+        key: PAYSTACK_PUBLIC_KEY,
+        email: email,
+        amount: finalAmount * 100,
+        currency: 'NGN',
+        ref: 'HMS-' + Math.floor((Math.random() * 1000000000) + 1),
+        metadata: {
+          custom_fields: [
+            { display_name: "Item", variable_name: "item", value: productName },
+            { display_name: "Delivery", variable_name: "delivery", value: zoneName }
+          ]
+        },
+        callback: function(response) {
+          alert('Payment Successful!');
+          window.location.href = "https://wa.me/2349061989529?text=Payment+Confirmed!%0AItem:+" + productName + "%0ADelivery:+" + zoneName + "%0ARef:+" + response.reference;
+        }
+      });
+      handler.openIframe();
+    }
+
     function filterProducts() {
       let input = document.getElementById('shopSearch').value.toLowerCase();
       let products = document.getElementsByClassName('product');
@@ -153,44 +139,6 @@
         products[i].style.display = title.includes(input) ? "" : "none";
       }
     }
-    <script>
-function filterProducts() {
-  let input = document.getElementById('shopSearch').value.toLowerCase();
-  let products = document.getElementsByClassName('product');
-  for (let i = 0; i < products.length; i++) {
-    let title = products[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
-    products[i].style.display = title.includes(input) ? "" : "none";
-  }
-}
-
-/* 🔥 PASTE YOUR NEW CODE HERE 👇 */
-
-function showSummary(){
-  if(cart.length === 0){
-    alert("Cart is empty");
-    return;
-  }
-
-  let summaryDiv = document.getElementById("summaryItems");
-  summaryDiv.innerHTML = "";
-
-  cart.forEach(item => {
-    summaryDiv.innerHTML += `<p>${item.name} - ₦${item.price}</p>`;
-  });
-
-  document.getElementById("summaryTotal").innerText = total;
-
-  document.getElementById("summaryBox").style.display = "block";
-}
-
-function closeSummary(){
-  document.getElementById("summaryBox").style.display = "none";
-}
-
-function confirmPayment(){
-  document.getElementById("summaryBox").style.display = "none";
-  payWithPaystack();
-}
   </script>
 </body>
 </html>
