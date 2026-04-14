@@ -38,8 +38,8 @@
     #cart-icon { position: fixed; bottom: 20px; right: 20px; background: #007bff; color: white; padding: 15px 25px; border-radius: 50px; cursor: pointer; z-index: 2000; font-weight: bold; box-shadow: 0 4px 15px rgba(0,123,255,0.4); }
     #cart-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; }
     .modal-content { background: white; max-width: 500px; margin: 50px auto; padding: 25px; border-radius: 15px; position: relative; max-height: 85vh; overflow-y: auto; }
-    .cart-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
-    .remove-btn { color: #ff4d4d; background: none; border: none; font-weight: bold; cursor: pointer; }
+    .cart-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; align-items: center; }
+    .remove-btn { color: #ff4d4d; background: none; border: none; font-weight: bold; cursor: pointer; padding: 5px; }
     footer { background: var(--dark-bg); color: #888; text-align: center; padding: 25px; }
   </style>
 </head>
@@ -69,8 +69,6 @@
       <div class="product"><img src="inverter.jpg"><h3>2.5KVA Inverter</h3><span class="price">₦120,000</span><button class="btn-add" onclick="addToCart('2.5KVA Inverter', 120000, 'large')">ADD TO CART</button></div>
       <div class="product"><img src="battery.jpg"><h3>200Ah Battery</h3><span class="price">₦280,000</span><button class="btn-add" onclick="addToCart('200Ah Battery', 280000, 'large')">ADD TO CART</button></div>
       <div class="product"><img src="charge.jpg"><h3>60A MPPT Controller</h3><span class="price">₦45,000</span><button class="btn-add" onclick="addToCart('60A MPPT Controller', 45000, 'large')">ADD TO CART</button></div>
-      <div class="product"><img src="SolarG1.jpg"><h3>Solar Generator 500W</h3><span class="price">₦320,000</span><button class="btn-add" onclick="addToCart('Solar Generator 500W', 320000, 'large')">ADD TO CART</button></div>
-      <div class="product"><img src="streetcctv.jpg"><h3>Street Light w/ Camera</h3><span class="price">₦150,000</span><button class="btn-add" onclick="addToCart('Street Light w/ Camera', 150000, 'large')">ADD TO CART</button></div>
     </section>
   </details>
 
@@ -87,13 +85,8 @@
     <summary>📱 PHONE AND ACCESSORIES</summary>
     <section class="products">
       <div class="product"><img src="phone1.jpg"><h3>iPhone 11 (64GB)</h3><span class="price">₦320,000</span><button class="btn-add" onclick="addToCart('iPhone 11', 320000, 'small')">ADD TO CART</button></div>
-      <div class="product"><img src="samsung.jpg"><h3>Samsung Galaxy A14</h3><span class="price">₦145,000</span><button class="btn-add" onclick="addToCart('Samsung A14', 145000, 'small')">ADD TO CART</button></div>
-      <div class="product"><img src="infinix.jpg"><h3>Infinix Smart 8</h3><span class="price">₦110,000</span><button class="btn-add" onclick="addToCart('Infinix Smart 8', 110000, 'small')">ADD TO CART</button></div>
-      <div class="product"><img src="charger.jpg"><h3>Fast Charger (Type-C)</h3><span class="price">₦8,000</span><button class="btn-add" onclick="addToCart('Fast Charger', 8000, 'small')">ADD TO CART</button></div>
       <div class="product"><img src="powerbank.jpg"><h3>20,000mAh Power Bank</h3><span class="price">₦25,000</span><button class="btn-add" onclick="addToCart('Power Bank', 25000, 'small')">ADD TO CART</button></div>
-      <div class="product"><img src="earpod.jpg"><h3>Bluetooth Earpods</h3><span class="price">₦18,000</span><button class="btn-add" onclick="addToCart('Earpods', 18000, 'small')">ADD TO CART</button></div>
-      <div class="product"><img src="case.jpg"><h3>Phone Case</h3><span class="price">₦5,000</span><button class="btn-add" onclick="addToCart('Phone Case', 5000, 'small')">ADD TO CART</button></div>
-      <div class="product"><img src="screen.jpg"><h3>Screen Protector</h3><span class="price">₦3,000</span><button class="btn-add" onclick="addToCart('Screen Protector', 3000, 'small')">ADD TO CART</button></div>
+      <div class="product"><img src="charger.jpg"><h3>Fast Charger (Type-C)</h3><span class="price">₦8,000</span><button class="btn-add" onclick="addToCart('Fast Charger', 8000, 'small')">ADD TO CART</button></div>
     </section>
   </details>
 
@@ -125,8 +118,67 @@
   <footer>
     <p>© 2026 Holuwafemi Mega Store. Secure Payments by Paystack.</p>
   </footer>
-<script>
-      function checkout() {
+
+  <script>
+    const PAYSTACK_PUBLIC_KEY = 'pk_live_74b79dcbb6afc98ea13aa66c2c0f154e923643bc';
+    let cart = [];
+
+    // 1. Function to add items
+    function addToCart(name, price, size) {
+      cart.push({ name, price, size });
+      updateUI();
+      alert(name + " added to cart!");
+    }
+
+    // 2. Function to refresh the UI
+    function updateUI() {
+      document.getElementById('cart-count').innerText = cart.length;
+      const list = document.getElementById('cart-items-list');
+      const zoneSelect = document.getElementById('delivery-zone-select');
+      
+      let subtotal = 0; 
+      let sizeExtra = 0; 
+      let insurance = 0;
+      
+      list.innerHTML = '';
+      cart.forEach((item, index) => {
+        subtotal += item.price;
+        // Logic: Large items add 3k delivery, Expensive items add 1% insurance
+        if (item.size === 'large') sizeExtra += 3000;
+        if (item.price > 200000) insurance += (item.price * 0.01);
+        
+        list.innerHTML += `
+          <div class="cart-item">
+            <span>${item.name}</span>
+            <span>₦${item.price.toLocaleString()} <button class="remove-btn" onclick="removeItem(${index})">🗑️</button></span>
+          </div>`;
+      });
+
+      let baseFee = (zoneSelect.value === "pickup" || zoneSelect.value === "0") ? 0 : parseInt(zoneSelect.value);
+      if (zoneSelect.value === "pickup") { sizeExtra = 0; insurance = 0; }
+      
+      const totalDelivery = baseFee + sizeExtra + insurance;
+      const finalTotal = subtotal + totalDelivery;
+
+      document.getElementById('subtotal-display').innerText = subtotal.toLocaleString();
+      document.getElementById('delivery-display').innerText = totalDelivery.toLocaleString();
+      document.getElementById('final-total-display').innerText = finalTotal.toLocaleString();
+    }
+
+    // 3. Remove Item
+    function removeItem(index) {
+      cart.splice(index, 1);
+      updateUI();
+    }
+
+    // 4. Toggle Cart Modal
+    function toggleCart() {
+      const m = document.getElementById('cart-modal');
+      m.style.display = (m.style.display === 'block') ? 'none' : 'block';
+    }
+
+    // 5. Checkout Function
+    function checkout() {
       if (cart.length === 0) return alert("Your cart is empty!");
       const zoneSelect = document.getElementById('delivery-zone-select');
       if (zoneSelect.value === "0") return alert("Please select a delivery zone first!");
@@ -134,12 +186,11 @@
       const email = prompt("Enter your email for the receipt:");
       if (!email || !email.includes('@')) return alert("Valid email needed.");
 
-      // --- NEW: Collect Address and Phone ---
       const phoneNumber = prompt("Enter your Phone Number:");
-      if (!phoneNumber) return alert("Phone number is required for delivery.");
+      if (!phoneNumber) return alert("Phone number is required.");
 
-      const address = prompt("Enter your Full Delivery Address (House No, Street, City, State):");
-      if (!address || address.length < 10) return alert("Please provide a more detailed address.");
+      const address = prompt("Enter your Full Delivery Address:");
+      if (!address || address.length < 10) return alert("Please provide a detailed address.");
 
       const totalAmount = parseInt(document.getElementById('final-total-display').innerText.replace(/,/g, ''));
       const deliveryTotal = document.getElementById('delivery-display').innerText;
@@ -152,34 +203,30 @@
         ref: 'HMS-' + Date.now(),
         metadata: { 
           custom_fields: [
-            { display_name: "Items", variable_name: "items", value: cart.map(i => i.name).join(", ") },
-            { display_name: "Delivery Address", variable_name: "address", value: address },
-            { display_name: "Phone Number", variable_name: "phone", value: phoneNumber },
-            { display_name: "Delivery Fee", variable_name: "delivery_fee", value: "₦" + deliveryTotal }
+            { display_name: "Items", value: cart.map(i => i.name).join(", ") },
+            { display_name: "Address", value: address },
+            { display_name: "Phone", value: phoneNumber }
           ] 
         },
         callback: function(response) {
-          alert('Payment Successful! Sending details to WhatsApp...');
-          
-          // Send all details to your WhatsApp
           const itemsList = cart.map(i => i.name).join(", ");
-          const whatsappText = `*New Order Confirmed!*%0A%0A` +
-                               `*Items:* ${itemsList}%0A` +
-                               `*Total Paid:* ₦${totalAmount.toLocaleString()}%0A` +
-                               `*Customer Phone:* ${phoneNumber}%0A` +
-                               `*Delivery Address:* ${address}%0A` +
-                               `*Ref:* ${response.reference}`;
-                               
+          const whatsappText = `*New Order Confirmed!*%0A%0A*Items:* ${itemsList}%0A*Total:* ₦${totalAmount.toLocaleString()}%0A*Phone:* ${phoneNumber}%0A*Address:* ${address}`;
           window.location.href = `https://wa.me/2349061989529?text=${whatsappText}`;
-          
-          cart = []; 
-          updateUI(); 
-          toggleCart();
+          cart = []; updateUI(); toggleCart();
         }
       });
       handler.openIframe();
     }
-  <script/>   
+
+    // 6. Search Filter
+    function filterProducts() {
+      let input = document.getElementById('shopSearch').value.toLowerCase();
+      let products = document.getElementsByClassName('product');
+      for (let i = 0; i < products.length; i++) {
+        let title = products[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
+        products[i].style.display = title.includes(input) ? "" : "none";
+      }
+    }
+  </script>
 </body>
-  </html>
-  
+</html>
