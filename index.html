@@ -163,7 +163,7 @@
       let handler = PaystackPop.setup({
         key: PAYSTACK_PUBLIC_KEY,
         email: email,
-       amount: 100 * 100, // This will ALWAYS charge exactly ₦100
+       amount: finalAmount* 100, // This will ALWAYS charge exactly ₦100
         
         currency: 'NGN',
         ref: 'HMS-' + Math.floor((Math.random() * 1000000000) + 1),
