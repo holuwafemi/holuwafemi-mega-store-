@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>Holuwafemi Mega Store | Solar, Electronics & Home Appliances</title>
+  
   <meta name="google-site-verification" content="UhQWXui2QJo2rJvnBkdxPkTusL0qkpXromcdVIwDHMY" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Holuwafemi Mega Store – Reliable solar panels, inverters, and home gadgets in Nigeria.">
+
   <script src="https://js.paystack.co/v1/inline.js"></script>
 
   <style>
@@ -17,19 +20,27 @@
     header { background: var(--primary-gradient); color: white; padding: 30px; text-align: center; }
     nav { background: var(--dark-bg); padding: 14px; text-align: center; position: sticky; top: 0; z-index: 1000; }
     nav a { color: #e0f2f1; margin: 0 15px; text-decoration: none; font-weight: bold; text-transform: uppercase; }
+    
     .search-box { text-align: center; padding: 20px; background: #fff; border-bottom: 3px solid #00b09b; }
-    #shopSearch { width: 85%; max-width: 500px; padding: 12px; border-radius: 25px; border: 2px solid #00b09b; outline: none; }
+    #shopSearch { width: 85%; max-width: 500px; padding: 12px; border-radius: 25px; border: 2px solid #00b09b; outline: none; font-size: 16px; }
+
     .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 20px; max-width: 1200px; margin: auto; }
-    .product { background: white; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); padding: 15px; text-align: center; border: 1px solid #e0e0e0; }
-    .product img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; }
-    .price { color: #2d6a4f; font-weight: bold; font-size: 1.3em; margin: 10px 0; display: block; }
-    details { background: white; margin: 20px auto; max-width: 1200px; border-radius: 10px; overflow: hidden; }
+    .product { background: white; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); padding: 15px; text-align: center; border: 1px solid #e0e0e0; transition: 0.3s; }
+    .product:hover { transform: translateY(-5px); }
+    .product img { width: 100%; height: 200px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; }
+    
+    .price { color: #2d6a4f; font-weight: bold; font-size: 1.3em; display: block; margin-bottom: 10px; }
+    details { background: white; margin: 20px auto; max-width: 1200px; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
     summary { background: #008080; color: white; padding: 18px; font-size: 20px; font-weight: bold; cursor: pointer; list-style: none; }
+    
     .btn-add { background: var(--primary-gradient); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; }
-    #cart-icon { position: fixed; bottom: 20px; right: 20px; background: #007bff; color: white; padding: 15px 25px; border-radius: 50px; cursor: pointer; z-index: 2000; font-weight: bold; }
+    
+    #cart-icon { position: fixed; bottom: 20px; right: 20px; background: #007bff; color: white; padding: 15px 25px; border-radius: 50px; cursor: pointer; z-index: 2000; font-weight: bold; box-shadow: 0 4px 15px rgba(0,123,255,0.4); }
     #cart-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; }
-    .modal-content { background: white; max-width: 500px; margin: 50px auto; padding: 25px; border-radius: 15px; position: relative; }
+    .modal-content { background: white; max-width: 500px; margin: 50px auto; padding: 25px; border-radius: 15px; position: relative; max-height: 85vh; overflow-y: auto; }
     .cart-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
+    .remove-btn { color: #ff4d4d; background: none; border: none; font-weight: bold; cursor: pointer; }
+    footer { background: var(--dark-bg); color: #888; text-align: center; padding: 25px; }
   </style>
 </head>
 <body>
@@ -40,28 +51,49 @@
   </header>
 
   <nav>
-    <a href="#solar">Solar</a> <a href="#electronics">Electronics</a> <a href="#phones">Phones</a>
+    <a href="#solar">Solar</a>
+    <a href="#electronics">Electronics</a>
+    <a href="#phones">Phones & Accessories</a>
   </nav>
 
   <div class="search-box">
-    <input type="text" id="shopSearch" onkeyup="filterProducts()" placeholder="Search products...">
+    <input type="text" id="shopSearch" onkeyup="filterProducts()" placeholder="Search (TV, Inverter, Charger)...">
   </div>
 
-  <div id="cart-icon" onclick="toggleCart()">🛒 <span id="cart-count">0</span> Items</div>
+  <div id="cart-icon" onclick="toggleCart()">🛒 Cart (<span id="cart-count">0</span>)</div>
 
   <details open id="solar">
-    <summary>☀️ SOLAR ENERGY PRODUCTS (Large Items)</summary>
+    <summary>☀️ SOLAR ENERGY PRODUCTS</summary>
     <section class="products">
       <div class="product"><img src="Solar Panel.jpg"><h3>300W Solar Panel</h3><span class="price">₦65,000</span><button class="btn-add" onclick="addToCart('300W Solar Panel', 65000, 'large')">ADD TO CART</button></div>
+      <div class="product"><img src="inverter.jpg"><h3>2.5KVA Inverter</h3><span class="price">₦120,000</span><button class="btn-add" onclick="addToCart('2.5KVA Inverter', 120000, 'large')">ADD TO CART</button></div>
       <div class="product"><img src="battery.jpg"><h3>200Ah Battery</h3><span class="price">₦280,000</span><button class="btn-add" onclick="addToCart('200Ah Battery', 280000, 'large')">ADD TO CART</button></div>
+      <div class="product"><img src="charge.jpg"><h3>60A MPPT Controller</h3><span class="price">₦45,000</span><button class="btn-add" onclick="addToCart('60A MPPT Controller', 45000, 'large')">ADD TO CART</button></div>
+      <div class="product"><img src="SolarG1.jpg"><h3>Solar Generator 500W</h3><span class="price">₦320,000</span><button class="btn-add" onclick="addToCart('Solar Generator 500W', 320000, 'large')">ADD TO CART</button></div>
+      <div class="product"><img src="streetcctv.jpg"><h3>Street Light w/ Camera</h3><span class="price">₦150,000</span><button class="btn-add" onclick="addToCart('Street Light w/ Camera', 150000, 'large')">ADD TO CART</button></div>
+    </section>
+  </details>
+
+  <details open id="electronics">
+    <summary>🖥️ ELECTRONICS</summary>
+    <section class="products">
+      <div class="product"><img src="smarttv.jpg"><h3>32-inch Smart TV</h3><span class="price">₦145,000</span><button class="btn-add" onclick="addToCart('32-inch Smart TV', 145000, 'large')">ADD TO CART</button></div>
+      <div class="product"><img src="tv43.jpg"><h3>43-inch Smart TV</h3><span class="price">₦200,000</span><button class="btn-add" onclick="addToCart('43-inch Smart TV', 200000, 'large')">ADD TO CART</button></div>
+      <div class="product"><img src="laptop.jpg"><h3>HP Laptop 15"</h3><span class="price">₦420,000</span><button class="btn-add" onclick="addToCart('HP Laptop 15', 420000, 'large')">ADD TO CART</button></div>
     </section>
   </details>
 
   <details open id="phones">
-    <summary>📱 PHONES & ACCESSORIES (Small Items)</summary>
+    <summary>📱 PHONE AND ACCESSORIES</summary>
     <section class="products">
       <div class="product"><img src="phone1.jpg"><h3>iPhone 11 (64GB)</h3><span class="price">₦320,000</span><button class="btn-add" onclick="addToCart('iPhone 11', 320000, 'small')">ADD TO CART</button></div>
+      <div class="product"><img src="samsung.jpg"><h3>Samsung Galaxy A14</h3><span class="price">₦145,000</span><button class="btn-add" onclick="addToCart('Samsung A14', 145000, 'small')">ADD TO CART</button></div>
+      <div class="product"><img src="infinix.jpg"><h3>Infinix Smart 8</h3><span class="price">₦110,000</span><button class="btn-add" onclick="addToCart('Infinix Smart 8', 110000, 'small')">ADD TO CART</button></div>
+      <div class="product"><img src="charger.jpg"><h3>Fast Charger (Type-C)</h3><span class="price">₦8,000</span><button class="btn-add" onclick="addToCart('Fast Charger', 8000, 'small')">ADD TO CART</button></div>
       <div class="product"><img src="powerbank.jpg"><h3>20,000mAh Power Bank</h3><span class="price">₦25,000</span><button class="btn-add" onclick="addToCart('Power Bank', 25000, 'small')">ADD TO CART</button></div>
+      <div class="product"><img src="earpod.jpg"><h3>Bluetooth Earpods</h3><span class="price">₦18,000</span><button class="btn-add" onclick="addToCart('Earpods', 18000, 'small')">ADD TO CART</button></div>
+      <div class="product"><img src="case.jpg"><h3>Phone Case</h3><span class="price">₦5,000</span><button class="btn-add" onclick="addToCart('Phone Case', 5000, 'small')">ADD TO CART</button></div>
+      <div class="product"><img src="screen.jpg"><h3>Screen Protector</h3><span class="price">₦3,000</span><button class="btn-add" onclick="addToCart('Screen Protector', 3000, 'small')">ADD TO CART</button></div>
     </section>
   </details>
 
@@ -71,13 +103,28 @@
       <h2>Your Cart</h2>
       <div id="cart-items-list"></div>
       <hr>
-      <div id="checkout-details">
-        <p>Subtotal: ₦<span id="subtotal-display">0</span></p>
-        <p><b>Total (Incl. Delivery): ₦<span id="final-total-display">0</span></b></p>
+      <div style="margin: 15px 0; padding: 10px; background: #f0fdfa; border-radius: 8px;">
+        <label style="font-weight:bold; font-size:14px;">Select Delivery Destination:</label>
+        <select id="delivery-zone-select" onchange="updateUI()" style="width:100%; padding:10px; margin-top:5px; border-radius:5px;">
+          <option value="0">Select Zone...</option>
+          <option value="2000">Ibadan (Local) - ₦2,000</option>
+          <option value="5000">Other South-West - ₦5,000</option>
+          <option value="10000">Nationwide - ₦10,000</option>
+          <option value="pickup">Store Pickup - Free</option>
+        </select>
       </div>
-      <button class="btn-add" onclick="checkout()">PROCEED TO CHECKOUT</button>
+      <div id="checkout-details" style="line-height: 1.8;">
+        <div style="display:flex; justify-content:space-between;"><span>Subtotal:</span> <span>₦<span id="subtotal-display">0</span></span></div>
+        <div style="display:flex; justify-content:space-between;"><span>Delivery Fee:</span> <span>₦<span id="delivery-display">0</span></span></div>
+        <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.1em; border-top:1px solid #eee;"><span>Total:</span> <span>₦<span id="final-total-display">0</span></span></div>
+      </div>
+      <button class="btn-add" onclick="checkout()" style="margin-top:15px;">PROCEED TO PAYMENT</button>
     </div>
   </div>
+
+  <footer>
+    <p>© 2026 Holuwafemi Mega Store. Secure Payments by Paystack.</p>
+  </footer>
 
   <script>
     const PAYSTACK_PUBLIC_KEY = 'pk_live_74b79dcbb6afc98ea13aa66c2c0f154e923643bc';
@@ -86,84 +133,52 @@
     function addToCart(name, price, size) {
       cart.push({ name, price, size });
       updateUI();
-      alert(name + " added!");
+      alert(name + " added to cart!");
     }
 
     function updateUI() {
       document.getElementById('cart-count').innerText = cart.length;
       const list = document.getElementById('cart-items-list');
-      let subtotal = 0;
-      list.innerHTML = '';
+      const zoneSelect = document.getElementById('delivery-zone-select');
+      let subtotal = 0; let sizeExtra = 0; let insurance = 0;
       
+      list.innerHTML = '';
       cart.forEach((item, index) => {
         subtotal += item.price;
-        list.innerHTML += `<div class="cart-item"><span>${item.name}</span><span>₦${item.price.toLocaleString()} <button onclick="removeItem(${index})">x</button></span></div>`;
+        if (item.size === 'large') sizeExtra += 3000;
+        if (item.price > 200000) insurance += (item.price * 0.01);
+        list.innerHTML += `<div class="cart-item"><span>${item.name}</span><span>₦${item.price.toLocaleString()} <button class="remove-btn" onclick="removeItem(${index})">Delete</button></span></div>`;
       });
+
+      let baseFee = (zoneSelect.value === "pickup" || zoneSelect.value === "0") ? 0 : parseInt(zoneSelect.value);
+      if (zoneSelect.value === "pickup") { sizeExtra = 0; insurance = 0; }
+      
+      const totalDelivery = baseFee + sizeExtra + insurance;
       document.getElementById('subtotal-display').innerText = subtotal.toLocaleString();
-      document.getElementById('final-total-display').innerText = subtotal.toLocaleString();
+      document.getElementById('delivery-display').innerText = totalDelivery.toLocaleString();
+      document.getElementById('final-total-display').innerText = (subtotal + totalDelivery).toLocaleString();
     }
 
-    function removeItem(index) {
-      cart.splice(index, 1);
-      updateUI();
-    }
-
-    function toggleCart() {
-      const modal = document.getElementById('cart-modal');
-      modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
-    }
+    function removeItem(index) { cart.splice(index, 1); updateUI(); }
+    function toggleCart() { const m = document.getElementById('cart-modal'); m.style.display = (m.style.display==='block')?'none':'block'; }
 
     function checkout() {
       if (cart.length === 0) return alert("Cart is empty!");
-      
+      if (document.getElementById('delivery-zone-select').value === "0") return alert("Select delivery zone!");
       const email = prompt("Enter email:");
-      const zone = prompt("Select Delivery Zone:\n1. Ibadan (Local)\n2. Other SW\n3. Nationwide\n4. Pickup (Free)");
-      
-      if (zone === "4") {
-          processPayment(email, 0, "Pickup");
-          return;
-      }
+      if (!email || !email.includes('@')) return;
 
-      // --- LOGIC: Calculate Fee based on Size & Price ---
-      let baseFee = 0;
-      if (zone === "1") baseFee = 2000;
-      else if (zone === "2") baseFee = 5000;
-      else if (zone === "3") baseFee = 10000;
-
-      let sizeExtra = 0;
-      let insurance = 0;
-
-      cart.forEach(item => {
-          // Add extra for large items
-          if (item.size === 'large') sizeExtra += 3000;
-          // Add insurance for items over 200k (1% of price)
-          if (item.price > 200000) insurance += (item.price * 0.01);
-      });
-
-      const totalDeliveryFee = baseFee + sizeExtra + insurance;
-      processPayment(email, totalDeliveryFee, "Delivery");
-    }
-
-    function processPayment(email, deliveryFee, type) {
-      const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
-      const finalAmount = subtotal + deliveryFee;
+      const totalAmount = parseInt(document.getElementById('final-total-display').innerText.replace(/,/g, ''));
 
       let handler = PaystackPop.setup({
         key: PAYSTACK_PUBLIC_KEY,
         email: email,
-        amount: finalAmount * 100,
+        amount: totalAmount * 100,
         currency: 'NGN',
         ref: 'HMS-' + Date.now(),
-        metadata: {
-          custom_fields: [
-            { display_name: "Items", value: cart.map(i => i.name).join(", ") },
-            { display_name: "Delivery Fee", value: "₦" + deliveryFee }
-          ]
-        },
+        metadata: { custom_fields: [{ display_name: "Items", value: cart.map(i => i.name).join(", ") }] },
         callback: function(response) {
-          alert('Payment Successful!');
-          window.location.href = `https://wa.me/2349061989529?text=Order+Confirmed!+Total:₦${finalAmount}`;
-          cart = []; updateUI(); toggleCart();
+          window.location.href = `https://wa.me/2349061989529?text=Order+Paid!+Total:₦${totalAmount}`;
         }
       });
       handler.openIframe();
@@ -179,4 +194,5 @@
     }
   </script>
 </body>
-</html>
+  </html>
+  
