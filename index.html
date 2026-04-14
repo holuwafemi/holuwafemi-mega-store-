@@ -57,7 +57,35 @@
   <a href="#solar" style="margin: 5px; padding: 8px 12px; background: #17a2b8; color: white; text-decoration: none; border-radius: 20px; display: inline-block;">Solar & Power</a>
 </div>
   </nav>
+<div id="cart-icon" onclick="toggleCart()" style="position: fixed; bottom: 20px; right: 20px; background: #f39c12; color: white; padding: 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 2000;">
+  🛒 <span id="cart-count">0</span>
+</div>
 
+<div id="cart-modal" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; overflow-y: auto;">
+  <div style="background: white; max-width: 500px; margin: 50px auto; padding: 20px; border-radius: 10px;">
+    <h2>Your Shopping Cart</h2>
+    <div id="cart-items"></div>
+    <hr>
+    <h3>Total: ₦<span id="cart-total-display">0</span></h3>
+    <button class="btn-pay" onclick="checkout()" style="margin-top: 10px;">PROCEED TO CHECKOUT</button>
+    <button onclick="toggleCart()" style="margin-top: 10px; width: 100%; padding: 10px; background: #ddd; border: none; cursor: pointer;">Close</button>
+  </div>
+</div>
+  <div id="cart-icon" onclick="toggleCart()" style="position: fixed; bottom: 20px; right: 20px; background: #f39c12; color: white; padding: 15px; border-radius: 50%; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 2000;">
+  🛒 <span id="cart-count">0</span>
+</div>
+
+<div id="cart-modal" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; overflow-y: auto;">
+  <div style="background: white; max-width: 500px; margin: 50px auto; padding: 20px; border-radius: 10px;">
+    <h2>Your Shopping Cart</h2>
+    <div id="cart-items"></div>
+    <hr>
+    <h3>Total: ₦<span id="cart-total-display">0</span></h3>
+    <button class="btn-pay" onclick="checkout()" style="margin-top: 10px;">PROCEED TO CHECKOUT</button>
+    <button onclick="toggleCart()" style="margin-top: 10px; width: 100%; padding: 10px; background: #ddd; border: none; cursor: pointer;">Close</button>
+  </div>
+</div>
+  
   <div class="search-box">
     <input type="text" id="shopSearch" onkeyup="filterProducts()" placeholder="Search (Inverter, TV, Fan)...">
   </div>
