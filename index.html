@@ -125,50 +125,24 @@
   <footer>
     <p>© 2026 Holuwafemi Mega Store. Secure Payments by Paystack.</p>
   </footer>
-
-  <script>
-    const PAYSTACK_PUBLIC_KEY = 'pk_live_74b79dcbb6afc98ea13aa66c2c0f154e923643bc';
-    let cart = [];
-
-    function addToCart(name, price, size) {
-      cart.push({ name, price, size });
-      updateUI();
-      alert(name + " added to cart!");
-    }
-
-    function updateUI() {
-      document.getElementById('cart-count').innerText = cart.length;
-      const list = document.getElementById('cart-items-list');
+<script>
+      function checkout() {
+      if (cart.length === 0) return alert("Your cart is empty!");
       const zoneSelect = document.getElementById('delivery-zone-select');
-      let subtotal = 0; let sizeExtra = 0; let insurance = 0;
-      
-      list.innerHTML = '';
-      cart.forEach((item, index) => {
-        subtotal += item.price;
-        if (item.size === 'large') sizeExtra += 3000;
-        if (item.price > 200000) insurance += (item.price * 0.01);
-        list.innerHTML += `<div class="cart-item"><span>${item.name}</span><span>₦${item.price.toLocaleString()} <button class="remove-btn" onclick="removeItem(${index})">Delete</button></span></div>`;
-      });
+      if (zoneSelect.value === "0") return alert("Please select a delivery zone first!");
 
-      let baseFee = (zoneSelect.value === "pickup" || zoneSelect.value === "0") ? 0 : parseInt(zoneSelect.value);
-      if (zoneSelect.value === "pickup") { sizeExtra = 0; insurance = 0; }
-      
-      const totalDelivery = baseFee + sizeExtra + insurance;
-      document.getElementById('subtotal-display').innerText = subtotal.toLocaleString();
-      document.getElementById('delivery-display').innerText = totalDelivery.toLocaleString();
-      document.getElementById('final-total-display').innerText = (subtotal + totalDelivery).toLocaleString();
-    }
+      const email = prompt("Enter your email for the receipt:");
+      if (!email || !email.includes('@')) return alert("Valid email needed.");
 
-    function removeItem(index) { cart.splice(index, 1); updateUI(); }
-    function toggleCart() { const m = document.getElementById('cart-modal'); m.style.display = (m.style.display==='block')?'none':'block'; }
+      // --- NEW: Collect Address and Phone ---
+      const phoneNumber = prompt("Enter your Phone Number:");
+      if (!phoneNumber) return alert("Phone number is required for delivery.");
 
-    function checkout() {
-      if (cart.length === 0) return alert("Cart is empty!");
-      if (document.getElementById('delivery-zone-select').value === "0") return alert("Select delivery zone!");
-      const email = prompt("Enter email:");
-      if (!email || !email.includes('@')) return;
+      const address = prompt("Enter your Full Delivery Address (House No, Street, City, State):");
+      if (!address || address.length < 10) return alert("Please provide a more detailed address.");
 
       const totalAmount = parseInt(document.getElementById('final-total-display').innerText.replace(/,/g, ''));
+      const deliveryTotal = document.getElementById('delivery-display').innerText;
 
       let handler = PaystackPop.setup({
         key: PAYSTACK_PUBLIC_KEY,
@@ -176,23 +150,36 @@
         amount: totalAmount * 100,
         currency: 'NGN',
         ref: 'HMS-' + Date.now(),
-        metadata: { custom_fields: [{ display_name: "Items", value: cart.map(i => i.name).join(", ") }] },
+        metadata: { 
+          custom_fields: [
+            { display_name: "Items", variable_name: "items", value: cart.map(i => i.name).join(", ") },
+            { display_name: "Delivery Address", variable_name: "address", value: address },
+            { display_name: "Phone Number", variable_name: "phone", value: phoneNumber },
+            { display_name: "Delivery Fee", variable_name: "delivery_fee", value: "₦" + deliveryTotal }
+          ] 
+        },
         callback: function(response) {
-          window.location.href = `https://wa.me/2349061989529?text=Order+Paid!+Total:₦${totalAmount}`;
+          alert('Payment Successful! Sending details to WhatsApp...');
+          
+          // Send all details to your WhatsApp
+          const itemsList = cart.map(i => i.name).join(", ");
+          const whatsappText = `*New Order Confirmed!*%0A%0A` +
+                               `*Items:* ${itemsList}%0A` +
+                               `*Total Paid:* ₦${totalAmount.toLocaleString()}%0A` +
+                               `*Customer Phone:* ${phoneNumber}%0A` +
+                               `*Delivery Address:* ${address}%0A` +
+                               `*Ref:* ${response.reference}`;
+                               
+          window.location.href = `https://wa.me/2349061989529?text=${whatsappText}`;
+          
+          cart = []; 
+          updateUI(); 
+          toggleCart();
         }
       });
       handler.openIframe();
     }
-
-    function filterProducts() {
-      let input = document.getElementById('shopSearch').value.toLowerCase();
-      let products = document.getElementsByClassName('product');
-      for (let i = 0; i < products.length; i++) {
-        let title = products[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
-        products[i].style.display = title.includes(input) ? "" : "none";
-      }
-    }
-  </script>
+  <script/>   
 </body>
   </html>
   
