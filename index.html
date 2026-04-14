@@ -2,266 +2,250 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Holuwafemi Mega Store | Solar, Electronics & Home Appliances</title>
-  
-  <meta name="google-site-verification" content="UhQWXui2QJo2rJvnBkdxPkTusL0qkpXromcdVIwDHMY" />
+  <title>Holuwafemi Mega Store | Solar, Electronics & More</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Holuwafemi Mega Store – Reliable solar panels, inverters, and home gadgets in Nigeria.">
-
   <script src="https://js.paystack.co/v1/inline.js"></script>
 
   <style>
-    :root {
-      --primary-gradient: linear-gradient(135deg, #00b09b, #96c93d);
-      --secondary-color: #008080;
-      --dark-bg: #1a2a33;
-    }
+    :root { --primary: #00b09b; --secondary: #008080; --dark: #1a2a33; }
+    body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f4f7f6; padding-bottom: 80px; }
+    header { background: linear-gradient(135deg, #00b09b, #96c93d); color: white; padding: 30px; text-align: center; }
+    nav { background: var(--dark); padding: 12px; text-align: center; position: sticky; top: 0; z-index: 1000; }
+    nav a { color: white; margin: 0 10px; text-decoration: none; font-weight: bold; font-size: 13px; text-transform: uppercase; }
     
-    body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; background: #f4f7f6; color: #333; padding-bottom: 80px; }
-    
-    header { background: var(--primary-gradient); color: white; padding: 30px; text-align: center; }
-    
-    nav { background: var(--dark-bg); padding: 14px; text-align: center; position: sticky; top: 0; z-index: 1000; }
-    nav a { color: #e0f2f1; margin: 0 15px; text-decoration: none; font-weight: bold; text-transform: uppercase; font-size: 13px; }
-    
-    .search-box { text-align: center; padding: 20px; background: #fff; border-bottom: 3px solid #00b09b; }
-    #shopSearch { width: 85%; max-width: 500px; padding: 12px; border-radius: 25px; border: 2px solid #00b09b; outline: none; font-size: 16px; }
-
-    /* Product Grid & Card */
     .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 20px; max-width: 1200px; margin: auto; }
-    .product { background: white; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); padding: 15px; text-align: center; border: 1px solid #e0e0e0; transition: 0.3s; }
-    .product:hover { transform: translateY(-5px); }
+    .product { background: white; border-radius: 12px; padding: 15px; text-align: center; border: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
     
-    /* Multi-Photo Gallery Styles */
-    .main-img { width: 100%; height: 220px; object-fit: cover; border-radius: 10px; margin-bottom: 10px; cursor: pointer; }
-    .thumb-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 15px; }
-    .thumb { width: 45px; height: 45px; object-fit: cover; border-radius: 5px; cursor: pointer; border: 1px solid #ddd; transition: 0.2s; }
-    .thumb:hover { border-color: #00b09b; transform: scale(1.1); }
-    
-    .price { color: #2d6a4f; font-weight: bold; font-size: 1.3em; display: block; margin-bottom: 10px; }
-    
-    details { background: white; margin: 20px auto; max-width: 1200px; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
-    summary { background: #008080; color: white; padding: 18px; font-size: 20px; font-weight: bold; cursor: pointer; list-style: none; }
-    
-    .btn-add { background: var(--primary-gradient); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: bold; font-size: 15px; }
-    
-    /* Cart UI */
-    #cart-icon { position: fixed; bottom: 20px; right: 20px; background: #007bff; color: white; padding: 15px 25px; border-radius: 50px; cursor: pointer; z-index: 2000; font-weight: bold; box-shadow: 0 4px 15px rgba(0,123,255,0.4); }
-    
+    /* Clickable Images */
+    .main-img { width: 100%; height: 220px; object-fit: cover; border-radius: 10px; cursor: zoom-in; transition: 0.3s; }
+    .main-img:hover { opacity: 0.85; transform: scale(1.02); }
+    .thumb-container { display: flex; justify-content: center; gap: 8px; margin-top: 10px; }
+    .thumb { width: 45px; height: 45px; object-fit: cover; border-radius: 5px; cursor: pointer; border: 1px solid #ddd; }
+
+    /* Enlarged Image Overlay */
+    #image-viewer { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 4000; justify-content: center; align-items: center; }
+    #image-viewer img { max-width: 90%; max-height: 80%; border-radius: 10px; box-shadow: 0 0 20px rgba(255,255,255,0.2); }
+    #image-viewer .close { position: absolute; top: 20px; right: 30px; color: white; font-size: 45px; cursor: pointer; font-weight: bold; }
+
+    /* Cart & Form */
+    #cart-icon { position: fixed; bottom: 20px; right: 20px; background: #007bff; color: white; padding: 15px 25px; border-radius: 50px; cursor: pointer; z-index: 2000; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
     #cart-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; }
-    .modal-content { background: white; max-width: 480px; margin: 40px auto; padding: 25px; border-radius: 15px; position: relative; max-height: 85vh; overflow-y: auto; }
+    .modal-content { background: white; max-width: 480px; margin: 20px auto; padding: 25px; border-radius: 15px; position: relative; max-height: 90vh; overflow-y: auto; }
     
+    .input-field { width: 100%; padding: 12px; margin-top: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; box-sizing: border-box; }
     .cart-item { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #eee; align-items: center; }
-    .remove-btn { color: #ff4d4d; background: none; border: none; font-weight: bold; cursor: pointer; font-size: 18px; }
+    .remove-btn { color: #ff4d4d; background: none; border: none; font-weight: bold; cursor: pointer; }
+    .btn-pay { background: linear-gradient(135deg, #00b09b, #96c93d); color: white; border: none; padding: 16px; border-radius: 8px; width: 100%; font-weight: bold; margin-top: 20px; cursor: pointer; font-size: 16px; }
     
-    footer { background: var(--dark-bg); color: #888; text-align: center; padding: 30px; margin-top: 40px; }
+    section-title { background: #008080; color: white; padding: 15px; display: block; font-weight: bold; margin-top: 20px; border-radius: 5px; text-align: center; }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>Holuwafemi Mega Store</h1>
-    <p>Premium Solar Solutions & Quality Electronics</p>
-  </header>
+<header>
+  <h1>Holuwafemi Mega Store</h1>
+  <p>Premium Solar Solutions & Quality Electronics</p>
+</header>
 
-  <nav>
-    <a href="#solar">Solar</a>
-    <a href="#electronics">Electronics</a>
-    <a href="#phones">Phones & Accessories</a>
-  </nav>
+<nav>
+  <a href="#solar">Solar</a> <a href="#electronics">Electronics</a> <a href="#phones">Phones</a>
+</nav>
 
-  <div class="search-box">
-    <input type="text" id="shopSearch" onkeyup="filterProducts()" placeholder="What are you looking for?">
-  </div>
+<div id="image-viewer">
+  <span class="close" onclick="closeViewer()">&times;</span>
+  <img id="full-res-img" src="">
+</div>
 
-  <div id="cart-icon" onclick="toggleCart()">🛒 Cart (<span id="cart-count">0</span>)</div>
+<div id="cart-icon" onclick="toggleCart()">🛒 Cart (<span id="cart-count">0</span>)</div>
 
-  <details open id="solar">
-    <summary>☀️ SOLAR ENERGY PRODUCTS</summary>
-    <section class="products">
-      
-      <div class="product">
-        <img src="Solar Panel.jpg" id="img-panel" class="main-img" alt="Solar Panel">
-        <div class="thumb-container">
-          <img src="Solar Panel.jpg" class="thumb" onclick="changeImage('img-panel', 'Solar Panel.jpg')">
-          <img src="panel2.jpg" class="thumb" onclick="changeImage('img-panel', 'panel2.jpg')"> </div>
-        <h3>300W Solar Panel</h3>
-        <span class="price">₦65,000</span>
-        <button class="btn-add" onclick="addToCart('300W Solar Panel', 65000, 'large')">ADD TO CART</button>
-      </div>
-
-      <div class="product">
-        <img src="battery.jpg" id="img-battery" class="main-img" alt="Battery">
-        <div class="thumb-container">
-          <img src="battery.jpg" class="thumb" onclick="changeImage('img-battery', 'battery.jpg')">
-          <img src="battery2.jpg" class="thumb" onclick="changeImage('img-battery', 'battery2.jpg')">
-        </div>
-        <h3>200Ah Battery</h3>
-        <span class="price">₦280,000</span>
-        <button class="btn-add" onclick="addToCart('200Ah Battery', 280000, 'large')">ADD TO CART</button>
-      </div>
-
-      <div class="product"><img src="inverter.jpg" class="main-img"><h3>2.5KVA Inverter</h3><span class="price">₦120,000</span><button class="btn-add" onclick="addToCart('2.5KVA Inverter', 120000, 'large')">ADD TO CART</button></div>
-    </section>
-  </details>
-
-  <details open id="electronics">
-    <summary>🖥️ ELECTRONICS</summary>
-    <section class="products">
-      <div class="product"><img src="smarttv.jpg" class="main-img"><h3>32-inch Smart TV</h3><span class="price">₦145,000</span><button class="btn-add" onclick="addToCart('32-inch Smart TV', 145000, 'large')">ADD TO CART</button></div>
-      <div class="product"><img src="tv43.jpg" class="main-img"><h3>43-inch Smart TV</h3><span class="price">₦200,000</span><button class="btn-add" onclick="addToCart('43-inch Smart TV', 200000, 'large')">ADD TO CART</button></div>
-      <div class="product"><img src="laptop.jpg" class="main-img"><h3>HP Laptop 15"</h3><span class="price">₦420,000</span><button class="btn-add" onclick="addToCart('HP Laptop 15', 420000, 'large')">ADD TO CART</button></div>
-    </section>
-  </details>
-
-  <details open id="phones">
-    <summary>📱 PHONE AND ACCESSORIES</summary>
-    <section class="products">
-      <div class="product"><img src="phone1.jpg" class="main-img"><h3>iPhone 11 (64GB)</h3><span class="price">₦320,000</span><button class="btn-add" onclick="addToCart('iPhone 11', 320000, 'small')">ADD TO CART</button></div>
-      <div class="product"><img src="powerbank.jpg" class="main-img"><h3>20,000mAh Power Bank</h3><span class="price">₦25,000</span><button class="btn-add" onclick="addToCart('Power Bank', 25000, 'small')">ADD TO CART</button></div>
-      <div class="product"><img src="charger.jpg" class="main-img"><h3>Fast Charger (Type-C)</h3><span class="price">₦8,000</span><button class="btn-add" onclick="addToCart('Fast Charger', 8000, 'small')">ADD TO CART</button></div>
-    </section>
-  </details>
-
-  <div id="cart-modal">
-    <div class="modal-content">
-      <span onclick="toggleCart()" style="position:absolute; top:15px; right:20px; font-size:28px; cursor:pointer;">&times;</span>
-      <h2 style="color:var(--secondary-color);">Your Shopping Cart</h2>
-      <div id="cart-items-list"></div>
-      
-      <div style="margin: 20px 0; padding: 15px; background: #f0fdfa; border-radius: 8px; border: 1px solid #00b09b;">
-        <label style="font-weight:bold; font-size:14px; display:block; margin-bottom:5px;">Delivery Zone:</label>
-        <select id="delivery-zone-select" onchange="updateUI()" style="width:100%; padding:10px; border-radius:5px; border:1px solid #ccc;">
-          <option value="0">-- Select Destination --</option>
-          <option value="2000">Ibadan (Local) - ₦2,000</option>
-          <option value="5000">Other South-West - ₦5,000</option>
-          <option value="10000">Nationwide - ₦10,000</option>
-          <option value="pickup">Store Pickup - Free</option>
-        </select>
-      </div>
-
-      <div id="checkout-details" style="background:#f9f9f9; padding:15px; border-radius:8px;">
-        <div style="display:flex; justify-content:space-between;"><span>Subtotal:</span> <span>₦<span id="subtotal-display">0</span></span></div>
-        <div style="display:flex; justify-content:space-between;"><span>Delivery Fee:</span> <span>₦<span id="delivery-display">0</span></span></div>
-        <div style="display:flex; justify-content:space-between; font-weight:bold; font-size:1.2em; color:#000; border-top:2px solid #ddd; margin-top:10px; padding-top:10px;">
-          <span>Total:</span> <span>₦<span id="final-total-display">0</span></span>
-        </div>
-      </div>
-      
-      <button class="btn-add" onclick="checkout()" style="margin-top:20px; padding:15px;">PROCEED TO PAYMENT</button>
+<h2 id="solar" style="text-align:center; color:var(--secondary); margin-top:30px;">☀️ SOLAR ENERGY PRODUCTS</h2>
+<section class="products">
+  <div class="product">
+    <img src="Solar Panel.jpg" class="main-img" onclick="enlargeImage(this.src)">
+    <div class="thumb-container">
+      <img src="Solar Panel.jpg" class="thumb" onclick="enlargeImage(this.src)">
+      <img src="panel2.jpg" class="thumb" onclick="enlargeImage(this.src)">
     </div>
+    <h3>300W Solar Panel</h3><p><b>₦65,000</b></p>
+    <button onclick="addToCart('300W Solar Panel', 65000, 'large')" class="btn-pay" style="margin-top:0;">ADD TO CART</button>
   </div>
 
-  <footer>
-    <p>© 2026 Holuwafemi Mega Store. Safe Payments by Paystack.</p>
-    <p style="font-size:12px;">Apata, Ibadan, Oyo State.</p>
-  </footer>
+  <div class="product">
+    <img src="battery.jpg" class="main-img" onclick="enlargeImage(this.src)">
+    <div class="thumb-container">
+      <img src="battery.jpg" class="thumb" onclick="enlargeImage(this.src)">
+      <img src="battery2.jpg" class="thumb" onclick="enlargeImage(this.src)">
+    </div>
+    <h3>200Ah Battery</h3><p><b>₦280,000</b></p>
+    <button onclick="addToCart('200Ah Battery', 280000, 'large')" class="btn-pay" style="margin-top:0;">ADD TO CART</button>
+  </div>
 
-  <script>
-    const PAYSTACK_PUBLIC_KEY = 'pk_live_74b79dcbb6afc98ea13aa66c2c0f154e923643bc';
-    let cart = [];
+  <div class="product">
+    <img src="inverter.jpg" class="main-img" onclick="enlargeImage(this.src)">
+    <h3>2.5KVA Inverter</h3><p><b>₦120,000</b></p>
+    <button onclick="addToCart('2.5KVA Inverter', 120000, 'large')" class="btn-pay" style="margin-top:0;">ADD TO CART</button>
+  </div>
 
-    function changeImage(id, src) {
-      document.getElementById(id).src = src;
+  <div class="product">
+    <img src="charge.jpg" class="main-img" onclick="enlargeImage(this.src)">
+    <h3>60A MPPT Controller</h3><p><b>₦45,000</b></p>
+    <button onclick="addToCart('60A MPPT', 45000, 'large')" class="btn-pay" style="margin-top:0;">ADD TO CART</button>
+  </div>
+</section>
+
+<h2 id="electronics" style="text-align:center; color:var(--secondary);">🖥️ ELECTRONICS</h2>
+<section class="products">
+  <div class="product">
+    <img src="smarttv.jpg" class="main-img" onclick="enlargeImage(this.src)">
+    <h3>32-inch Smart TV</h3><p><b>₦145,000</b></p>
+    <button onclick="addToCart('32-inch TV', 145000, 'large')" class="btn-pay" style="margin-top:0;">ADD TO CART</button>
+  </div>
+
+  <div class="product">
+    <img src="laptop.jpg" class="main-img" onclick="enlargeImage(this.src)">
+    <h3>HP Laptop 15"</h3><p><b>₦420,000</b></p>
+    <button onclick="addToCart('HP Laptop 15', 420000, 'large')" class="btn-pay" style="margin-top:0;">ADD TO CART</button>
+  </div>
+</section>
+
+<h2 id="phones" style="text-align:center; color:var(--secondary);">📱 PHONES & ACCESSORIES</h2>
+<section class="products">
+  <div class="product">
+    <img src="phone1.jpg" class="main-img" onclick="enlargeImage(this.src)">
+    <h3>iPhone 11 (64GB)</h3><p><b>₦320,000</b></p>
+    <button onclick="addToCart('iPhone 11', 320000, 'small')" class="btn-pay" style="margin-top:0;">ADD TO CART</button>
+  </div>
+
+  <div class="product">
+    <img src="powerbank.jpg" class="main-img" onclick="enlargeImage(this.src)">
+    <h3>20,000mAh Power Bank</h3><p><b>₦25,000</b></p>
+    <button onclick="addToCart('Power Bank', 25000, 'small')" class="btn-pay" style="margin-top:0;">ADD TO CART</button>
+  </div>
+
+  <div class="product">
+    <img src="earpod.jpg" class="main-img" onclick="enlargeImage(this.src)">
+    <h3>Bluetooth Earpods</h3><p><b>₦18,000</b></p>
+    <button onclick="addToCart('Earpods', 18000, 'small')" class="btn-pay" style="margin-top:0;">ADD TO CART</button>
+  </div>
+</section>
+
+<div id="cart-modal">
+  <div class="modal-content">
+    <span onclick="toggleCart()" style="float:right; cursor:pointer; font-size:28px;">&times;</span>
+    <h2 style="color:var(--secondary); margin-top:0;">Shopping Cart</h2>
+    <div id="cart-items-list"></div>
+    <hr>
+    
+    <div style="background:#f0fdfa; padding:15px; border-radius:10px; border:1px solid #00b09b;">
+      <h4 style="margin:0 0 10px 0; color:#006b5e;">Checkout Details</h4>
+      <select id="zone" class="input-field" onchange="updateUI()">
+        <option value="0">-- Select Delivery Destination --</option>
+        <option value="2000">Ibadan (Local) - ₦2,000</option>
+        <option value="5000">Other South-West - ₦5,000</option>
+        <option value="10000">Nationwide - ₦10,000</option>
+        <option value="pickup">Store Pickup - Free</option>
+      </select>
+      <input type="email" id="cust-email" class="input-field" placeholder="Your Email Address">
+      <input type="tel" id="cust-phone" class="input-field" placeholder="WhatsApp / Phone Number">
+      <textarea id="cust-address" class="input-field" rows="3" placeholder="Full Delivery Address (House No, Street, Area, Landmark)"></textarea>
+    </div>
+
+    <div style="margin-top:20px; font-weight:bold; font-size:1.2em; display:flex; justify-content:space-between;">
+      <span>Final Total:</span> <span>₦<span id="final-total">0</span></span>
+    </div>
+    <button class="btn-pay" onclick="checkout()">PROCEED TO SECURE PAYMENT</button>
+  </div>
+</div>
+
+<footer>
+  <p>© 2026 Holuwafemi Mega Store. Secure Payments by Paystack.</p>
+</footer>
+
+<script>
+  let cart = [];
+  const PAYSTACK_KEY = 'pk_live_74b79dcbb6afc98ea13aa66c2c0f154e923643bc';
+
+  function enlargeImage(src) {
+    document.getElementById('full-res-img').src = src;
+    document.getElementById('image-viewer').style.display = 'flex';
+  }
+
+  function closeViewer() {
+    document.getElementById('image-viewer').style.display = 'none';
+  }
+
+  function addToCart(name, price, size) {
+    cart.push({ name, price, size });
+    updateUI();
+    alert(name + " added to your cart!");
+  }
+
+  function updateUI() {
+    document.getElementById('cart-count').innerText = cart.length;
+    const list = document.getElementById('cart-items-list');
+    let subtotal = 0; let extra = 0;
+    list.innerHTML = '';
+    
+    if (cart.length === 0) list.innerHTML = '<p style="text-align:center; color:#999;">Your cart is empty.</p>';
+
+    cart.forEach((item, index) => {
+      subtotal += item.price;
+      if (item.size === 'large') extra += 3000;
+      list.innerHTML += `<div class="cart-item">
+        <span>${item.name}</span> 
+        <span>₦${item.price.toLocaleString()} <button class="remove-btn" onclick="removeItem(${index})">×</button></span>
+      </div>`;
+    });
+
+    const zone = document.getElementById('zone').value;
+    let deliveryBase = (zone === "pickup" || zone === "0") ? 0 : parseInt(zone);
+    
+    // Total is Subtotal + Delivery + Handling (for large items)
+    const final = subtotal + deliveryBase + (zone === "pickup" ? 0 : extra);
+    document.getElementById('final-total').innerText = final.toLocaleString();
+  }
+
+  function removeItem(index) {
+    cart.splice(index, 1);
+    updateUI();
+  }
+
+  function toggleCart() {
+    const m = document.getElementById('cart-modal');
+    m.style.display = (m.style.display === 'block') ? 'none' : 'block';
+  }
+
+  function checkout() {
+    const email = document.getElementById('cust-email').value;
+    const phone = document.getElementById('cust-phone').value;
+    const addr = document.getElementById('cust-address').value;
+    const total = parseInt(document.getElementById('final-total').innerText.replace(/,/g, ''));
+
+    if (!email || !phone || !addr || total === 0 || document.getElementById('zone').value === "0") {
+      return alert("Please select a delivery zone and fill all your contact details!");
     }
 
-    function addToCart(name, price, size) {
-      cart.push({ name, price, size });
-      updateUI();
-      const btn = event.target;
-      btn.innerText = "ADDED! ✅";
-      setTimeout(() => btn.innerText = "ADD TO CART", 1000);
-    }
-
-    function updateUI() {
-      document.getElementById('cart-count').innerText = cart.length;
-      const list = document.getElementById('cart-items-list');
-      const zoneSelect = document.getElementById('delivery-zone-select');
-      
-      let subtotal = 0; 
-      let sizeExtra = 0; 
-      let insurance = 0;
-      
-      list.innerHTML = '';
-      if (cart.length === 0) list.innerHTML = '<p style="text-align:center; color:#999;">Cart is empty</p>';
-
-      cart.forEach((item, index) => {
-        subtotal += item.price;
-        if (item.size === 'large') sizeExtra += 3000;
-        if (item.price > 200000) insurance += (item.price * 0.01);
-        
-        list.innerHTML += `
-          <div class="cart-item">
-            <span>${item.name}</span>
-            <span>₦${item.price.toLocaleString()} <button class="remove-btn" onclick="removeItem(${index})">×</button></span>
-          </div>`;
-      });
-
-      let baseFee = (zoneSelect.value === "pickup" || zoneSelect.value === "0") ? 0 : parseInt(zoneSelect.value);
-      if (zoneSelect.value === "pickup") { sizeExtra = 0; insurance = 0; }
-      
-      const totalDelivery = baseFee + sizeExtra + insurance;
-      document.getElementById('subtotal-display').innerText = subtotal.toLocaleString();
-      document.getElementById('delivery-display').innerText = totalDelivery.toLocaleString();
-      document.getElementById('final-total-display').innerText = (subtotal + totalDelivery).toLocaleString();
-    }
-
-    function removeItem(index) {
-      cart.splice(index, 1);
-      updateUI();
-    }
-
-    function toggleCart() {
-      const m = document.getElementById('cart-modal');
-      m.style.display = (m.style.display === 'block') ? 'none' : 'block';
-    }
-
-    function checkout() {
-      if (cart.length === 0) return alert("Your cart is empty!");
-      if (document.getElementById('delivery-zone-select').value === "0") return alert("Please select a delivery zone!");
-
-      const email = prompt("Email address for receipt:");
-      if (!email || !email.includes('@')) return;
-
-      const phone = prompt("Delivery Phone Number:");
-      if (!phone) return;
-
-      const addr = prompt("Full Delivery Address:");
-      if (!addr || addr.length < 10) return alert("Full address required.");
-
-      const finalAmount = parseInt(document.getElementById('final-total-display').innerText.replace(/,/g, ''));
-
-      let handler = PaystackPop.setup({
-        key: PAYSTACK_PUBLIC_KEY,
-        email: email,
-        amount: finalAmount * 100,
-        currency: 'NGN',
-        ref: 'HMS-' + Date.now(),
-        metadata: {
-          custom_fields: [
-            { display_name: "Items", value: cart.map(i => i.name).join(", ") },
-            { display_name: "Address", value: addr },
-            { display_name: "Phone", value: phone }
-          ]
-        },
-        callback: function(response) {
-          const items = cart.map(i => i.name).join(", ");
-          const whatsappMsg = `*Order Confirmed!*%0A*Items:* ${items}%0A*Total:* ₦${finalAmount.toLocaleString()}%0A*Phone:* ${phone}%0A*Address:* ${addr}`;
-          window.location.href = `https://wa.me/2349061989529?text=${whatsappMsg}`;
-          cart = []; updateUI(); toggleCart();
-        }
-      });
-      handler.openIframe();
-    }
-
-    function filterProducts() {
-      let input = document.getElementById('shopSearch').value.toLowerCase();
-      let products = document.getElementsByClassName('product');
-      for (let i = 0; i < products.length; i++) {
-        let title = products[i].getElementsByTagName('h3')[0].innerText.toLowerCase();
-        products[i].style.display = title.includes(input) ? "" : "none";
+    let handler = PaystackPop.setup({
+      key: PAYSTACK_KEY,
+      email: email,
+      amount: total * 100,
+      currency: 'NGN',
+      metadata: {
+        custom_fields: [
+          { display_name: "Phone", value: phone },
+          { display_name: "Address", value: addr },
+          { display_name: "Items", value: cart.map(i => i.name).join(", ") }
+        ]
+      },
+      callback: function(res) {
+        alert('Payment Successful!');
+        const text = `*New Paid Order!*%0A*Items:* ${cart.map(i => i.name).join(", ")}%0A*Total:* ₦${total.toLocaleString()}%0A*Phone:* ${phone}%0A*Address:* ${addr}`;
+        window.location.href = `https://wa.me/2349061989529?text=${text}`;
       }
-    }
-  </script>
+    });
+    handler.openIframe();
+  }
+</script>
 </body>
-</html>
+  </html>
+  
