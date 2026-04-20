@@ -17,14 +17,14 @@
     .product { background: white; border-radius: 12px; padding: 15px; text-align: center; border: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
     
     /* Clickable Images */
-    .main-img { width: 100%; height: 220px; object-fit: cover; border-radius: 10px; cursor: zoom-in; transition: 0.3s; }
+    .main-img { width: 200%; height: 400px; object-fit: cover; border-radius: 50px; cursor: zoom-in; transition: 0.3s; }
     .main-img:hover { opacity: 0.85; transform: scale(1.02); }
     .thumb-container { display: flex; justify-content: center; gap: 8px; margin-top: 10px; }
-    .thumb { width: 45px; height: 45px; object-fit: cover; border-radius: 5px; cursor: pointer; border: 1px solid #ddd; }
+    .thumb { width: 85px; height: 85px; object-fit: cover; border-radius: 5px; cursor: pointer; border: 1px solid #ddd; }
 
     /* Enlarged Image Overlay */
     #image-viewer { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 4000; justify-content: center; align-items: center; }
-    #image-viewer img { max-width: 90%; max-height: 80%; border-radius: 10px; box-shadow: 0 0 20px rgba(255,255,255,0.2); }
+    #image-viewer img { max-width: 100%; max-height: 100%; border-radius: 10px; box-shadow: 0 0 20px rgba(255,255,255,0.2); }
     #image-viewer .close { position: absolute; top: 20px; right: 30px; color: white; font-size: 45px; cursor: pointer; font-weight: bold; }
 
     /* Cart & Form */
@@ -48,7 +48,7 @@
 </header>
 
 <nav>
-  <a href="#solar">Solar</a> <a href="#electronics">Electronics</a> <a href="#phones">Phones</a>
+  <a href="#solar">Solar</a> <a href="#electronics">Electronics</a> <a href="#home appliances">Home Appliances</a> <a href="#phones">Phones</a>
 </nav>
 
 <div id="image-viewer">
@@ -111,6 +111,8 @@
     <h3>HP Laptop 15"</h3><p><b>₦420,000</b></p>
     <button onclick="addToCart('HP Laptop 15', 420000, 'large')" class="btn-pay" style="margin-top:0;">ADD TO CART</button>
   </div>
+  <h2 id="home appliances" style="text-align:center; color:var(--secondary);">HOME APPLIANCES</h2>
+  <section class="products">
   <div class="product">
     <img src="blender.jpg" class="main-img" onclick="enlargeImage(this.src)">
     <h3>Blender"</h3><p><b>₦35,000</b></p>
