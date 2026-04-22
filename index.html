@@ -666,9 +666,7 @@
     handler.openIframe();
   }
 </script>
-  <script src="https://js.paystack.co/v1/inline.js"></script>
-
-<script type="module">
+  <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -684,8 +682,28 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  console.log("Firebase and Paystack are both ready!");
-</script>
+  async function displayProducts() {
+    const querySnapshot = await getDocs(collection(db, "products"));
+    // This looks for an element in your HTML with id="product-list"
+    const container = document.getElementById('product-list'); 
+    
+    if(container) {
+      container.innerHTML = ''; // Clear old manual items
+      querySnapshot.forEach((doc) => {
+        const item = doc.data();
+        container.innerHTML += `
+          <div class="product-card">
+            <h3>${item.name}</h3>
+            <p>₦${item.price.toLocaleString()}</p>
+            <button onclick="addToCart('${item.name}', ${item.price})">Add to Cart</button>
+          </div>
+        `;
+      });
+    }
+  }
+
+  displayProducts();
+  </script>
 </body>
   </html>
   
