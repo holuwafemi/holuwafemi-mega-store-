@@ -666,6 +666,26 @@
     handler.openIframe();
   }
 </script>
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
+    authDomain: "holuwafemi-mega-store.firebaseapp.com",
+    projectId: "holuwafemi-mega-store",
+    storageBucket: "holuwafemi-mega-store.firebasestorage.app",
+    messagingSenderId: "1002214759367",
+    appId: "1:1002214759367:web:0f3afecb88c0f8a0f397e2"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  console.log("Firebase and Paystack are both ready!");
+</script>
 </body>
   </html>
   
