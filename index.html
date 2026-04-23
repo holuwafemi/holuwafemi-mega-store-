@@ -666,7 +666,7 @@
     handler.openIframe();
   }
 </script>
-  <script type="module">
+ <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -682,28 +682,49 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  async function displayProducts() {
-    const querySnapshot = await getDocs(collection(db, "products"));
-    // This looks for an element in your HTML with id="product-list"
-    const container = document.getElementById('product-list'); 
-    
-    if(container) {
-      container.innerHTML = ''; // Clear old manual items
+  async function syncPrices() {
+    try {
+      const querySnapshot = await getDocs(collection(db, "products"));
+      
       querySnapshot.forEach((doc) => {
-        const item = doc.data();
-        container.innerHTML += `
-          <div class="product-card">
-            <h3>${item.name}</h3>
-            <p>₦${item.price.toLocaleString()}</p>
-            <button onclick="addToCart('${item.name}', ${item.price})">Add to Cart</button>
-          </div>
-        `;
+        const firebaseData = doc.data();
+        const productName = firebaseData.name; // e.g., "300W Solar Panel"
+        const newPrice = firebaseData.price;
+
+        // This finds the specific product in your HTML by its name
+        const productElements = document.querySelectorAll('.product, .product-list');
+        
+        productElements.forEach((el) => {
+          const h3 = el.querySelector('h3');
+          if (h3 && h3.innerText.trim() === productName) {
+            // 1. Update the visible price text
+            const priceTag = el.querySelector('p b');
+            if (priceTag) {
+              priceTag.innerText = `₦${newPrice.toLocaleString()}`;
+            }
+            
+            // 2. Update the Add to Cart button so Paystack charges the right amount
+            const button = el.querySelector('button');
+            if (button) {
+              // We update the onclick attribute with the new price
+              const currentOnClick = button.getAttribute('onclick');
+              if (currentOnClick) {
+                // This replaces the old price number in the function call
+                const updatedOnClick = currentOnClick.replace(/,\s*\d+\s*,/, `, ${newPrice},`);
+                button.setAttribute('onclick', updatedOnClick);
+              }
+            }
+          }
+        });
       });
+      console.log("Prices synced with Holuwafemi Mega Store Database");
+    } catch (e) {
+      console.error("Error syncing prices: ", e);
     }
   }
 
-  displayProducts();
-  </script>
+  syncPrices();
+</script>
 </body>
   </html>
   
