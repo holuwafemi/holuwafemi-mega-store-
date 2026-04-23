@@ -1,293 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Holuwafemi Mega Store</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Holuwafemi Mega Store</title>
+  <script src="https://js.paystack.co/v1/inline.js"></script>
 
-<script src="https://js.paystack.co/v1/inline.js"></script>
+  <style>
+    :root { --primary: #ff9900; --secondary: #008080; --dark: #1a1a1a; }
+    body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #f5f5f5; padding-bottom: 80px; scroll-behavior: smooth; }
+    
+    header { background: linear-gradient(135deg, #0f2027, #2c5364); color: white; padding: 25px; text-align: center; }
+    
+    nav { background: #222; padding: 12px; text-align: center; position: sticky; top: 0; z-index: 1000; display: flex; justify-content: center; flex-wrap: wrap; }
+    nav a { color: white; margin: 5px 15px; text-decoration: none; font-size: 13px; font-weight: bold; text-transform: uppercase; }
 
-<style>
-:root{
-  --primary:#ff9900;
-  --dark:#1a1a1a;
-}
+    .section-title { text-align: center; color: var(--secondary); margin-top: 40px; font-size: 24px; text-transform: uppercase; border-bottom: 2px solid var(--primary); display: inline-block; width: 100%; padding-bottom: 10px; }
 
-/* BODY */
-body{
-  margin:0;
-  font-family: 'Segoe UI', sans-serif;
-  background:#f5f5f5;
-}
+    /* GRID SYSTEM */
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; padding: 20px; max-width: 1400px; margin: auto; }
 
-/* HEADER */
-header{
-  background:linear-gradient(135deg,#0f2027,#2c5364);
-  color:white;
-  padding:20px;
-  text-align:center;
-}
+    /* CARD STYLE */
+    .product { background: white; border-radius: 12px; padding: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); transition: 0.3s; text-align: center; display: flex; flex-direction: column; }
+    .product:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
 
-/* NAV */
-nav{
-  background:#222;
-  padding:12px;
-  text-align:center;
-  position:sticky;
-  top:0;
-}
-nav a{
-  color:white;
-  margin:0 10px;
-  text-decoration:none;
-  font-size:13px;
-}
+    .main-img { width: 100%; height: 180px; object-fit: contain; background: #fff; border-radius: 10px; margin-bottom: 10px; }
+    .product h3 { font-size: 15px; margin: 10px 0; color: #333; height: 40px; overflow: hidden; }
+    .product p { color: var(--primary); font-weight: bold; font-size: 18px; margin: 5px 0; }
 
-/* GRID */
-.products{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:20px;
-  padding:20px;
-  max-width:1300px;
-  margin:auto;
-}
+    .btn-pay { background: var(--primary); color: white; border: none; padding: 12px; width: 100%; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: auto; }
+    .btn-pay:hover { background: #e68a00; }
 
-/* CARD */
-.product{
-  background:white;
-  border-radius:12px;
-  padding:12px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.05);
-  transition:0.3s;
-  position:relative;
-}
-.product:hover{
-  transform:translateY(-5px);
-}
-
-/* BADGE */
-.product::before{
-  content:"HOT";
-  position:absolute;
-  top:10px;
-  left:10px;
-  background:blue;
-  color:white;
-  font-size:10px;
-  padding:4px 7px;
-  border-radius:5px;
-}
-
-/* IMAGE */
-.main-img{
-  width:100%;
-  height:180px;
-  object-fit:contain;
-  background:#f9f9f9;
-  border-radius:10px;
-  padding:10px;
-}
-
-/* TEXT */
-.product h3{
-  font-size:14px;
-  margin:8px 0;
-}
-
-.product p{
-  color:#ff9900;
-  font-weight:bold;
-}
-
-/* BUTTON */
-.btn-pay{
-  background:var(--primary);
-  color:white;
-  border:none;
-  padding:10px;
-  width:100%;
-  border-radius:6px;
-  cursor:pointer;
-}
-.btn-pay:hover{
-  background:#e68a00;
-}
-
-/* CART */
-#cart-icon{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:linear-gradient(135deg,#ff9900,#ff5e00);
-  color:white;
-  padding:14px 20px;
-  border-radius:40px;
-  cursor:pointer;
-}
-
-/* MODAL */
-#cart-modal{
-  display:none;
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.8);
-  top:0;
-}
-
-.modal-content{
-  background:white;
-  max-width:400px;
-  margin:50px auto;
-  padding:20px;
-  border-radius:10px;
-}
-
-.input-field{
-  width:100%;
-  padding:10px;
-  margin-top:10px;
-}
-</style>
+    /* CART UI */
+    #cart-icon { position: fixed; bottom: 20px; right: 20px; background: linear-gradient(135deg, #ff9900, #ff5e00); color: white; padding: 15px 25px; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 2000; font-weight: bold; }
+    #cart-modal { display: none; position: fixed; width: 100%; height: 100%; background: rgba(0,0,0,0.8); top: 0; left: 0; z-index: 3000; overflow-y: auto; }
+    .modal-content { background: white; max-width: 450px; margin: 30px auto; padding: 25px; border-radius: 15px; position: relative; }
+    .input-field { width: 100%; padding: 12px; margin-top: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+  </style>
 </head>
-
 <body>
 
 <header>
-<h1>Holuwafemi Mega Store</h1>
-<p>Solar • Electronics • Appliances • Home Appliances • Phones</p>
+  <h1>Holuwafemi Mega Store</h1>
+  <p>Your One-Stop Shop for Quality Solutions</p>
 </header>
 
 <nav>
-<a href="#solar">Solar</a>
-<a href="#electronics">Electronics</a>
-<a href="#home appliances">Home Appliances</a>
-<a href="#phones">Phones</a>
+  <a href="#solar">Solar</a>
+  <a href="#electronics">Electronics</a>
+  <a href="#appliances">Home Appliances</a>
+  <a href="#phones">Phones & Gadgets</a>
 </nav>
 
-<div id="cart-icon" onclick="toggleCart()">🛒 (<span id="cart-count">0</span>)</div>
+<div id="cart-icon" onclick="toggleCart()">🛒 Cart (<span id="cart-count">0</span>)</div>
 
-<!-- PRODUCTS -->
-<section class="products">
-
-<div class="product">
-<img src="Solar Panel.jpg" class="main-img">
-<h3>300W Solar Panel</h3>
-<p>₦65,000</p>
-<button onclick="addToCart('300W Solar Panel',65000)" class="btn-pay">ADD TO CART</button>
-</div>
-
-<div class="product">
-<img src="stv.jpg" class="main-img">
-<h3>Sunking Solar TV</h3>
-<p>₦250,000</p>
-<button onclick="addToCart('Solar TV',250000)" class="btn-pay">ADD TO CART</button>
-</div>
-
-<div class="product">
-<img src="4g.jpg" class="main-img">
-<h3>4G Camera</h3>
-<p>₦80,000</p>
-<button onclick="addToCart('4G Camera',80000)" class="btn-pay">ADD TO CART</button>
-</div>
-
-<div class="product">
-<img src="street.jpg" class="main-img">
-<h3>Solar Streetlight</h3>
-<p>₦45,000</p>
-<button onclick="addToCart('Streetlight',45000)" class="btn-pay">ADD TO CART</button>
-</div>
-
-<div class="product">
-<img src="smarttv.jpg" class="main-img">
-<h3>32-inch Smart TV</h3>
-<p>₦145,000</p>
-<button onclick="addToCart('TV',145000)" class="btn-pay">ADD TO CART</button>
-</div>
-
-<div class="product">
-<img src="iPhone11.jpg" class="main-img">
-<h3>iPhone 11</h3>
-<p>₦320,000</p>
-<button onclick="addToCart('iPhone',320000)" class="btn-pay">ADD TO CART</button>
-</div>
-<div class="product">
-<img src="freezer.jpg" class="main-img">
-<h3> 70Ltr Skyrun Freezer</h3>
-<p>₦250,000</p>
-<button onclick="addToCart('Solar TV',250000)" class="btn-pay">ADD TO CART</button>
-</div>
-  <div class="product">
-<img src="freezer1.jpg" class="main-img">
-<h3> 70Ltr Skyrun Freezer</h3>
-<p>₦250,000</p>
-<button onclick="addToCart('Solar TV',250000)" class="btn-pay">ADD TO CART</button>
-</div>
-<div class="product">
-<img src="fset of pot.jpg" class="main-img">
-<h3>Set of Pot</h3>
-<p>₦250,000</p>
-<button onclick="addToCart('Solar TV',250000)" class="btn-pay">ADD TO CART</button>
-</div>
-
-  <div class="product">
-<img src="fset of pot.jpg" class="main-img">
-<h3>Pots</h3>
-<p>₦250,000</p>
-<button onclick="addToCart('Solar TV',250000)" class="btn-pay">ADD TO CART</button>
-</div>
-  
+<h2 id="solar" class="section-title">☀️ Solar Energy Products</h2>
+<section class="products-grid">
+  <div class="product"><img src="Solar Panel.jpg" class="main-img"><h3>300W Solar Panel</h3><p>₦65,000</p><button onclick="addToCart('300W Solar Panel', 65000)" class="btn-pay">ADD TO CART</button></div>
+  <div class="product"><img src="stv.jpg" class="main-img"><h3>Sunking Solar TV</h3><p>₦250,000</p><button onclick="addToCart('Sunking Solar TV', 250000)" class="btn-pay">ADD TO CART</button></div>
+  <div class="product"><img src="SolarG1.jpg" class="main-img"><h3>1.5KVA Solar Generator</h3><p>₦1,200,000</p><button onclick="addToCart('1.5KVA Generator', 1200000)" class="btn-pay">ADD TO CART</button></div>
+  <div class="product"><img src="inverter.jpg" class="main-img"><h3>2.5KVA Inverter</h3><p>₦120,000</p><button onclick="addToCart('2.5KVA Inverter', 120000)" class="btn-pay">ADD TO CART</button></div>
+  <div class="product"><img src="Sunking fan.jpg" class="main-img"><h3>Sunking Solar Fan</h3><p>₦120,000</p><button onclick="addToCart('Sunking Fan', 120000)" class="btn-pay">ADD TO CART</button></div>
+  <div class="product"><img src="charge.jpg" class="main-img"><h3>60A MPPT Controller</h3><p>₦45,000</p><button onclick="addToCart('60A MPPT', 45000)" class="btn-pay">ADD TO CART</button></div>
+  <div class="product"><img src="street.jpg" class="main-img"><h3>Solar Streetlight</h3><p>₦45,000</p><button onclick="addToCart('Streetlight', 45000)" class="btn-pay">ADD TO CART</button></div>
+  <div class="product"><img src="cctv.jpg" class="main-img"><h3>Solar CCTV Camera</h3><p>₦80,000</p><button onclick="addToCart('CCTV', 80000)" class="btn-pay">ADD TO CART</button></div>
 </section>
 
-<!-- CART -->
+<h2 id="electronics" class="section-title">🖥️ Electronics</h2>
+<section class="products-grid">
+  <div class="product"><img src="smarttv.jpg" class="main-img"><h3>32-inch Smart TV</h3><p>₦145,000</p><button onclick="addToCart('32-inch TV', 145000)" class="btn-pay">ADD TO CART</button></div>
+  <div class="product"><img src="43.jpg" class="main-img"><h3>43-inch Smart TV</h3><p>₦185,000</p><button onclick="addToCart('43-inch TV', 185000)" class="btn-pay">ADD TO CART</button></div>
+  <div class="product"><img src="Mp3.jpg" class="main-img"><h3>Home Theatre System</h3><p>₦45,000</p><button onclick="addToCart('Home Theatre', 45000)" class="btn-pay">ADD TO CART</button></div>
+  <div class="product"><img src="Djack.jpg" class="main-img"><h3>Djack Audio System</h3><p>₦48,000</p><button onclick="addToCart('Djack Audio', 48000)" class="btn-pay">ADD TO CART</button></div>
+  <div class="product"><img src="Gen.jpg" class="main-img"><h3>SENWEI Generator</h3><p>₦170,000</p><button onclick="addToCart('Generator', 170000)" class="btn-pay">ADD TO CART</button></div>
+</section>
+
+<h2 id="appliances" class="section-title">🏠 Home Appliances</h2>
+<section class="products-grid">
+  <div class="product"><img src="skyrun.jpg" class="main-img"><h3>Skyrun Washing Machine</h3><p>₦185,000</p><button onclick="addToCart('Washer', 185000)" class="btn-pay">ADD TO CART</button></div>
+  <div class="product"><img src="freezer.jpg" class="main-img"><h3>Skyrun Chest Freezer</h3><p>₦210,000</p><button onclick="addToCart('Freezer', 210000)" class="btn-pay">ADD TO CART</button></div>
+  <div class="product"><img src="microwave.jpg" class="main-img"><h3>Digital Microwave</h3><p>₦75,000</p><button onclick="addToCart('Microwave', 75000)" class="btn-pay">ADD TO CART</button></div>
+  <div class="product"><img src="blender.jpg" class="main-img"><h3>Electric Blender</h3><p>₦25,000</p><button onclick="addToCart('Blender', 25000)" class="btn-pay">ADD TO CART</button></div>
+  <div class="product"><img src="electric kettle.jpg" class="main-img"><h3>Electric Kettle</h3><p>₦15,000</p><button onclick="addToCart('Kettle', 15000)" class="btn-pay">ADD TO CART</button></div>
+  <div class="product"><img src="Gas.jpg" class="main-img"><h3>Double Burner Gas Cooker</h3><p>₦35,000</p><button onclick="addToCart('Gas Cooker', 35000)" class="btn-pay">ADD TO CART</button></div>
+  <div class="product"><img src="Oven.jpg" class="main-img"><h3>Baking Oven</h3><p>₦85,000</p><button onclick="addToCart('Oven', 85000)" class="btn-pay">ADD TO CART</button></div>
+</section>
+
+<h2 id="phones" class="section-title">📱 Phones & Accessories</h2>
+<section class="products-grid">
+  <div class="product"><img src="iPhone11.jpg" class="main-img"><h3>iPhone 11</h3><p>₦320,000</p><button onclick="addToCart('iPhone 11', 320000)" class="btn-pay">ADD TO CART</button></div>
+  <div class="product"><img src="Redmi.jpg" class="main-img"><h3>Redmi Note Series</h3><p>₦180,000</p><button onclick="addToCart('Redmi', 180000)" class="btn-pay">ADD TO CART</button></div>
+  <div class="product"><img src="Oraimo smartwatch.jpeg" class="main-img"><h3>Oraimo Smartwatch</h3><p>₦35,000</p><button onclick="addToCart('Smartwatch', 35000)" class="btn-pay">ADD TO CART</button></div>
+  <div class="product"><img src="earbud.jpg" class="main-img"><h3>Wireless Earbuds</h3><p>₦12,000</p><button onclick="addToCart('Earbuds', 12000)" class="btn-pay">ADD TO CART</button></div>
+  <div class="product"><img src="powerbank.jpg" class="main-img"><h3>20,000mAh Powerbank</h3><p>₦25,000</p><button onclick="addToCart('Powerbank', 25000)" class="btn-pay">ADD TO CART</button></div>
+</section>
+
 <div id="cart-modal">
-<div class="modal-content">
-<h2>Cart</h2>
-<div id="cart-items"></div>
-
-<input id="email" class="input-field" placeholder="Email">
-<input id="phone" class="input-field" placeholder="Phone">
-<input id="address" class="input-field" placeholder="Address">
-
-<button onclick="pay()" class="btn-pay">PAY</button>
-</div>
+  <div class="modal-content">
+    <h2>🛒 Your Cart</h2>
+    <div id="cart-items"></div>
+    <hr>
+    <input id="email" class="input-field" placeholder="Email Address">
+    <input id="phone" class="input-field" placeholder="Phone Number">
+    <textarea id="address" class="input-field" placeholder="Delivery Address" rows="3"></textarea>
+    <button onclick="pay()" class="btn-pay" style="margin-top:20px;">CHECKOUT NOW</button>
+    <button onclick="toggleCart()" style="background:none; border:none; color:gray; cursor:pointer; width:100%; margin-top:15px;">Close Cart</button>
+  </div>
 </div>
 
 <script>
-let cart=[];
-
-function addToCart(name,price){
-cart.push({name,price});
-updateCart();
-alert(name+" added");
-}
-
-function updateCart(){
-document.getElementById("cart-count").innerText=cart.length;
-
-let list="";
-let total=0;
-
-cart.forEach(item=>{
-list+=`<p>${item.name} - ₦${item.price}</p>`;
-total+=item.price;
-});
-
-list+=`<h3>Total: ₦${total}</h3>`;
-
-document.getElementById("cart-items").innerHTML=list;
-}
-
-function toggleCart(){
-let modal=document.getElementById("cart-modal");
-modal.style.display = modal.style.display==="block"?"none":"block";
-}
-
-function pay(){
-alert("Payment Ready (Paystack still connected)");
-}
+  let cart = [];
+  function addToCart(name, price) {
+    cart.push({ name, price });
+    updateCart();
+    alert(name + " added!");
+  }
+  function updateCart() {
+    document.getElementById("cart-count").innerText = cart.length;
+    let list = "";
+    let total = 0;
+    cart.forEach(item => {
+      list += `<p>${item.name} - <b>₦${item.price.toLocaleString()}</b></p>`;
+      total += item.price;
+    });
+    list += `<h3 style="color:var(--primary)">Total: ₦${total.toLocaleString()}</h3>`;
+    document.getElementById("cart-items").innerHTML = list;
+  }
+  function toggleCart() {
+    let modal = document.getElementById("cart-modal");
+    modal.style.display = modal.style.display === "block" ? "none" : "block";
+  }
+  function pay() { alert("Redirecting to Secure Payment..."); }
 </script>
+
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
   import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -304,32 +149,22 @@ alert("Payment Ready (Paystack still connected)");
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  async function syncFirebasePrices() {
-    const querySnapshot = await getDocs(collection(db, "products"));
-    
-    querySnapshot.forEach((doc) => {
-      const fbProduct = doc.data();
-      const allProductCards = document.querySelectorAll('.product');
-
-      allProductCards.forEach((card) => {
-        const title = card.querySelector('h3').innerText;
-        
-        // If the name in Firebase matches the name on the screen
-        if (title.includes(fbProduct.name)) {
-          // Update the Price Display
-          card.querySelector('p').innerText = `₦${fbProduct.price.toLocaleString()}`;
-          
-          // Update the "Add to Cart" button so it charges the correct amount
-          const button = card.querySelector('button');
-          button.setAttribute('onclick', `addToCart('${fbProduct.name}', ${fbProduct.price})`);
-        }
+  async function syncPrices() {
+    try {
+      const querySnapshot = await getDocs(collection(db, "products"));
+      querySnapshot.forEach((doc) => {
+        const fb = doc.data();
+        const cards = document.querySelectorAll('.product');
+        cards.forEach((card) => {
+          if (card.querySelector('h3').innerText.includes(fb.name)) {
+            card.querySelector('p').innerText = `₦${fb.price.toLocaleString()}`;
+            card.querySelector('button').setAttribute('onclick', `addToCart('${fb.name}', ${fb.price})`);
+          }
+        });
       });
-    });
+    } catch (e) { console.log("Firebase Price Sync Offline"); }
   }
-
-  // Run the sync when the page loads
-  syncFirebasePrices();
+  syncPrices();
 </script>
-  
 </body>
-  </html>
+</html>
