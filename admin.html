@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mega Store - Admin Dashboard</title>
+    <style>
+        :root {
+          --jumia-orange: #f68b1e;
+          --bg-gray: #f1f1f2;
+          --dark-gray: #333333;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
+        body { background: var(--bg-gray); padding: 16px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .admin-card { background: white; padding: 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); width: 100%; max-width: 480px; }
+        h2 { color: var(--jumia-orange); margin-bottom: 20px; text-align: center; font-size: 22px; text-transform: uppercase; letter-spacing: 0.5px; }
+        label { display: block; font-size: 12px; font-weight: bold; margin-top: 14px; margin-bottom: 5px; color: #555; text-transform: uppercase; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ccd1d9; border-radius: 4px; font-size: 14px; outline: none; transition: border-color 0.2s; }
+        input:focus, select:focus, textarea:focus { border-color: var(--jumia-orange); }
+        button { width: 100%; padding: 14px; border: none; border-radius: 4px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 18px; transition: opacity 0.2s; }
+        button:active { opacity: 0.8; }
+        #upload-btn { background: var(--dark-gray); color: white; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        #submit-btn { background: var(--jumia-orange); color: white; font-size: 16px; margin-top: 24px; }
+        #preview-box { width: 100%; height: 200px; border: 2px dashed #ccd1d9; border-radius: 6px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; overflow: hidden; background: #fafafa; position: relative; }
+        #preview-img { max-width: 100%; max-height: 100%; object-fit: contain; display: none; }
+        .progress-text { font-size: 13px; color: var(--jumia-orange); font-weight: bold; display: none; text-align: center; margin-top: 6px; }
+    </style>
+</head>
+<body>
+
+<div class="admin-card">
+    <h2>Mega Store Admin Panel</h2>
+    
+    <div id="preview-box">
+        <span id="preview-placeholder" style="color: #888; font-size: 14px;">No Image Selected</span>
+        <img id="preview-img" src="" alt="Product Preview">
+    </div>
+    
+    <!-- Hidden native file picker, triggered by our stylized button -->
+    <input type="file" id="fileSelector" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
+    <button id="upload-btn" type="button" onclick="document.getElementById('fileSelector').click()">
+        <span id="upload-text">1. SELECT & UPLOAD PHOTO</span>
+    </button>
+    <div id="uploadProgress" class="progress-text">Uploading image to Google Cloud... 0%</div>
+    
+    <!-- Hidden input to temporarily hold the uploaded secure image URL -->
+    <input type="hidden" id="prodImgUrl">
+    
+    <label>Product Title / Name</label>
+    <input type="text" id="prodName" placeholder="e.g. Skyrun 4 Burners Gas Cooker">
+    
+    <label>Current Sale Price (₦)</label>
+    <input type="number" id="prodPrice" placeholder="e.g. 128520">
+    
+    <label>Old Price / Original Price (₦)</label>
+    <input type="number" id="prodOldPrice" placeholder="e.g. 173825 (Optional)">
+    
+    <label>Store Department Category</label>
+    <select id="prodCat">
+        <option value="electronics">Electronics</option>
+        <option value="solar">Solar</option>
+        <option value="phones">Phones</option>
+    </select>
+    
+    <label>Product Specifications / Description</label>
+    <textarea id="prodDesc" placeholder="Enter specifications or key selling points..." rows="4"></textarea>
+
+    <button id="submit-btn" onclick="saveProductToFirebase()">2. PUBLISH PRODUCT LIVE</button>
+</div>
+
+<!-- Firebase Modular SDK Scripts -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+    import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
+
+    // =========================================================
+    // ⚠️ CONFIGURATION: PASTE YOUR FIREBASE PROJ KEYS HERE
+    // =========================================================
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // The secure key must match EXACTLY what you published in your Firestore security rules
+    const DATABASE_SECURITY_PASSWORD = "MyMegaStoreSecret2026";
+    // =========================================================
+
+    // Initialize Firebase Services
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const storage = getStorage(app);
+
+    let selectedFile = null;
+
+    // Phase 1: Handle File Selection & Stream Upload to Firebase Storage
+    window.handleFileSelect = function(event) {
+        selectedFile = event.target.files[0];
+        if (!selectedFile) return;
+
+        // Display immediate local UI placeholder preview
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('preview-placeholder').style.display = 'none';
+            const img = document.getElementById('preview-img');
+            img.src = e.target.result;
+            img.style.display = 'block';
+        }
+        reader.readAsDataURL(selectedFile);
+
+        // Upload directly to Firebase Storage Bucket folder "products/"
+        const storageRef = ref(storage, 'products/' + Date.now() + '_' + selectedFile.name);
+        const uploadTask = uploadBytesResumable(storageRef, selectedFile);
+        
+        const progText = document.getElementById("uploadProgress");
+        const uploadBtn = document.getElementById("upload-btn");
+        const uploadBtnText = document.getElementById("upload-text");
+        
+        progText.style.display = "block";
+        uploadBtn.disabled = true;
+        uploadBtn.style.opacity = "0.6";
+
+        uploadTask.on('state_changed', 
+            (snapshot) => {
+                const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                progText.innerText = "Uploading image to Google Cloud... " + progress + "%";
+            }, 
+            (error) => {
+                alert("Image storage upload failed: " + error.message);
+                uploadBtn.disabled = false;
+                uploadBtn.style.opacity = "1";
+            }, 
+            () => {
+                // Success path: Retrieve download URL from Google Storage
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    document.getElementById('prodImgUrl').value = downloadURL;
+                    progText.innerText = "✓ Upload successful! Image locked and saved.";
+                    uploadBtn.style.background = "#25D366"; // Success Green
+                    uploadBtn.style.opacity = "1";
+                    uploadBtn.disabled = false;
+                    uploadBtnText.innerText = "✓ PHOTO LOADED";
+                });
+            }
+        );
+    }
+
+    // Phase 2: Package JSON Metadata & Transmit Payload to Firestore Collection
+    window.saveProductToFirebase = async function() {
+        const name = document.getElementById('prodName').value.trim();
+        const price = document.getElementById('prodPrice').value;
+        const oldPrice = document.getElementById('prodOldPrice').value;
+        const imgUrl = document.getElementById('prodImgUrl').value;
+        const cat = document.getElementById('prodCat').value;
+        const desc = document.getElementById('prodDesc').value.trim();
+
+        // Validations
+        if (!imgUrl) return alert("Please select a product photo and wait for the upload to complete first!");
+        if (!name || !price) return alert("Product Name and Current Sale Price are required fields!");
+
+        const submitBtn = document.getElementById("submit-btn");
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Publishing to live store catalog...";
+
+        // Logic calculating the exact discount percentage (Jumia Style)
+        const parsedPrice = Number(price);
+        const parsedOldPrice = oldPrice ? Number(oldPrice) : parsedPrice;
+        let discountPercentage = 0;
+        if (parsedOldPrice > parsedPrice) {
+            discountPercentage = Math.round(((parsedOldPrice - parsedPrice) / parsedOldPrice) * 100);
+        }
+
+        try {
+            // Push structured record directly into the firestore cloud database collection
+            await addDoc(collection(db, "products"), {
+                name: name,
+                price: parsedPrice,
+                old: parsedOldPrice,
+                pct: discountPercentage,
+                img: imgUrl,
+                cat: cat,
+                desc: desc,
+                isTop: false, // Default flagship listing toggle
+                timestamp: new Date(),
+                
+                // This critical field passes Google's firewall check in your security rules!
+                password: DATABASE_SECURITY_PASSWORD 
+            });
+
+            alert("🎉 Catalog updated successfully! The product is now live on the storefront.");
+            location.reload(); // Refresh to flush inputs for the next entry
+        } catch (error) {
+            alert("Database listing error: " + error.message + "\nCheck if your security password matches the console rule.");
+            submitBtn.disabled = false;
+            submitBtn.innerText = "2. PUBLISH PRODUCT LIVE";
+        }
+    }
+</script>
+</body>
+</html>
