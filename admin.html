@@ -24,6 +24,7 @@
         #preview-box { width: 100%; height: 180px; border: 2px dashed #ccc; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: #fafafa; overflow: hidden; margin-bottom: 10px; }
         #preview-img { max-width: 100%; max-height: 100%; display: none; }
 
+        /* Inventory Manager */
         .catalog-list { margin-top: 10px; max-height: 300px; overflow-y: auto; }
         .catalog-item { display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; gap: 10px; }
         .catalog-item img { width: 40px; height: 40px; object-fit: contain; border-radius: 4px; }
@@ -35,27 +36,25 @@
 </head>
 <body>
 
-    <!-- ADD PRODUCT CARD -->
     <div class="admin-card">
-        <h2>Store Management</h2>
+        <h2>Add New Product</h2>
         
         <div id="preview-box">
             <span id="pre-text" style="color:#999">Product Image Preview</span>
             <img id="preview-img" src="">
         </div>
 
-        <!-- Safe & Free Image Link Input -->
-        <label>Product Image URL</label>
-        <input type="text" id="finalImgUrl" placeholder="Paste direct image link here..." oninput="updatePreview(this.value)">
+        <label>Image URL (Direct Link)</label>
+        <input type="text" id="finalImgUrl" placeholder="Paste link ending in .jpg or .png" oninput="updatePreview(this.value)">
 
         <label>Product Name</label>
-        <input type="text" id="pName" placeholder="e.g. iPhone 11 Pro Max">
+        <input type="text" id="pName" placeholder="e.g. Solar Power Bank 20k mAh">
         
         <label>Current Price (₦)</label>
-        <input type="number" id="pPrice" placeholder="Price customer pays">
+        <input type="number" id="pPrice" placeholder="Selling price">
         
-        <label>Old Price (₦) - Optional</label>
-        <input type="number" id="pOld" placeholder="Original price for discount strike">
+        <label>Old Price (₦)</label>
+        <input type="number" id="pOld" placeholder="Original price for discount badge">
         
         <label>Category</label>
         <select id="pCat">
@@ -64,33 +63,29 @@
             <option value="phones">Phones</option>
         </select>
         
-        <label>Description / Specs</label>
-        <textarea id="pDesc" rows="3" placeholder="Enter key features..."></textarea>
+        <label>Description</label>
+        <textarea id="pDesc" rows="3" placeholder="Key specs..."></textarea>
 
         <button id="publishBtn" class="btn-publish" onclick="publishProduct()">PUBLISH TO STORE</button>
     </div>
 
-    <!-- LIVE CATALOG MANAGER CARD -->
     <div class="admin-card">
-        <h3 style="font-size: 15px; color: var(--dark); text-transform: uppercase; margin-bottom: 10px; border-bottom: 2px solid #eee; padding-bottom: 5px;">
-            <i class="fas fa-boxes"></i> Live Store Catalog
+        <h3 style="font-size: 14px; text-transform: uppercase; margin-bottom: 10px;">
+            <i class="fas fa-list"></i> Current Inventory
         </h3>
         <div class="catalog-list" id="adminCatalogList">
-            <p style="text-align:center; color:#999; font-size:13px; padding:10px;">Loading items...</p>
+            <p style="text-align:center; color:#999; font-size:12px; padding:10px;">Loading...</p>
         </div>
     </div>
 
-    <!-- AI KEY MANAGEMENT -->
     <div class="admin-card" style="max-width: 350px; padding: 15px;">
-        <p style="font-size: 12px; text-align: center; color: #666;">AI Chat System Status</p>
-        <button class="btn-ai" onclick="setupAiKey()">ACTIVATE / UPDATE AI KEY</button>
+        <button class="btn-ai" onclick="setupAiKey()">ACTIVATE AI SYSTEM</button>
     </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-    // --- 1. FIREBASE CONFIGURATION ---
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
       authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -100,13 +95,11 @@
       appId: "YOUR_APP_ID"
     };
 
-    // --- 2. SECURITY GATEKEEPER ---
-    const ADMIN_PASSWORD = "MyMegaStoreSecret2026";
-    const sessionAuth = sessionStorage.getItem("adminAuth");
-
-    if (!sessionAuth) {
+    // 🛡️ ADMIN ACCESS
+    const ADMIN_PASS = "MyMegaStoreSecret2026";
+    if (sessionStorage.getItem("adminAuth") !== "true") {
         const attempt = prompt("Enter Admin Access Key:");
-        if (attempt === ADMIN_PASSWORD) {
+        if (attempt === ADMIN_PASS) {
             sessionStorage.setItem("adminAuth", "true");
         } else {
             alert("Unauthorized!");
@@ -114,62 +107,46 @@
         }
     }
 
-    // Initialize Firebase (Firestore Database only - completely free tier!)
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Live UI Preview Handler
-    window.updatePreview = function(url) {
-        if(url.trim() !== "") {
-            document.getElementById('pre-text').style.display = 'none';
+    // Live Preview
+    window.updatePreview = (url) => {
+        if(url.trim()){
+            document.getElementById('pre-text').style.display='none';
             const img = document.getElementById('preview-img');
-            img.src = url;
-            img.style.display = 'block';
+            img.src = url; img.style.display='block';
         }
-    }
+    };
 
-    // --- 3. SYNC PRODUCTS TO DASHBOARD ---
+    // Sync Inventory List
     const q = query(collection(db, "products"), orderBy("timestamp", "desc"));
     onSnapshot(q, (snapshot) => {
-        const listContainer = document.getElementById("adminCatalogList");
-        let htmlContent = "";
-        
-        if (snapshot.empty) {
-            listContainer.innerHTML = `<p style="text-align:center; color:#999; font-size:13px; padding:10px;">No products found in store.</p>`;
-            return;
-        }
-
-        snapshot.forEach((productDoc) => {
-            const data = productDoc.data();
-            const id = productDoc.id;
-            htmlContent += `
+        const list = document.getElementById("adminCatalogList");
+        let html = "";
+        snapshot.forEach((pDoc) => {
+            const p = pDoc.data();
+            html += `
                 <div class="catalog-item">
-                    <img src="${data.img || 'https://via.placeholder.com/40'}">
+                    <img src="${p.img}">
                     <div class="catalog-info">
-                        <div class="catalog-name">${data.name}</div>
-                        <div class="catalog-price">₦${Number(data.price).toLocaleString()}</div>
+                        <div class="catalog-name">${p.name}</div>
+                        <div class="catalog-price">₦${p.price.toLocaleString()}</div>
                     </div>
-                    <button class="btn-delete" onclick="deleteProduct('${id}')"><i class="fas fa-trash"></i></button>
-                </div>
-            `;
+                    <button class="btn-delete" onclick="deleteProduct('${pDoc.id}')"><i class="fas fa-trash"></i></button>
+                </div>`;
         });
-        listContainer.innerHTML = htmlContent;
+        list.innerHTML = html || "<p style='text-align:center'>No products found.</p>";
     });
 
-    // --- 4. DELETE PRODUCT FUNCTION ---
-    window.deleteProduct = async function(id) {
-        if (confirm("Are you sure you want to delete this product?")) {
-            try {
-                await deleteDoc(doc(db, "products", id));
-                alert("🗑️ Product removed!");
-            } catch (e) {
-                alert("Failed to delete: " + e.message);
-            }
+    window.deleteProduct = async (id) => {
+        if(confirm("Delete this product permanently?")) {
+            await deleteDoc(doc(db, "products", id));
+            alert("Deleted!");
         }
-    }
+    };
 
-    // --- 5. PUBLISH LOGIC ---
-    window.publishProduct = async function() {
+    window.publishProduct = async () => {
         const img = document.getElementById('finalImgUrl').value.trim();
         const name = document.getElementById('pName').value.trim();
         const price = Number(document.getElementById('pPrice').value);
@@ -177,39 +154,30 @@
         const cat = document.getElementById('pCat').value;
         const desc = document.getElementById('pDesc').value.trim();
 
-        if (!img) return alert("Please paste an image URL!");
-        if (!name || !price) return alert("Please enter Product Name and Price!");
+        if(!img || !name || !price) return alert("Fill Name, Price and Image URL!");
 
         const btn = document.getElementById("publishBtn");
-        btn.disabled = true;
-        btn.innerText = "Connecting...";
+        btn.disabled = true; btn.innerText = "Publishing...";
 
         try {
             await addDoc(collection(db, "products"), {
                 name, price, old, img, cat, desc,
-                pct: Math.round(((old - price) / old) * 100),
+                pct: Math.round(((old - price)/old)*100),
                 timestamp: new Date(),
-                password: ADMIN_PASSWORD
+                password: ADMIN_PASS
             });
-            alert("🎉 Product is live!");
+            alert("Success!");
             location.reload();
-        } catch (e) {
-            alert("Error: " + e.message);
-            btn.disabled = false;
-            btn.innerText = "PUBLISH TO STORE";
-        }
-    }
+        } catch(e) { alert(e.message); btn.disabled = false; }
+    };
 
-    // --- 6. AI KEY HANDLER ---
-    window.setupAiKey = function() {
-        const key = prompt("Paste your Groq API Key here:");
-        if (key && key.startsWith("gsk_")) {
+    window.setupAiKey = () => {
+        const key = prompt("Paste Groq API Key:");
+        if(key && key.startsWith("gsk_")) {
             localStorage.setItem("GROQ_API_KEY", key);
-            alert("AI System Activated!");
-        } else {
-            alert("Invalid Key Format.");
+            alert("AI Activated!");
         }
-    }
+    };
 </script>
 </body>
 </html>
