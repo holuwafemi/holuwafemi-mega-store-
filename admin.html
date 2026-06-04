@@ -18,15 +18,12 @@
         input:focus { border-color: var(--jumia-orange); }
         
         button { width: 100%; padding: 14px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.2s; }
-        .btn-upload { background: var(--dark); color: white; }
         .btn-publish { background: var(--jumia-orange); color: white; font-size: 16px; }
         .btn-ai { background: #25D366; color: white; margin-top: 10px; font-size: 12px; }
 
         #preview-box { width: 100%; height: 180px; border: 2px dashed #ccc; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: #fafafa; overflow: hidden; margin-bottom: 10px; }
         #preview-img { max-width: 100%; max-height: 100%; display: none; }
-        .status-text { font-size: 12px; color: var(--jumia-orange); text-align: center; margin-top: 5px; font-weight: bold; }
 
-        /* Catalog Manager Styles */
         .catalog-list { margin-top: 10px; max-height: 300px; overflow-y: auto; }
         .catalog-item { display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; gap: 10px; }
         .catalog-item img { width: 40px; height: 40px; object-fit: contain; border-radius: 4px; }
@@ -47,10 +44,9 @@
             <img id="preview-img" src="">
         </div>
 
-        <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="uploadImage(event)">
-        <button class="btn-upload" onclick="document.getElementById('imageInput').click()">1. SELECT & UPLOAD PHOTO</button>
-        <div id="uploadStatus" class="status-text" style="display:none;">Uploading to Cloud... 0%</div>
-        <input type="hidden" id="finalImgUrl">
+        <!-- Safe & Free Image Link Input -->
+        <label>Product Image URL</label>
+        <input type="text" id="finalImgUrl" placeholder="Paste direct image link here..." oninput="updatePreview(this.value)">
 
         <label>Product Name</label>
         <input type="text" id="pName" placeholder="e.g. iPhone 11 Pro Max">
@@ -71,10 +67,10 @@
         <label>Description / Specs</label>
         <textarea id="pDesc" rows="3" placeholder="Enter key features..."></textarea>
 
-        <button id="publishBtn" class="btn-publish" onclick="publishProduct()">2. PUBLISH TO STORE</button>
+        <button id="publishBtn" class="btn-publish" onclick="publishProduct()">PUBLISH TO STORE</button>
     </div>
 
-    <!-- NEW: LIVE CATALOG MANAGER CARD -->
+    <!-- LIVE CATALOG MANAGER CARD -->
     <div class="admin-card">
         <h3 style="font-size: 15px; color: var(--dark); text-transform: uppercase; margin-bottom: 10px; border-bottom: 2px solid #eee; padding-bottom: 5px;">
             <i class="fas fa-boxes"></i> Live Store Catalog
@@ -93,7 +89,6 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-    import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
 
     // --- 1. FIREBASE CONFIGURATION ---
     const firebaseConfig = {
@@ -119,12 +114,21 @@
         }
     }
 
-    // Initialize Firebase
+    // Initialize Firebase (Firestore Database only - completely free tier!)
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const storage = getStorage(app);
 
-    // --- 3. SYNC & DISPLAY PRODUCTS IN ADMIN PANEL ---
+    // Live UI Preview Handler
+    window.updatePreview = function(url) {
+        if(url.trim() !== "") {
+            document.getElementById('pre-text').style.display = 'none';
+            const img = document.getElementById('preview-img');
+            img.src = url;
+            img.style.display = 'block';
+        }
+    }
+
+    // --- 3. SYNC PRODUCTS TO DASHBOARD ---
     const q = query(collection(db, "products"), orderBy("timestamp", "desc"));
     onSnapshot(q, (snapshot) => {
         const listContainer = document.getElementById("adminCatalogList");
@@ -152,68 +156,33 @@
         listContainer.innerHTML = htmlContent;
     });
 
-    // --- 4. NEW: DELETE PRODUCT FUNCTION ---
+    // --- 4. DELETE PRODUCT FUNCTION ---
     window.deleteProduct = async function(id) {
-        if (confirm("Are you absolutely sure you want to delete this product from your storefront?")) {
+        if (confirm("Are you sure you want to delete this product?")) {
             try {
                 await deleteDoc(doc(db, "products", id));
-                alert("🗑️ Product removed successfully!");
+                alert("🗑️ Product removed!");
             } catch (e) {
                 alert("Failed to delete: " + e.message);
             }
         }
     }
 
-    // --- 5. UPLOAD LOGIC ---
-    window.uploadImage = function(event) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            document.getElementById('pre-text').style.display = 'none';
-            const img = document.getElementById('preview-img');
-            img.src = e.target.result;
-            img.style.display = 'block';
-        };
-        reader.readAsDataURL(file);
-
-        const storageRef = ref(storage, 'products/' + Date.now() + '_' + file.name);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-        const status = document.getElementById("uploadStatus");
-        status.style.display = "block";
-
-        uploadTask.on('state_changed', 
-            (snapshot) => {
-                const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                status.innerText = "Uploading to Cloud... " + progress + "%";
-            }, 
-            (error) => alert("Upload failed: " + error.message), 
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                    document.getElementById('finalImgUrl').value = url;
-                    status.innerText = "✓ Photo Secured and Ready";
-                    status.style.color = "#25D366";
-                });
-            }
-        );
-    }
-
-    // --- 6. PUBLISH LOGIC ---
+    // --- 5. PUBLISH LOGIC ---
     window.publishProduct = async function() {
-        const img = document.getElementById('finalImgUrl').value;
+        const img = document.getElementById('finalImgUrl').value.trim();
         const name = document.getElementById('pName').value.trim();
         const price = Number(document.getElementById('pPrice').value);
         const old = Number(document.getElementById('pOld').value) || price;
         const cat = document.getElementById('pCat').value;
         const desc = document.getElementById('pDesc').value.trim();
 
-        if (!img) return alert("Please wait for the photo to finish uploading!");
+        if (!img) return alert("Please paste an image URL!");
         if (!name || !price) return alert("Please enter Product Name and Price!");
 
         const btn = document.getElementById("publishBtn");
         btn.disabled = true;
-        btn.innerText = "Connecting to Database...";
+        btn.innerText = "Connecting...";
 
         try {
             await addDoc(collection(db, "products"), {
@@ -222,18 +191,18 @@
                 timestamp: new Date(),
                 password: ADMIN_PASSWORD
             });
-            alert("🎉 Product is now LIVE on the store!");
+            alert("🎉 Product is live!");
             location.reload();
         } catch (e) {
             alert("Error: " + e.message);
             btn.disabled = false;
-            btn.innerText = "2. PUBLISH TO STORE";
+            btn.innerText = "PUBLISH TO STORE";
         }
     }
 
-    // --- 7. AI KEY HANDLER ---
+    // --- 6. AI KEY HANDLER ---
     window.setupAiKey = function() {
-        const key = prompt("Paste your Groq API Key here (It will only be saved on this device):");
+        const key = prompt("Paste your Groq API Key here:");
         if (key && key.startsWith("gsk_")) {
             localStorage.setItem("GROQ_API_KEY", key);
             alert("AI System Activated!");
