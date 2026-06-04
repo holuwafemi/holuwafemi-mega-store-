@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mega Store - Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
     <style>
-        :root { --jumia-orange: #f68b1e; --bg-gray: #f1f1f2; --dark: #333; }
+        :root { --jumia-orange: #f68b1e; --bg-gray: #f1f1f2; --dark: #333; --danger: #e61601; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
         body { background: var(--bg-gray); padding: 16px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         
@@ -24,10 +25,20 @@
         #preview-box { width: 100%; height: 180px; border: 2px dashed #ccc; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: #fafafa; overflow: hidden; margin-bottom: 10px; }
         #preview-img { max-width: 100%; max-height: 100%; display: none; }
         .status-text { font-size: 12px; color: var(--jumia-orange); text-align: center; margin-top: 5px; font-weight: bold; }
+
+        /* Catalog Manager Styles */
+        .catalog-list { margin-top: 10px; max-height: 300px; overflow-y: auto; }
+        .catalog-item { display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; gap: 10px; }
+        .catalog-item img { width: 40px; height: 40px; object-fit: contain; border-radius: 4px; }
+        .catalog-info { flex: 1; min-width: 0; }
+        .catalog-name { font-size: 13px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .catalog-price { font-size: 12px; color: var(--jumia-orange); }
+        .btn-delete { background: var(--danger); color: white; padding: 6px 10px; font-size: 12px; width: auto; margin-top: 0; }
     </style>
 </head>
 <body>
 
+    <!-- ADD PRODUCT CARD -->
     <div class="admin-card">
         <h2>Store Management</h2>
         
@@ -63,6 +74,17 @@
         <button id="publishBtn" class="btn-publish" onclick="publishProduct()">2. PUBLISH TO STORE</button>
     </div>
 
+    <!-- NEW: LIVE CATALOG MANAGER CARD -->
+    <div class="admin-card">
+        <h3 style="font-size: 15px; color: var(--dark); text-transform: uppercase; margin-bottom: 10px; border-bottom: 2px solid #eee; padding-bottom: 5px;">
+            <i class="fas fa-boxes"></i> Live Store Catalog
+        </h3>
+        <div class="catalog-list" id="adminCatalogList">
+            <p style="text-align:center; color:#999; font-size:13px; padding:10px;">Loading items...</p>
+        </div>
+    </div>
+
+    <!-- AI KEY MANAGEMENT -->
     <div class="admin-card" style="max-width: 350px; padding: 15px;">
         <p style="font-size: 12px; text-align: center; color: #666;">AI Chat System Status</p>
         <button class="btn-ai" onclick="setupAiKey()">ACTIVATE / UPDATE AI KEY</button>
@@ -70,7 +92,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
     import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
 
     // --- 1. FIREBASE CONFIGURATION ---
@@ -102,12 +124,51 @@
     const db = getFirestore(app);
     const storage = getStorage(app);
 
-    // --- 3. UPLOAD LOGIC ---
+    // --- 3. SYNC & DISPLAY PRODUCTS IN ADMIN PANEL ---
+    const q = query(collection(db, "products"), orderBy("timestamp", "desc"));
+    onSnapshot(q, (snapshot) => {
+        const listContainer = document.getElementById("adminCatalogList");
+        let htmlContent = "";
+        
+        if (snapshot.empty) {
+            listContainer.innerHTML = `<p style="text-align:center; color:#999; font-size:13px; padding:10px;">No products found in store.</p>`;
+            return;
+        }
+
+        snapshot.forEach((productDoc) => {
+            const data = productDoc.data();
+            const id = productDoc.id;
+            htmlContent += `
+                <div class="catalog-item">
+                    <img src="${data.img || 'https://via.placeholder.com/40'}">
+                    <div class="catalog-info">
+                        <div class="catalog-name">${data.name}</div>
+                        <div class="catalog-price">₦${Number(data.price).toLocaleString()}</div>
+                    </div>
+                    <button class="btn-delete" onclick="deleteProduct('${id}')"><i class="fas fa-trash"></i></button>
+                </div>
+            `;
+        });
+        listContainer.innerHTML = htmlContent;
+    });
+
+    // --- 4. NEW: DELETE PRODUCT FUNCTION ---
+    window.deleteProduct = async function(id) {
+        if (confirm("Are you absolutely sure you want to delete this product from your storefront?")) {
+            try {
+                await deleteDoc(doc(db, "products", id));
+                alert("🗑️ Product removed successfully!");
+            } catch (e) {
+                alert("Failed to delete: " + e.message);
+            }
+        }
+    }
+
+    // --- 5. UPLOAD LOGIC ---
     window.uploadImage = function(event) {
         const file = event.target.files[0];
         if (!file) return;
 
-        // UI Preview
         const reader = new FileReader();
         reader.onload = (e) => {
             document.getElementById('pre-text').style.display = 'none';
@@ -117,7 +178,6 @@
         };
         reader.readAsDataURL(file);
 
-        // Firebase Storage Upload
         const storageRef = ref(storage, 'products/' + Date.now() + '_' + file.name);
         const uploadTask = uploadBytesResumable(storageRef, file);
         const status = document.getElementById("uploadStatus");
@@ -139,7 +199,7 @@
         );
     }
 
-    // --- 4. PUBLISH LOGIC ---
+    // --- 6. PUBLISH LOGIC ---
     window.publishProduct = async function() {
         const img = document.getElementById('finalImgUrl').value;
         const name = document.getElementById('pName').value.trim();
@@ -160,7 +220,7 @@
                 name, price, old, img, cat, desc,
                 pct: Math.round(((old - price) / old) * 100),
                 timestamp: new Date(),
-                password: ADMIN_PASSWORD // Matches Firestore Security Rules
+                password: ADMIN_PASSWORD
             });
             alert("🎉 Product is now LIVE on the store!");
             location.reload();
@@ -171,7 +231,7 @@
         }
     }
 
-    // --- 5. AI KEY HANDLER (Safe from GitHub Scanning) ---
+    // --- 7. AI KEY HANDLER ---
     window.setupAiKey = function() {
         const key = prompt("Paste your Groq API Key here (It will only be saved on this device):");
         if (key && key.startsWith("gsk_")) {
