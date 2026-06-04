@@ -1,183 +1,359 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Holuwafemi Mega Store | Payments Live</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <script src="https://js.paystack.co/v1/inline.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>Holuwafemi Mega Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
 
-  <style>
-    :root { --orange: #f68b1e; --red: #e61601; --bg: #f1f1f2; }
-    body { margin: 0; font-family: Roboto, sans-serif; background: var(--bg); padding-bottom: 70px; }
-    
-    .header { background: white; padding: 10px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    .search-box { background: #f1f1f2; padding: 10px; border-radius: 4px; display: flex; align-items: center; }
-    .search-box input { border: none; background: transparent; width: 100%; margin-left: 10px; outline: none; }
+    <style>
+        :root {
+            --jumia-orange: #f68b1e;
+            --jumia-dark-orange: #e07612;
+            --flash-red: #e61601;
+            --bg-gray: #f1f1f2;
+            --text-main: #000000;
+            --text-muted: #75757a;
+            --border-color: #e0e0e3;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg-gray); padding-bottom: 80px; color: var(--text-main); overflow-x: hidden; }
 
-    .cat-bar { background: white; overflow-x: auto; white-space: nowrap; padding: 10px; border-bottom: 1px solid #ddd; display: flex; gap: 15px; }
-    .cat-item { text-decoration: none; color: #333; font-size: 13px; font-weight: bold; cursor: pointer; padding: 5px 10px; border-radius: 4px; }
-    .cat-item.active { background: var(--orange); color: white; }
+        .view-section { display: none; }
+        .view-section.active-view { display: block; }
 
-    .flash-sale { background: var(--red); color: white; padding: 12px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
-    .timer { background: rgba(0,0,0,0.2); padding: 4px 8px; border-radius: 4px; font-size: 14px; }
+        .jumia-header { background: #ffffff; padding: 12px 16px; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 4px rgba(0,0,0,0.05); display: flex; align-items: center; gap: 12px; }
+        .back-arrow { font-size: 20px; color: #000; cursor: pointer; display: none; }
+        .jumia-search-container { background: var(--bg-gray); border-radius: 24px; padding: 10px 16px; display: flex; align-items: center; flex: 1; }
+        .jumia-search-container input { border: none; background: transparent; width: 100%; margin-left: 10px; outline: none; font-size: 14px; }
+        .header-cart-icon { font-size: 20px; color: #000; position: relative; cursor: pointer; }
+        .header-cart-badge { position: absolute; top: -8px; right: -8px; background: var(--jumia-orange); color: #fff; font-size: 10px; font-weight: bold; padding: 2px 5px; border-radius: 50%; }
 
-    .products-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 8px; }
-    .product { background: white; border-radius: 4px; padding: 10px; position: relative; display: flex; flex-direction: column; }
-    .hot { position: absolute; top: 5px; left: 5px; background: red; color: white; font-size: 10px; padding: 2px 6px; border-radius: 2px; font-weight: bold; z-index: 5; }
-    .discount { position: absolute; top: 5px; right: 5px; background: #feefdf; color: var(--orange); font-size: 11px; padding: 2px 4px; font-weight: bold; z-index: 5; }
-    
-    .product img { width: 100%; height: 140px; object-fit: contain; }
-    .product h3 { font-size: 13px; font-weight: normal; margin: 8px 0; height: 32px; overflow: hidden; }
-    .price { font-size: 16px; font-weight: bold; }
-    .old-price { font-size: 12px; color: #75757a; text-decoration: line-through; }
+        .orange-banner { background: var(--jumia-orange); color: #ffffff; padding: 12px 16px; font-weight: bold; font-size: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .see-all { font-size: 13px; font-weight: normal; cursor: pointer; }
 
-    .add-btn { background: var(--orange); color: white; border: none; padding: 10px; border-radius: 4px; font-weight: bold; margin-top: 10px; cursor: pointer; width: 100%; }
+        .horizontal-scroll-container { background: #ffffff; padding: 12px; display: flex; gap: 12px; overflow-x: auto; margin-bottom: 8px; scrollbar-width: none; }
+        .horizontal-scroll-container::-webkit-scrollbar { display: none; }
+        .scroll-product-card { width: 140px; flex-shrink: 0; background: #ffffff; position: relative; cursor: pointer; }
+        .scroll-product-card img { width: 100%; height: 110px; object-fit: contain; }
 
-    /* CART UI */
-    #cart-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; }
-    .cart-content { background: white; width: 90%; max-width: 400px; margin: 30px auto; padding: 20px; border-radius: 8px; position: relative; }
-    .cart-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; font-size: 14px; }
-    .input-field { width: 100%; padding: 10px; margin-top: 10px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        .jumia-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; padding: 4px; background: var(--border-color); }
+        .grid-product-card { background: #ffffff; padding: 12px; position: relative; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; height: 240px; }
+        .grid-product-card img { width: 100%; height: 130px; object-fit: contain; margin-bottom: 8px; }
+        
+        .discount-badge { position: absolute; top: 8px; right: 8px; background: #feefdf; color: var(--jumia-orange); font-size: 11px; font-weight: bold; padding: 2px 4px; border-radius: 2px; }
+        .product-title { font-size: 13px; color: #333; line-height: 1.4; height: 36px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; margin-bottom: 4px; }
+        .product-price { font-size: 15px; font-weight: bold; }
+        .product-old-price { font-size: 12px; color: var(--text-muted); text-decoration: line-through; }
 
-    .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid #ddd; }
-    .nav-link { text-align: center; color: #75757a; font-size: 11px; cursor: pointer; position: relative; text-decoration: none; }
-    #badge { position: absolute; top: -5px; right: 0px; background: var(--orange); color: white; font-size: 10px; padding: 2px 6px; border-radius: 50%; }
-  </style>
+        .category-row { background: #ffffff; padding: 16px 8px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; text-align: center; margin-bottom: 8px; }
+        .category-circle { width: 50px; height: 50px; background: var(--bg-gray); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 6px; font-size: 18px; }
+        .category-label { font-size: 11px; color: #333; height: 26px; overflow: hidden; }
+
+        .details-white-section { background: #ffffff; padding: 16px; margin-bottom: 8px; }
+        .details-img-container { width: 100%; height: 280px; display: flex; align-items: center; justify-content: center; position: relative; }
+        .details-img-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        
+        .flash-sale-progress-banner { background: linear-gradient(90deg, #e61601, #b30e00); color: #ffffff; padding: 12px 16px; border-radius: 4px; margin-bottom: 12px; }
+        .flash-price-row { display: flex; align-items: baseline; gap: 8px; margin: 5px 0; }
+        .flash-current-price { font-size: 22px; font-weight: bold; }
+        .progress-bar-container { background: rgba(255,255,255,0.3); height: 8px; border-radius: 4px; overflow: hidden; margin-top: 8px; }
+        .progress-bar-filled { background: #ffffff; height: 100%; }
+
+        .shipping-selector-box { background: #ffffff; padding: 16px; margin-bottom: 8px; }
+        .jumia-dropdown-wrapper { margin-bottom: 12px; position: relative; }
+        .jumia-dropdown-wrapper select { width: 100%; padding: 14px; border: 1px solid var(--border-color); border-radius: 4px; background: #fff; font-size: 14px; appearance: none; font-weight: bold; outline: none; }
+        .jumia-dropdown-wrapper::after { content: '\f107'; font-family: 'Font Awesome 5 Free'; font-weight: 900; position: absolute; right: 15px; top: 15px; pointer-events: none; }
+        
+        .shipping-info-row { display: flex; gap: 12px; padding-top: 12px; border-top: 1px dashed var(--border-color); margin-top: 12px; }
+
+        .checkout-scroll-zone { padding: 16px; padding-bottom: 100px; }
+        .checkout-card { background: #ffffff; border-radius: 4px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .checkout-section-title { font-size: 13px; font-weight: bold; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 6px; }
+        .checkout-input-group { margin-bottom: 12px; }
+        .checkout-input-group label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 5px; }
+        .checkout-input-group input, .checkout-input-group textarea { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--bg-gray); font-size: 14px; outline: none; }
+        
+        .summary-row { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 8px; }
+        .grand-total { font-size: 18px; font-weight: bold; color: var(--jumia-orange); border-top: 1px solid var(--border-color); padding-top: 10px; }
+
+        .jumia-bottom-actions-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #ffffff; border-top: 1px solid var(--border-color); display: flex; align-items: center; padding: 8px 16px; gap: 12px; z-index: 1500; height: 68px; }
+        .orange-action-btn-long { flex: 1; background: var(--jumia-orange); color: #ffffff; border: none; height: 48px; border-radius: 4px; font-size: 15px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .grey-action-btn { background: #333333; color: white; border: none; height: 48px; padding: 0 16px; border-radius: 4px; font-weight: bold; font-size: 14px; cursor: pointer; }
+
+        #chatBtn { position: fixed; right: 16px; bottom: 85px; width: 50px; height: 50px; border-radius: 50%; background: #25D366; color: white; border: none; font-size: 22px; z-index: 1400; box-shadow: 0 4px 10 rgba(0,0,0,0.2); }
+        #chatBox { display: none; position: fixed; right: 16px; bottom: 145px; width: 300px; height: 400px; background: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); z-index: 1600; flex-direction: column; overflow: hidden; }
+        #chatHeader { background: var(--jumia-orange); color: white; padding: 12px; font-weight: bold; display: flex; justify-content: space-between; }
+        #chatMessages { flex: 1; padding: 10px; overflow-y: auto; background: #f4f4f6; display: flex; flex-direction: column; gap: 8px; }
+        .chat-bubble { padding: 8px 12px; border-radius: 8px; font-size: 13px; max-width: 85%; }
+        .ai { background: #e2e2e7; align-self: flex-start; }
+        .user { background: #feefdf; align-self: flex-end; }
+    </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="search-box">
-    <i class="fas fa-search"></i>
-    <input type="text" placeholder="Search for electronics, solar...">
-  </div>
-</div>
+    <div class="jumia-header">
+        <i class="fas fa-arrow-left back-arrow" id="mainBackBtn" onclick="navigateBack()"></i>
+        <div class="jumia-search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" id="storeSearchInput" placeholder="Search on Jumia">
+        </div>
+        <div class="header-cart-icon" onclick="openCheckoutView()">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="header-cart-badge" id="cartBadgeCount">0</span>
+        </div>
+    </div>
 
-<div class="cat-bar" id="category-links">
-  <div class="cat-item active" onclick="filterItems('all', this)">ALL</div>
-  <div class="cat-item" onclick="filterItems('solar', this)">SOLAR</div>
-  <div class="cat-item" onclick="filterItems('electronics', this)">ELECTRONICS</div>
-  <div class="cat-item" onclick="filterItems('phones', this)">PHONES</div>
-</div>
+    <div id="homeViewContainer" class="view-section active-view">
+        <div class="orange-banner"><span>Latest Arrivals</span><span class="see-all">See All</span></div>
+        <div class="horizontal-scroll-container" id="topSellersScrollBox"></div>
 
-<div class="flash-sale">
-  <span>⚡ FLASH SALES</span>
-  <div class="timer" id="clock">00h : 00m : 00s</div>
-</div>
+        <div class="category-row">
+            <div class="category-item" onclick="filterCategory('all')">
+                <div class="category-circle" style="color:var(--jumia-orange);"><i class="fas fa-th-large"></i></div>
+                <div class="category-label">All Items</div>
+            </div>
+            <div class="category-item" onclick="filterCategory('solar')">
+                <div class="category-circle"><i class="fas fa-solar-panel"></i></div>
+                <div class="category-label">Solar</div>
+            </div>
+            <div class="category-item" onclick="filterCategory('phones')">
+                <div class="category-circle"><i class="fas fa-mobile-alt"></i></div>
+                <div class="category-label">Phones</div>
+            </div>
+            <div class="category-item" onclick="filterCategory('electronics')">
+                <div class="category-circle"><i class="fas fa-tv"></i></div>
+                <div class="category-label">Electronics</div>
+            </div>
+        </div>
 
-<div class="products-grid" id="product-list"></div>
+        <div class="orange-banner" style="background:#e07612;"><span>Featured Catalog</span></div>
+        <div class="jumia-grid" id="mainCatalogGrid"></div>
+    </div>
 
-<div id="cart-modal">
-  <div class="cart-content">
-    <h3>My Shopping Cart</h3>
-    <div id="cart-items-list"></div>
-    <div id="cart-total" style="font-weight:bold; margin-top:15px; font-size:18px; color:var(--orange);">Total: ₦0</div>
-    
-    <input type="email" id="email" class="input-field" placeholder="Your Email Address" required>
-    
-    <button class="add-btn" onclick="payWithPaystack()">PAY NOW</button>
-    <button onclick="toggleCart()" style="width:100%; background:none; border:none; color:gray; margin-top:10px; cursor:pointer;">Close</button>
-  </div>
-</div>
+    <div id="detailsViewContainer" class="view-section">
+        <div id="dynamicProductDetailsTarget"></div>
+    </div>
 
-<div class="bottom-nav">
-  <div class="nav-link" onclick="location.reload()"><i class="fas fa-home"></i>Home</div>
-  <div class="nav-link" onclick="toggleCart()"><i class="fas fa-shopping-cart"></i>Cart<span id="badge">0</span></div>
-</div>
+    <div id="checkoutViewContainer" class="view-section">
+        <div class="checkout-scroll-zone">
+            <div class="checkout-card">
+                <div class="checkout-section-title">Customer Details</div>
+                <div class="checkout-input-group"><label>Full Name</label><input type="text" id="custName" value="Shokunbi Femi"></div>
+                <div class="checkout-input-group"><label>Email</label><input type="email" id="custEmail" value="femitaiwo228@gmail.com"></div>
+                <div class="checkout-input-group"><label>Phone</label><input type="tel" id="custPhone" value="09061899529"></div>
+            </div>
 
-<script>
-  // YOUR PRODUCT DATABASE
-  const products = [
-    { name: "300W Solar Panel", price: 65000, old: 76500, img: "Solar Panel.jpg", cat: "solar", hot: true },
-    { name: "Sunking Solar TV", price: 250000, old: 275000, img: "stv.jpg", cat: "solar", hot: true },
-    { name: "iPhone 11 64GB", price: 320000, old: 340000, img: "iPhone11.jpg", cat: "phones", hot: false },
-    { name: "4G Camera", price: 80000, old: 95000, img: "4g.jpg", cat: "electronics", hot: true },
-    { name: "Smart TV 32\"", price: 145000, old: 160000, img: "smarttv.jpg", cat: "electronics", hot: false },
-    { name: "Djack Audio", price: 48000, old: 55000, img: "Djack.jpg", cat: "electronics", hot: true }
-  ];
+            <div class="checkout-card">
+                <div class="checkout-section-title">Delivery Address</div>
+                <div class="summary-row"><span>State:</span><span id="checkState" style="font-weight:bold;">--</span></div>
+                <div class="summary-row"><span>Area:</span><span id="checkArea" style="font-weight:bold;">--</span></div>
+                <div class="checkout-input-group" style="margin-top: 12px;">
+                    <label>Street Address / Landmark</label>
+                    <textarea id="custFullAddress" rows="2" placeholder="e.g. No. 7 Ifedapo Street, Apata, Ibadan"></textarea>
+                </div>
+            </div>
 
-  let cart = [];
+            <div class="checkout-card">
+                <div class="checkout-section-title">Order Summary</div>
+                <div id="checkItems"></div>
+                <div class="summary-row" style="margin-top:10px;"><span>Subtotal:</span><span id="sumSub">₦0</span></div>
+                <div class="summary-row"><span>Shipping:</span><span id="sumShip">₦0</span></div>
+                <div class="summary-row grand-total"><span>Total Payable:</span><span id="sumTotal">₦0</span></div>
+            </div>
+        </div>
+    </div>
 
-  function renderProducts(items) {
-    const container = document.getElementById('product-list');
-    container.innerHTML = items.map(p => `
-      <div class="product">
-        ${p.hot ? '<div class="hot">HOT</div>' : ''}
-        <div class="discount">-${Math.round((1 - p.price/p.old) * 100)}%</div>
-        <img src="${p.img}" onclick="alert('Viewing Detail')">
-        <h3>${p.name}</h3>
-        <div class="price">₦${p.price.toLocaleString()}</div>
-        <div class="old-price">₦${p.old.toLocaleString()}</div>
-        <button class="add-btn" onclick="addToCart('${p.name}', ${p.price})">ADD TO CART</button>
-      </div>
-    `).join('');
-  }
+    <div class="jumia-bottom-actions-bar" id="footerActionBarContext"></div>
 
-  function filterItems(cat, element) {
-    const filtered = cat === 'all' ? products : products.filter(p => p.cat === cat);
-    renderProducts(filtered);
-    document.querySelectorAll('.cat-item').forEach(el => el.classList.remove('active'));
-    element.classList.add('active');
-  }
+    <button id="chatBtn" onclick="toggleChat()"><i class="fas fa-comment-dots"></i></button>
+    <div id="chatBox">
+        <div id="chatHeader"><span>Mega Store AI</span><i class="fas fa-times" onclick="toggleChat()"></i></div>
+        <div id="chatMessages"><div class="chat-bubble ai">How can I help you today?</div></div>
+        <div style="display:flex; border-top:1px solid #eee;">
+            <input type="text" id="chatInput" style="flex:1; padding:10px; border:none; outline:none;" placeholder="Type here...">
+            <button onclick="sendAi()" style="padding:10px; border:none; background:none; color:var(--jumia-orange);"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
 
-  function addToCart(name, price) {
-    cart.push({name, price});
-    updateCartUI();
-    alert(name + " added!");
-  }
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-  function updateCartUI() {
-    document.getElementById('badge').innerText = cart.length;
-    const list = document.getElementById('cart-items-list');
-    list.innerHTML = cart.map(item => `
-      <div class="cart-item"><span>${item.name}</span> <span>₦${item.price.toLocaleString()}</span></div>
-    `).join('');
-    const total = cart.reduce((sum, item) => sum + item.price, 0);
-    document.getElementById('cart-total').innerText = `Total: ₦${total.toLocaleString()}`;
-  }
+    // PASTE YOUR CONFIG FROM FIREBASE PROJECT SETTINGS HERE
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
 
-  function toggleCart() {
-    const modal = document.getElementById('cart-modal');
-    modal.style.display = (modal.style.display === 'block') ? 'none' : 'block';
-  }
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-  // --- REAL PAYSTACK FUNCTION ---
-  function payWithPaystack() {
-    const email = document.getElementById('email').value;
-    const totalAmount = cart.reduce((sum, item) => sum + item.price, 0);
+    let products = [];
+    const q = query(collection(db, "products"), orderBy("timestamp", "desc"));
 
-    if (!email) { alert("Please enter your email!"); return; }
-    if (totalAmount <= 0) { alert("Cart is empty!"); return; }
-
-    const handler = PaystackPop.setup({
-      key: 'pk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxx', // REPLACE WITH YOUR LIVE KEY
-      email: email,
-      amount: totalAmount * 100, // Paystack works in kobo
-      currency: "NGN",
-      callback: function(response) {
-        alert('Payment Successful! Reference: ' + response.reference);
-        cart = []; // Clear cart after success
-        updateCartUI();
-        toggleCart();
-      },
-      onClose: function() {
-        alert('Payment Window Closed.');
-      }
+    // Sync Store Data with Firebase
+    onSnapshot(q, (snapshot) => {
+        products = [];
+        snapshot.forEach((doc) => {
+            products.push({ id: doc.id, ...doc.data() });
+        });
+        loadHome(products);
     });
-    handler.openIframe();
-  }
 
-  function startTimer() {
-    let h = 5, m = 24, s = 59;
-    setInterval(() => {
-      s--; if(s<0){s=59; m--;} if(m<0){m=59; h--;}
-      document.getElementById('clock').innerText = `${h}h : ${m}m : ${s}s`;
-    }, 1000);
-  }
+    const shippingData = {
+        Oyo: { areas: ["IBADAN-DUGBE", "Ogbomoso", "Oyo-Town"], fee: 6000 },
+        Osun: { areas: ["OSOGBO-ALERE", "Ile-Ife", "Ilesa"], fee: 4500 },
+        Lagos: { areas: ["Ikeja", "Lekki", "Surulere"], fee: 7500 },
+        Ekiti: { areas: ["Ado-Ekiti", "Ijero-Ekiti"], fee: 5000 }
+    };
 
-  renderProducts(products);
-  startTimer();
+    let cart = [];
+    let selectedProd = null;
+    let navStack = ['homeViewContainer'];
+
+    window.showView = function(id) {
+        document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
+        document.getElementById(id).classList.add('active-view');
+        document.getElementById("mainBackBtn").style.display = (id === 'homeViewContainer') ? "none" : "block";
+        if(navStack[navStack.length-1] !== id) navStack.push(id);
+        renderFooter(id);
+        window.scrollTo(0,0);
+    }
+
+    window.navigateBack = function() {
+        if(navStack.length > 1) { navStack.pop(); showView(navStack[navStack.length-1]); }
+    }
+
+    function renderFooter(id) {
+        const f = document.getElementById("footerActionBarContext");
+        if(id === 'homeViewContainer') {
+            f.innerHTML = `<div style="flex:1; text-align:center; color:var(--jumia-orange); cursor:pointer;" onclick="showView('homeViewContainer')"><i class="fas fa-home"></i><br>Home</div><div style="flex:1; text-align:center; cursor:pointer;" onclick="openCheckoutView()"><i class="fas fa-shopping-cart"></i><br>Cart</div>`;
+        } else if(id === 'detailsViewContainer') {
+            f.innerHTML = `<button class="orange-action-btn-long" onclick="addToCart()"><i class="fas fa-shopping-cart"></i> ADD TO CART</button>`;
+        } else if(id === 'checkoutViewContainer') {
+            f.innerHTML = `<button class="grey-action-btn" onclick="showView('homeViewContainer')">SHOP MORE</button><button class="orange-action-btn-long" onclick="startPaystack()"><i class="fas fa-lock"></i> SECURELY PAY NOW</button>`;
+        }
+    }
+
+    function loadHome(data) {
+        const top = document.getElementById("topSellersScrollBox");
+        top.innerHTML = data.slice(0, 6).map(p => `
+            <div class="scroll-product-card" onclick="loadDetails('${p.id}')">
+                <img src="${p.img}">
+                <div class="product-title">${p.name}</div>
+                <div class="product-price">₦${p.price.toLocaleString()}</div>
+            </div>
+        `).join("");
+        
+        const grid = document.getElementById("mainCatalogGrid");
+        grid.innerHTML = data.map(p => `
+            <div class="grid-product-card" onclick="loadDetails('${p.id}')">
+                <div class="discount-badge">-${p.pct}%</div>
+                <img src="${p.img}">
+                <div><div class="product-title">${p.name}</div><div class="product-price">₦${p.price.toLocaleString()}</div></div>
+            </div>
+        `).join("");
+    }
+
+    window.filterCategory = function(cat) {
+        loadHome(cat === 'all' ? products : products.filter(p => p.cat === cat));
+    }
+
+    window.loadDetails = function(id) {
+        selectedProd = products.find(p => p.id === id);
+        const states = Object.keys(shippingData).map(s => `<option value="${s}">${s}</option>`).join("");
+        document.getElementById("dynamicProductDetailsTarget").innerHTML = `
+            <div class="details-white-section">
+                <div class="details-img-container"><img src="${selectedProd.img}"></div>
+                <h1 class="details-main-title">${selectedProd.name}</h1>
+            </div>
+            <div class="flash-sale-progress-banner">
+                <div class="flash-price-row">
+                    <span class="flash-current-price">₦${selectedProd.price.toLocaleString()}</span>
+                    <span class="product-old-price" style="color:white; opacity:0.7;">₦${selectedProd.old.toLocaleString()}</span>
+                </div>
+                <div class="progress-bar-container"><div class="progress-bar-filled" style="width:80%;"></div></div>
+            </div>
+            <div class="shipping-selector-box">
+                <div class="jumia-dropdown-wrapper"><select id="detState" onchange="updateAreas(this.value)">${states}</select></div>
+                <div class="jumia-dropdown-wrapper"><select id="detArea" onchange="syncDetailFee()"></select></div>
+                <div class="shipping-info-row"><i class="fas fa-shipping-fast"></i><div><span id="detFee" style="float:right; font-weight:bold; color:var(--jumia-orange);"></span><strong>Logistics Dispatch</strong><br><span style="font-size:12px;">Standard door delivery.</span></div></div>
+            </div>
+        `;
+        window.updateAreas(Object.keys(shippingData)[0]);
+        showView('detailsViewContainer');
+    }
+
+    window.updateAreas = function(s) {
+        const areaDrop = document.getElementById("detArea");
+        areaDrop.innerHTML = shippingData[s].areas.map(a => `<option value="${a}">${a}</option>`).join("");
+        window.syncDetailFee();
+    }
+
+    window.syncDetailFee = function() {
+        const s = document.getElementById("detState").value;
+        document.getElementById("detFee").innerText = "₦" + shippingData[s].fee.toLocaleString();
+    }
+
+    window.addToCart = function() {
+        const s = document.getElementById("detState").value;
+        const a = document.getElementById("detArea").value;
+        cart.push({ ...selectedProd, s, a, fee: shippingData[s].fee });
+        document.getElementById("cartBadgeCount").innerText = cart.length;
+        alert("Added!");
+        showView('homeViewContainer');
+    }
+
+    window.openCheckoutView = function() {
+        if(!cart.length) return alert("Empty cart!");
+        const last = cart[cart.length-1];
+        const itemTotal = cart.reduce((acc, i) => acc + i.price, 0);
+        document.getElementById("checkState").innerText = last.s;
+        document.getElementById("checkArea").innerText = last.a;
+        document.getElementById("checkItems").innerHTML = cart.map(i => `<div class="summary-row"><span>${i.name}</span><strong>₦${i.price.toLocaleString()}</strong></div>`).join("");
+        document.getElementById("sumSub").innerText = "₦" + itemTotal.toLocaleString();
+        document.getElementById("sumShip").innerText = "₦" + last.fee.toLocaleString();
+        document.getElementById("sumTotal").innerText = "₦" + (itemTotal + last.fee).toLocaleString();
+        showView('checkoutViewContainer');
+    }
+
+    window.startPaystack = function() {
+        const email = document.getElementById("custEmail").value;
+        const total = parseInt(document.getElementById("sumTotal").innerText.replace(/[^0-9]/g, ''));
+        PaystackPop.setup({
+            key: 'pk_live_74b79dcbb6afc98ea13aa66c2c0f154e923643bc',
+            email: email, 
+            amount: total * 100,
+            callback: (r) => { alert("Success: " + r.reference); location.reload(); }
+        }).openIframe();
+    }
+
+    window.toggleChat = function() { const c = document.getElementById("chatBox"); c.style.display = (c.style.display === "flex") ? "none" : "flex"; }
+
+    window.sendAi = async function() {
+        const i = document.getElementById("chatInput"); const m = document.getElementById("chatMessages");
+        if(!i.value) return;
+        m.innerHTML += `<div class="chat-bubble user">${i.value}</div>`;
+        const txt = i.value; i.value = "";
+        try {
+            const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST", headers: { "Authorization":"Bearer " + localStorage.getItem("GROQ_API_KEY"), "Content-Type": "application/json" },
+              body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: [{role:"system", content:"AI for Holuwafemi Mega Store."}, {role:"user", content: txt}] })
+            });
+            const d = await res.json();
+            m.innerHTML += `<div class="chat-bubble ai">${d.choices[0].message.content}</div>`;
+        } catch { m.innerHTML += `<div class="chat-bubble ai">Offline.</div>`; }
+        m.scrollTop = m.scrollHeight;
+    }
+
+    renderFooter('homeViewContainer');
 </script>
 </body>
 </html>
