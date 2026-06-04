@@ -48,7 +48,7 @@
         <input type="text" id="finalImgUrl" placeholder="Paste link ending in .jpg or .png" oninput="updatePreview(this.value)">
 
         <label>Product Name</label>
-        <input type="text" id="pName" placeholder="e.g. Solar Power Bank 20k mAh">
+        <input type="text" id="pName" placeholder="e.g. Earphones Wireless">
         
         <label>Current Price (₦)</label>
         <input type="number" id="pPrice" placeholder="Selling price">
@@ -86,13 +86,15 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
+    // 🖥️ Your Real App Credentials Built In
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT.firebaseapp.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
+        apiKey: "AIzaSyBCu34RlTpqeGFPRCI7xDVYVQJLwjL6Tbo",
+        authDomain: "femitech-1-e26ca.firebaseapp.com",
+        projectId: "femitech-1-e26ca",
+        storageBucket: "femitech-1-e26ca.firebasestorage.app",
+        messagingSenderId: "562859904708",
+        appId: "1:562859904708:web:df49e4b09dc2f81cf44391",
+        measurementId: "G-WPFKNZ20E3"
     };
 
     // 🛡️ ADMIN ACCESS
@@ -110,7 +112,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Live Preview
+    // Live Preview Tracker
     window.updatePreview = (url) => {
         if(url.trim()){
             document.getElementById('pre-text').style.display='none';
@@ -119,7 +121,7 @@
         }
     };
 
-    // Sync Inventory List
+    // Live Synchronized Inventory Module
     const q = query(collection(db, "products"), orderBy("timestamp", "desc"));
     onSnapshot(q, (snapshot) => {
         const list = document.getElementById("adminCatalogList");
@@ -128,7 +130,7 @@
             const p = pDoc.data();
             html += `
                 <div class="catalog-item">
-                    <img src="${p.img}">
+                    <img src="${p.img || 'https://via.placeholder.com/40'}">
                     <div class="catalog-info">
                         <div class="catalog-name">${p.name}</div>
                         <div class="catalog-price">₦${p.price.toLocaleString()}</div>
@@ -136,13 +138,15 @@
                     <button class="btn-delete" onclick="deleteProduct('${pDoc.id}')"><i class="fas fa-trash"></i></button>
                 </div>`;
         });
-        list.innerHTML = html || "<p style='text-align:center'>No products found.</p>";
+        list.innerHTML = html || "<p style='text-align:center; font-size:12px; color:#999; padding:10px;'>No products found.</p>";
     });
 
     window.deleteProduct = async (id) => {
         if(confirm("Delete this product permanently?")) {
-            await deleteDoc(doc(db, "products", id));
-            alert("Deleted!");
+            try {
+                await deleteDoc(doc(db, "products", id));
+                alert("🗑️ Product removed!");
+            } catch(e) { alert(e.message); }
         }
     };
 
@@ -166,9 +170,19 @@
                 timestamp: new Date(),
                 password: ADMIN_PASS
             });
-            alert("Success!");
-            location.reload();
-        } catch(e) { alert(e.message); btn.disabled = false; }
+            alert("🎉 Success! Product is now Live.");
+            document.getElementById('finalImgUrl').value = "";
+            document.getElementById('pName').value = "";
+            document.getElementById('pPrice').value = "";
+            document.getElementById('pOld').value = "";
+            document.getElementById('pDesc').value = "";
+            document.getElementById('preview-img').style.display = 'none';
+            document.getElementById('pre-text').style.display = 'block';
+            btn.disabled = false; btn.innerText = "PUBLISH TO STORE";
+        } catch(e) { 
+            alert("Error writing to database: " + e.message); 
+            btn.disabled = false; btn.innerText = "PUBLISH TO STORE";
+        }
     };
 
     window.setupAiKey = () => {
