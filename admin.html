@@ -2,81 +2,78 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mega Store - Admin Dashboard</title>
     <style>
-        :root {
-          --jumia-orange: #f68b1e;
-          --bg-gray: #f1f1f2;
-          --dark-gray: #333333;
-        }
+        :root { --jumia-orange: #f68b1e; --bg-gray: #f1f1f2; --dark: #333; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
-        body { background: var(--bg-gray); padding: 16px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .admin-card { background: white; padding: 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); width: 100%; max-width: 480px; }
-        h2 { color: var(--jumia-orange); margin-bottom: 20px; text-align: center; font-size: 22px; text-transform: uppercase; letter-spacing: 0.5px; }
-        label { display: block; font-size: 12px; font-weight: bold; margin-top: 14px; margin-bottom: 5px; color: #555; text-transform: uppercase; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ccd1d9; border-radius: 4px; font-size: 14px; outline: none; transition: border-color 0.2s; }
-        input:focus, select:focus, textarea:focus { border-color: var(--jumia-orange); }
-        button { width: 100%; padding: 14px; border: none; border-radius: 4px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 18px; transition: opacity 0.2s; }
-        button:active { opacity: 0.8; }
-        #upload-btn { background: var(--dark-gray); color: white; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        #submit-btn { background: var(--jumia-orange); color: white; font-size: 16px; margin-top: 24px; }
-        #preview-box { width: 100%; height: 200px; border: 2px dashed #ccd1d9; border-radius: 6px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; overflow: hidden; background: #fafafa; position: relative; }
-        #preview-img { max-width: 100%; max-height: 100%; object-fit: contain; display: none; }
-        .progress-text { font-size: 13px; color: var(--jumia-orange); font-weight: bold; display: none; text-align: center; margin-top: 6px; }
+        body { background: var(--bg-gray); padding: 16px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        
+        .admin-card { background: white; padding: 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 450px; margin-bottom: 20px; }
+        h2 { color: var(--jumia-orange); text-align: center; margin-bottom: 20px; font-size: 20px; text-transform: uppercase; }
+        
+        label { display: block; font-size: 11px; font-weight: bold; margin-top: 15px; color: #666; text-transform: uppercase; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px; font-size: 14px; outline: none; }
+        input:focus { border-color: var(--jumia-orange); }
+        
+        button { width: 100%; padding: 14px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.2s; }
+        .btn-upload { background: var(--dark); color: white; }
+        .btn-publish { background: var(--jumia-orange); color: white; font-size: 16px; }
+        .btn-ai { background: #25D366; color: white; margin-top: 10px; font-size: 12px; }
+
+        #preview-box { width: 100%; height: 180px; border: 2px dashed #ccc; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: #fafafa; overflow: hidden; margin-bottom: 10px; }
+        #preview-img { max-width: 100%; max-height: 100%; display: none; }
+        .status-text { font-size: 12px; color: var(--jumia-orange); text-align: center; margin-top: 5px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="admin-card">
-    <h2>Mega Store Admin Panel</h2>
-    
-    <div id="preview-box">
-        <span id="preview-placeholder" style="color: #888; font-size: 14px;">No Image Selected</span>
-        <img id="preview-img" src="" alt="Product Preview">
+    <div class="admin-card">
+        <h2>Store Management</h2>
+        
+        <div id="preview-box">
+            <span id="pre-text" style="color:#999">Product Image Preview</span>
+            <img id="preview-img" src="">
+        </div>
+
+        <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="uploadImage(event)">
+        <button class="btn-upload" onclick="document.getElementById('imageInput').click()">1. SELECT & UPLOAD PHOTO</button>
+        <div id="uploadStatus" class="status-text" style="display:none;">Uploading to Cloud... 0%</div>
+        <input type="hidden" id="finalImgUrl">
+
+        <label>Product Name</label>
+        <input type="text" id="pName" placeholder="e.g. iPhone 11 Pro Max">
+        
+        <label>Current Price (₦)</label>
+        <input type="number" id="pPrice" placeholder="Price customer pays">
+        
+        <label>Old Price (₦) - Optional</label>
+        <input type="number" id="pOld" placeholder="Original price for discount strike">
+        
+        <label>Category</label>
+        <select id="pCat">
+            <option value="electronics">Electronics</option>
+            <option value="solar">Solar</option>
+            <option value="phones">Phones</option>
+        </select>
+        
+        <label>Description / Specs</label>
+        <textarea id="pDesc" rows="3" placeholder="Enter key features..."></textarea>
+
+        <button id="publishBtn" class="btn-publish" onclick="publishProduct()">2. PUBLISH TO STORE</button>
     </div>
-    
-    <!-- Hidden native file picker, triggered by our stylized button -->
-    <input type="file" id="fileSelector" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
-    <button id="upload-btn" type="button" onclick="document.getElementById('fileSelector').click()">
-        <span id="upload-text">1. SELECT & UPLOAD PHOTO</span>
-    </button>
-    <div id="uploadProgress" class="progress-text">Uploading image to Google Cloud... 0%</div>
-    
-    <!-- Hidden input to temporarily hold the uploaded secure image URL -->
-    <input type="hidden" id="prodImgUrl">
-    
-    <label>Product Title / Name</label>
-    <input type="text" id="prodName" placeholder="e.g. Skyrun 4 Burners Gas Cooker">
-    
-    <label>Current Sale Price (₦)</label>
-    <input type="number" id="prodPrice" placeholder="e.g. 128520">
-    
-    <label>Old Price / Original Price (₦)</label>
-    <input type="number" id="prodOldPrice" placeholder="e.g. 173825 (Optional)">
-    
-    <label>Store Department Category</label>
-    <select id="prodCat">
-        <option value="electronics">Electronics</option>
-        <option value="solar">Solar</option>
-        <option value="phones">Phones</option>
-    </select>
-    
-    <label>Product Specifications / Description</label>
-    <textarea id="prodDesc" placeholder="Enter specifications or key selling points..." rows="4"></textarea>
 
-    <button id="submit-btn" onclick="saveProductToFirebase()">2. PUBLISH PRODUCT LIVE</button>
-</div>
+    <div class="admin-card" style="max-width: 350px; padding: 15px;">
+        <p style="font-size: 12px; text-align: center; color: #666;">AI Chat System Status</p>
+        <button class="btn-ai" onclick="setupAiKey()">ACTIVATE / UPDATE AI KEY</button>
+    </div>
 
-<!-- Firebase Modular SDK Scripts -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
     import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js";
 
-    // =========================================================
-    // ⚠️ CONFIGURATION: PASTE YOUR FIREBASE PROJ KEYS HERE
-    // =========================================================
+    // --- 1. FIREBASE CONFIGURATION ---
     const firebaseConfig = {
       apiKey: "YOUR_API_KEY",
       authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -86,116 +83,102 @@
       appId: "YOUR_APP_ID"
     };
 
-    // The secure key must match EXACTLY what you published in your Firestore security rules
-    const DATABASE_SECURITY_PASSWORD = "MyMegaStoreSecret2026";
-    // =========================================================
+    // --- 2. SECURITY GATEKEEPER ---
+    const ADMIN_PASSWORD = "MyMegaStoreSecret2026";
+    const sessionAuth = sessionStorage.getItem("adminAuth");
 
-    // Initialize Firebase Services
+    if (!sessionAuth) {
+        const attempt = prompt("Enter Admin Access Key:");
+        if (attempt === ADMIN_PASSWORD) {
+            sessionStorage.setItem("adminAuth", "true");
+        } else {
+            alert("Unauthorized!");
+            window.location.href = "index.html";
+        }
+    }
+
+    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const storage = getStorage(app);
 
-    let selectedFile = null;
+    // --- 3. UPLOAD LOGIC ---
+    window.uploadImage = function(event) {
+        const file = event.target.files[0];
+        if (!file) return;
 
-    // Phase 1: Handle File Selection & Stream Upload to Firebase Storage
-    window.handleFileSelect = function(event) {
-        selectedFile = event.target.files[0];
-        if (!selectedFile) return;
-
-        // Display immediate local UI placeholder preview
+        // UI Preview
         const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById('preview-placeholder').style.display = 'none';
+        reader.onload = (e) => {
+            document.getElementById('pre-text').style.display = 'none';
             const img = document.getElementById('preview-img');
             img.src = e.target.result;
             img.style.display = 'block';
-        }
-        reader.readAsDataURL(selectedFile);
+        };
+        reader.readAsDataURL(file);
 
-        // Upload directly to Firebase Storage Bucket folder "products/"
-        const storageRef = ref(storage, 'products/' + Date.now() + '_' + selectedFile.name);
-        const uploadTask = uploadBytesResumable(storageRef, selectedFile);
-        
-        const progText = document.getElementById("uploadProgress");
-        const uploadBtn = document.getElementById("upload-btn");
-        const uploadBtnText = document.getElementById("upload-text");
-        
-        progText.style.display = "block";
-        uploadBtn.disabled = true;
-        uploadBtn.style.opacity = "0.6";
+        // Firebase Storage Upload
+        const storageRef = ref(storage, 'products/' + Date.now() + '_' + file.name);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+        const status = document.getElementById("uploadStatus");
+        status.style.display = "block";
 
         uploadTask.on('state_changed', 
             (snapshot) => {
                 const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                progText.innerText = "Uploading image to Google Cloud... " + progress + "%";
+                status.innerText = "Uploading to Cloud... " + progress + "%";
             }, 
-            (error) => {
-                alert("Image storage upload failed: " + error.message);
-                uploadBtn.disabled = false;
-                uploadBtn.style.opacity = "1";
-            }, 
+            (error) => alert("Upload failed: " + error.message), 
             () => {
-                // Success path: Retrieve download URL from Google Storage
-                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    document.getElementById('prodImgUrl').value = downloadURL;
-                    progText.innerText = "✓ Upload successful! Image locked and saved.";
-                    uploadBtn.style.background = "#25D366"; // Success Green
-                    uploadBtn.style.opacity = "1";
-                    uploadBtn.disabled = false;
-                    uploadBtnText.innerText = "✓ PHOTO LOADED";
+                getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                    document.getElementById('finalImgUrl').value = url;
+                    status.innerText = "✓ Photo Secured and Ready";
+                    status.style.color = "#25D366";
                 });
             }
         );
     }
 
-    // Phase 2: Package JSON Metadata & Transmit Payload to Firestore Collection
-    window.saveProductToFirebase = async function() {
-        const name = document.getElementById('prodName').value.trim();
-        const price = document.getElementById('prodPrice').value;
-        const oldPrice = document.getElementById('prodOldPrice').value;
-        const imgUrl = document.getElementById('prodImgUrl').value;
-        const cat = document.getElementById('prodCat').value;
-        const desc = document.getElementById('prodDesc').value.trim();
+    // --- 4. PUBLISH LOGIC ---
+    window.publishProduct = async function() {
+        const img = document.getElementById('finalImgUrl').value;
+        const name = document.getElementById('pName').value.trim();
+        const price = Number(document.getElementById('pPrice').value);
+        const old = Number(document.getElementById('pOld').value) || price;
+        const cat = document.getElementById('pCat').value;
+        const desc = document.getElementById('pDesc').value.trim();
 
-        // Validations
-        if (!imgUrl) return alert("Please select a product photo and wait for the upload to complete first!");
-        if (!name || !price) return alert("Product Name and Current Sale Price are required fields!");
+        if (!img) return alert("Please wait for the photo to finish uploading!");
+        if (!name || !price) return alert("Please enter Product Name and Price!");
 
-        const submitBtn = document.getElementById("submit-btn");
-        submitBtn.disabled = true;
-        submitBtn.innerText = "Publishing to live store catalog...";
-
-        // Logic calculating the exact discount percentage (Jumia Style)
-        const parsedPrice = Number(price);
-        const parsedOldPrice = oldPrice ? Number(oldPrice) : parsedPrice;
-        let discountPercentage = 0;
-        if (parsedOldPrice > parsedPrice) {
-            discountPercentage = Math.round(((parsedOldPrice - parsedPrice) / parsedOldPrice) * 100);
-        }
+        const btn = document.getElementById("publishBtn");
+        btn.disabled = true;
+        btn.innerText = "Connecting to Database...";
 
         try {
-            // Push structured record directly into the firestore cloud database collection
             await addDoc(collection(db, "products"), {
-                name: name,
-                price: parsedPrice,
-                old: parsedOldPrice,
-                pct: discountPercentage,
-                img: imgUrl,
-                cat: cat,
-                desc: desc,
-                isTop: false, // Default flagship listing toggle
+                name, price, old, img, cat, desc,
+                pct: Math.round(((old - price) / old) * 100),
                 timestamp: new Date(),
-                
-                // This critical field passes Google's firewall check in your security rules!
-                password: DATABASE_SECURITY_PASSWORD 
+                password: ADMIN_PASSWORD // Matches Firestore Security Rules
             });
+            alert("🎉 Product is now LIVE on the store!");
+            location.reload();
+        } catch (e) {
+            alert("Error: " + e.message);
+            btn.disabled = false;
+            btn.innerText = "2. PUBLISH TO STORE";
+        }
+    }
 
-            alert("🎉 Catalog updated successfully! The product is now live on the storefront.");
-            location.reload(); // Refresh to flush inputs for the next entry
-        } catch (error) {
-            alert("Database listing error: " + error.message + "\nCheck if your security password matches the console rule.");
-            submitBtn.disabled = false;
-            submitBtn.innerText = "2. PUBLISH PRODUCT LIVE";
+    // --- 5. AI KEY HANDLER (Safe from GitHub Scanning) ---
+    window.setupAiKey = function() {
+        const key = prompt("Paste your Groq API Key here (It will only be saved on this device):");
+        if (key && key.startsWith("gsk_")) {
+            localStorage.setItem("GROQ_API_KEY", key);
+            alert("AI System Activated!");
+        } else {
+            alert("Invalid Key Format.");
         }
     }
 </script>
