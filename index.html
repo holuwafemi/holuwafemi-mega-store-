@@ -1,291 +1,1343 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Holuwafemi Mega Store</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
-    <script src="https://js.paystack.co/v1/inline.js"></script>
-    <style>
-        :root { --jumia-orange: #f68b1e; --bg-gray: #f1f1f2; --dark: #333; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
-        body { background: var(--bg-gray); padding-bottom: 60px; color: var(--dark); }
-        
-        /* Navigation Elements */
-        header { background: #fff; padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .nav-top { display: flex; align-items: center; justify-content: space-between; }
-        .logo { font-size: 18px; font-weight: bold; color: var(--jumia-orange); text-transform: uppercase; }
-        
-        .cart-icon-container { position: relative; cursor: pointer; padding: 5px; }
-        .cart-badge { 
-            position: absolute; 
-            top: -2px; 
-            right: -5px; 
-            background: var(--jumia-orange); 
-            color: white; 
-            font-size: 10px; 
-            font-weight: bold; 
-            border-radius: 50%; 
-            width: 16px; 
-            height: 16px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        .cat-bar { display: flex; gap: 10px; overflow-x: auto; padding: 12px 16px; background: #fff; border-top: 1px solid #eee; scrollbar-width: none; }
-        .cat-btn { background: #f1f1f2; border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: 0.2s; }
-        .cat-btn.active { background: var(--jumia-orange); color: #fff; }
+  <title>Holuwafemi Mega Store</title>
 
-        .section-title { font-size: 14px; font-weight: bold; text-transform: uppercase; padding: 12px 16px 4px 16px; color: #555; }
-        
-        /* Catalog Structure */
-        .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 0 16px 16px 16px; }
-        .grid-product-card { background: #fff; padding: 10px; border-radius: 4px; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.05); cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; }
-        .grid-product-card img { width: 100%; height: 140px; object-fit: contain; margin-bottom: 8px; }
-        .discount-badge { position: absolute; top: 8px; right: 8px; background: #feebd8; color: var(--jumia-orange); font-size: 11px; padding: 2px 6px; font-weight: bold; border-radius: 2px; }
-        
-        .product-title { font-size: 13px; color: #333; height: 32px; overflow: hidden; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-        .product-price { font-size: 15px; font-weight: bold; color: #333; }
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
 
-        /* Jumia-Style Overlays */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; overflow-y: auto; }
-        .modal-content { background: #fff; width: 100%; max-width: 500px; margin: 0 auto; min-height: 100vh; position: relative; }
-        .close-modal { position: absolute; top: 15px; left: 15px; font-size: 20px; color: #333; z-index: 1001; cursor: pointer; background: #fff; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+  <!-- PAYSTACK -->
+  <script src="https://js.paystack.co/v1/inline.js"></script>
 
-        .detail-img { width: 100%; height: 350px; object-fit: contain; background: #fff; border-bottom: 1px solid #eee; }
-        .detail-info { padding: 20px; }
-        .detail-name { font-size: 20px; font-weight: bold; color: #333; margin-bottom: 8px; }
-        .detail-price-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-        .detail-price { font-size: 24px; font-weight: bold; color: var(--jumia-orange); }
-        .detail-old { text-decoration: line-through; color: #999; font-size: 16px; }
-        .detail-desc { font-size: 15px; line-height: 1.6; color: #666; border-top: 1px solid #eee; padding-top: 15px; white-space: pre-wrap; }
+  <style>
 
-        /* Checkout Panels */
-        .action-bar { position: fixed; bottom: 0; width: 100%; max-width: 500px; display: flex; padding: 12px; gap: 10px; background: #fff; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); left: 50%; transform: translateX(-50%); }
-        .btn-cart { flex: 1; background: #feebd8; color: var(--jumia-orange); border: none; padding: 14px; font-weight: bold; border-radius: 4px; cursor: pointer; }
-        .btn-buy { flex: 1; background: var(--jumia-orange); color: #fff; border: none; padding: 14px; font-weight: bold; border-radius: 4px; cursor: pointer; text-align: center; font-size: 14px; }
-    </style>
+    :root{
+      --orange:#f68b1e;
+      --bg:#f1f1f2;
+      --dark:#333;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Roboto,sans-serif;
+    }
+
+    body{
+      background:var(--bg);
+      padding-bottom:80px;
+    }
+
+    header{
+      background:#fff;
+      padding:14px;
+      position:sticky;
+      top:0;
+      z-index:100;
+      box-shadow:0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .nav-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .logo{
+      font-size:18px;
+      font-weight:bold;
+      color:var(--orange);
+      text-transform:uppercase;
+    }
+
+    .cat-bar{
+      display:flex;
+      gap:10px;
+      overflow-x:auto;
+      padding:12px;
+      background:#fff;
+    }
+
+    .cat-btn{
+      border:none;
+      background:#eee;
+      padding:8px 16px;
+      border-radius:20px;
+      cursor:pointer;
+      white-space:nowrap;
+      font-size:13px;
+      font-weight:bold;
+    }
+
+    .cat-btn.active{
+      background:var(--orange);
+      color:#fff;
+    }
+
+    .section-title{
+      padding:14px;
+      font-weight:bold;
+      text-transform:uppercase;
+      font-size:14px;
+      color:#666;
+    }
+
+    .grid-container{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+      padding:0 12px 20px;
+    }
+
+    .product-card{
+      background:#fff;
+      border-radius:6px;
+      padding:10px;
+      position:relative;
+      box-shadow:0 2px 4px rgba(0,0,0,0.05);
+      cursor:pointer;
+    }
+
+    .product-card img{
+      width:100%;
+      height:150px;
+      object-fit:contain;
+    }
+
+    .discount{
+      position:absolute;
+      top:10px;
+      right:10px;
+      background:#feebd8;
+      color:var(--orange);
+      padding:2px 6px;
+      font-size:11px;
+      font-weight:bold;
+      border-radius:3px;
+    }
+
+    .p-title{
+      font-size:13px;
+      margin-top:10px;
+      height:35px;
+      overflow:hidden;
+    }
+
+    .p-price{
+      font-size:16px;
+      font-weight:bold;
+      margin-top:5px;
+    }
+
+    .modal{
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.8);
+      z-index:1000;
+      overflow-y:auto;
+    }
+
+    .modal-content{
+      background:#fff;
+      width:100%;
+      max-width:500px;
+      min-height:100vh;
+      margin:auto;
+      position:relative;
+    }
+
+    .close-btn{
+      position:absolute;
+      top:15px;
+      left:15px;
+      width:35px;
+      height:35px;
+      border-radius:50%;
+      background:#fff;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      cursor:pointer;
+      z-index:10;
+      box-shadow:0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .detail-img{
+      width:100%;
+      height:320px;
+      object-fit:contain;
+      background:#fff;
+    }
+
+    .detail-info{
+      padding:20px;
+    }
+
+    .detail-name{
+      font-size:20px;
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+
+    .detail-price{
+      color:var(--orange);
+      font-size:24px;
+      font-weight:bold;
+    }
+
+    .detail-old{
+      text-decoration:line-through;
+      color:#999;
+      margin-left:10px;
+    }
+
+    .detail-desc{
+      margin-top:20px;
+      color:#666;
+      line-height:1.6;
+    }
+
+    .action-bar{
+      position:fixed;
+      bottom:0;
+      width:100%;
+      max-width:500px;
+      left:50%;
+      transform:translateX(-50%);
+      background:#fff;
+      display:flex;
+      gap:10px;
+      padding:12px;
+      box-shadow:0 -2px 10px rgba(0,0,0,0.1);
+    }
+
+    .btn{
+      flex:1;
+      border:none;
+      padding:14px;
+      border-radius:5px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+
+    .cart-btn{
+      background:#feebd8;
+      color:var(--orange);
+    }
+
+    .buy-btn{
+      background:var(--orange);
+      color:#fff;
+    }
+
+    .socials{
+      background:#fff;
+      padding:30px;
+      text-align:center;
+      margin-top:20px;
+    }
+
+    .socials a{
+      margin:10px;
+      font-size:28px;
+      text-decoration:none;
+    }
+
+    .fa-facebook{color:#1877f2;}
+    .fa-instagram{color:#e1306c;}
+    .fa-whatsapp{color:#25D366;}
+    .fa-tiktok{color:#000;}
+    .fa-twitter{color:#000;}
+
+  </style>
 </head>
+
 <body>
 
-    <header>
-        <div class="nav-top">
-            <div class="logo">Holuwafemi Mega Store</div>
-            <div class="cart-icon-container" onclick="viewCartCount()">
-                <i class="fas fa-shopping-cart" style="font-size: 20px;"></i>
-                <div id="cartCounter" class="cart-badge">0</div>
-            </div>
-        </div>
-    </header>
+<header>
 
-    <div class="cat-bar">
-        <button class="cat-btn active" onclick="filterCategory('all', this)">All</button>
-        <button class="cat-btn" onclick="filterCategory('electronics', this)">Electronics</button>
-        <button class="cat-btn" onclick="filterCategory('solar', this)">Solar</button>
-        <button class="cat-btn" onclick="filterCategory('phones', this)">Phones</button>
+  <div class="nav-top">
+
+    <div class="logo">
+      Holuwafemi Mega Store
     </div>
 
-    <div class="section-title">Flash Sales</div>
-    <div id="topSellersScrollBox" style="display: flex; gap: 10px; overflow-x: auto; padding: 0 16px 16px 16px; scrollbar-width: none;">
-        <p style="padding:10px; color:#999; font-size:12px;">Connecting to database...</p>
+    <i class="fas fa-shopping-cart"></i>
+
+  </div>
+
+</header>
+
+<div class="cat-bar">
+
+  <button class="cat-btn active"
+  onclick="filterCategory('all',this)">
+  All
+  </button>
+
+  <button class="cat-btn"
+  onclick="filterCategory('electronics',this)">
+  Electronics
+  </button>
+
+  <button class="cat-btn"
+  onclick="filterCategory('solar',this)">
+  Solar
+  </button>
+
+  <button class="cat-btn"
+  onclick="filterCategory('phones',this)">
+  Phones
+  </button>
+
+</div>
+
+<div class="section-title">
+  Flash Sales
+</div>
+
+<div class="grid-container"
+id="mainCatalogGrid">
+
+  <p style="padding:20px;color:#999;">
+    Loading products...
+  </p>
+
+</div>
+
+<!-- PRODUCT MODAL -->
+
+<div class="modal" id="productModal">
+
+  <div class="modal-content">
+
+    <div class="close-btn"
+    onclick="closeDetails()">
+
+      <i class="fas fa-arrow-left"></i>
+
     </div>
 
-    <div class="section-title">All Products</div>
-    <div class="grid-container" id="mainCatalogGrid">
-        <p style="padding:20px; color:#999; font-size:13px;">Syncing product lines...</p>
+    <img id="mImg"
+    class="detail-img">
+
+    <div class="detail-info">
+
+      <div id="mName"
+      class="detail-name"></div>
+
+      <div>
+
+        <span id="mPrice"
+        class="detail-price"></span>
+
+        <span id="mOld"
+        class="detail-old"></span>
+
+      </div>
+
+      <div class="detail-desc"
+      id="mDesc"></div>
+
+      <div style="height:120px;"></div>
+
     </div>
 
-    <div id="productModal" class="modal">
-        <div class="modal-content">
-            <div class="close-modal" onclick="closeDetails()"><i class="fas fa-arrow-left"></i></div>
-            <img id="mImg" class="detail-img" src="">
-            <div class="detail-info">
-                <div id="mName" class="detail-name"></div>
-                <div class="detail-price-row">
-                    <span id="mPrice" class="detail-price"></span>
-                    <span id="mOld" class="detail-old"></span>
-                </div>
-                <div style="font-weight: bold; margin-bottom: 10px; text-transform: uppercase; font-size: 11px; color: #888;">Product Specifications</div>
-                <p id="mDesc" class="detail-desc"></p>
-                <div style="height: 100px;"></div> </div>
-            <div class="action-bar">
-                <button class="btn-cart" onclick="addToCart()">ADD TO CART</button>
-                <button class="btn-buy" onclick="payNow()">PAY NOW</button>
-            </div>
-        </div>
+    <div class="action-bar">
+
+      <button class="btn cart-btn"
+      onclick="addToCart()">
+
+        ADD TO CART
+
+      </button>
+
+      <button class="btn buy-btn"
+      onclick="payNow()">
+
+        BUY NOW
+
+      </button>
+
     </div>
+
+  </div>
+
+</div>
+
+<!-- SOCIALS -->
+
+<div class="socials">
+
+  <h3>Follow Holuwafemi Mega Store</h3>
+
+  <br>
+
+  <a href="https://facebook.com">
+    <i class="fab fa-facebook"></i>
+  </a>
+
+  <a href="https://instagram.com">
+    <i class="fab fa-instagram"></i>
+  </a>
+
+  <a href="https://tiktok.com">
+    <i class="fab fa-tiktok"></i>
+  </a>
+
+  <a href="https://x.com">
+    <i class="fab fa-twitter"></i>
+  </a>
+
+  <a href="https://wa.me/2349061989529">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+</div>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-    // Live App Configurations Connected
-    const firebaseConfig = {
-        apiKey: "AIzaSyBCu34RlTpqeGFPRCI7xDVYVQJLwjL6Tbo",
-        authDomain: "femitech-1-e26ca.firebaseapp.com",
-        projectId: "femitech-1-e26ca",
-        storageBucket: "femitech-1-e26ca.firebasestorage.app",
-        messagingSenderId: "562859904708",
-        appId: "1:562859904708:web:df49e4b09dc2f81cf44391",
-        measurementId: "G-WPFKNZ20E3"
-    };
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    
-    let allProducts = [];
-    let selectedProduct = null;
-    let cart = JSON.parse(localStorage.getItem("megaStoreCart")) || [];
+import {
+getFirestore,
+collection,
+query,
+orderBy,
+onSnapshot
+}
+from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-    // Real-time Database Sync (WIPES PREVIOUS SAMPLE PLACEHOLDERS)
-    const q = query(collection(db, "products"), orderBy("timestamp", "desc"));
-    onSnapshot(q, (snapshot) => {
-        allProducts = [];
-        snapshot.forEach((doc) => {
-            allProducts.push({ id: doc.id, ...doc.data() });
-        });
+const firebaseConfig = {
 
-        if (allProducts.length > 0) {
-            renderProducts(allProducts);
-        } else {
-            document.getElementById("mainCatalogGrid").innerHTML = 
-                `<p style='grid-column: span 2; padding:40px; text-align:center; color:#999; font-size:13px;'>Your store inventory is empty. Open admin.html to publish your products!</p>`;
-            document.getElementById("topSellersScrollBox").innerHTML = "";
-        }
-        updateCartBadge(); 
+  apiKey: "AIzaSyBCu34RlTpqeGFPRCI7xDVYVQJLwjL6Tbo",
+
+  authDomain: "femitech-1-e26ca.firebaseapp.com",
+
+  projectId: "femitech-1-e26ca",
+
+  storageBucket: "femitech-1-e26ca.firebasestorage.app",
+
+  messagingSenderId: "562859904708",
+
+  appId: "1:562859904708:web:df49e4b09dc2f81cf44391"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+let allProducts = [];
+
+let selectedProduct = null;
+
+// REALTIME PRODUCTS
+
+const q = query(
+collection(db,"products"),
+orderBy("timestamp","desc")
+);
+
+onSnapshot(q,(snapshot)=>{
+
+  allProducts = [];
+
+  snapshot.forEach((doc)=>{
+
+    allProducts.push({
+      id:doc.id,
+      ...doc.data()
     });
 
-    // Content Injector Framework
-    function renderProducts(productsList) {
-        const grid = document.getElementById("mainCatalogGrid");
-        const top = document.getElementById("topSellersScrollBox");
+  });
 
-        // Flash Sales Row Rendering (Top 5 rows)
-        top.innerHTML = productsList.slice(0, 5).map(p => `
-            <div class="grid-product-card" style="min-width: 145px; max-width: 145px;" onclick="openDetails('${p.id}')">
-                <img src="${p.img || 'https://via.placeholder.com/140'}">
-                <div class="product-title">${p.name}</div>
-                <div class="product-price">₦${Number(p.price).toLocaleString()}</div>
-            </div>
-        `).join("");
+  renderProducts(allProducts);
 
-        // Main Grid Presentation Catalog
-        grid.innerHTML = productsList.map(p => `
-            <div class="grid-product-card" onclick="openDetails('${p.id}')">
-                <div class="discount-badge">-${p.pct || 0}%</div>
-                <img src="${p.img || 'https://via.placeholder.com/140'}">
-                <div>
-                    <div class="product-title">${p.name}</div>
-                    <div class="product-price">₦${Number(p.price).toLocaleString()}</div>
-                </div>
-            </div>
-        `).join("");
-    }
+});
 
-    // Modal Presentation Layer Interceptors
-    window.openDetails = function(id) {
-        const p = allProducts.find(item => item.id === id);
-        if(!p) return;
+// RENDER PRODUCTS
 
-        selectedProduct = p; 
+function renderProducts(products){
 
-        document.getElementById("mImg").src = p.img;
-        document.getElementById("mName").innerText = p.name;
-        document.getElementById("mPrice").innerText = "₦" + Number(p.price).toLocaleString();
-        document.getElementById("mOld").innerText = p.old ? "₦" + Number(p.old).toLocaleString() : "";
-        document.getElementById("mDesc").innerText = p.desc || "No extended descriptions provided for this item.";
+  const grid =
+  document.getElementById("mainCatalogGrid");
 
-        document.getElementById("productModal").style.display = "block";
-        document.body.style.overflow = "hidden"; 
-    }
+  if(products.length === 0){
 
-    window.closeDetails = function() {
-        document.getElementById("productModal").style.display = "none";
-        document.body.style.overflow = "auto";
-        selectedProduct = null;
-    }
+    grid.innerHTML = `
+    <p style="padding:20px;color:red;">
+    No products found.
+    </p>
+    `;
 
-    window.filterCategory = function(category, btn) {
-        document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        const filtered = category === 'all' ? allProducts : allProducts.filter(p => p.cat === category);
-        renderProducts(filtered);
-    }
+    return;
+  }
 
-    // Storage Tracker Actions
-    window.addToCart = function() {
-        if (!selectedProduct) return;
-        cart.push(selectedProduct);
-        localStorage.setItem("megaStoreCart", JSON.stringify(cart));
-        updateCartBadge();
-        alert(`🛒 Added "${selectedProduct.name}" to your cart!`);
-        closeDetails();
-    }
+  grid.innerHTML = products.map(p => `
 
-    function updateCartBadge() {
-        const counterElement = document.getElementById("cartCounter");
-        if (counterElement) counterElement.innerText = cart.length;
-    }
+    <div class="product-card"
+    onclick="openDetails('${p.id}')">
 
-    window.viewCartCount = function() {
-        if(cart.length === 0) {
-            alert("Your shopping cart is currently empty!");
-        } else {
-            const itemsList = cart.map((p, i) => `${i+1}. ${p.name} - ₦${p.price.toLocaleString()}`).join("\n");
-            alert(`📦 Current Cart Content (${cart.length}):\n\n${itemsList}\n\nTo purchase, select an item to view details and click 'PAY NOW'.`);
+      <div class="discount">
+      -${p.pct || 0}%
+      </div>
+
+      <img src="${p.img}">
+
+      <div class="p-title">
+      ${p.name}
+      </div>
+
+      <div class="p-price">
+      ₦${Number(p.price).toLocaleString()}
+      </div>
+
+    </div>
+
+  `).join("");
+
+}
+
+// PRODUCT DETAILS
+
+window.openDetails = function(id){
+
+  const p =
+  allProducts.find(x => x.id === id);
+
+  if(!p) return;
+
+  selectedProduct = p;
+
+  document.getElementById("mImg").src = p.img;
+
+  document.getElementById("mName").innerText =
+  p.name;
+
+  document.getElementById("mPrice").innerText =
+  "₦" + Number(p.price).toLocaleString();
+
+  document.getElementById("mOld").innerText =
+  p.old
+  ? "₦" + Number(p.old).toLocaleString()
+  : "";
+
+  document.getElementById("mDesc").innerText =
+  p.desc || "No description available.";
+
+  document.getElementById("productModal").style.display =
+  "block";
+
+}
+
+// CLOSE MODAL
+
+window.closeDetails = function(){
+
+  document.getElementById("productModal").style.display =
+  "none";
+
+}
+
+// FILTER CATEGORY
+
+window.filterCategory = function(cat,btn){
+
+  document.querySelectorAll(".cat-btn")
+  .forEach(b => b.classList.remove("active"));
+
+  btn.classList.add("active");
+
+  const filtered =
+  cat === "all"
+  ? allProducts
+  : allProducts.filter(p => p.cat === cat);
+
+  renderProducts(filtered);
+
+}
+
+// ADD TO CART
+
+window.addToCart = function(){
+
+  alert("Product added to cart!");
+
+}
+
+// PAYSTACK PAYMENT
+
+window.payNow = function(){
+
+  if(!selectedProduct) return;
+
+  const email =
+  prompt("Enter Email Address");
+
+  if(!email){
+    alert("Email required!");
+    return;
+  }
+
+  const fullName =
+  prompt("Enter Full Name");
+
+  if(!fullName){
+    alert("Full name required!");
+    return;
+  }
+
+  const phone =
+  prompt("Enter Phone Number");
+
+  if(!phone){
+    alert("Phone number required!");
+    return;
+  }
+
+  const address =
+  prompt("Enter Full Delivery Address");
+
+  if(!address){
+    alert("Delivery address required!");
+    return;
+  }
+
+  let handler = PaystackPop.setup({
+
+    key:'pk_live_74b79dcbb6afc98ea13aa66c2c0f154e923643bc',
+
+    email:email,
+
+    amount:Number(selectedProduct.price) * 100,
+
+    currency:"NGN",
+
+    metadata:{
+      custom_fields:[
+        {
+          display_name:"Customer Name",
+          variable_name:"customer_name",
+          value:fullName
+        },
+        {
+          display_name:"Phone Number",
+          variable_name:"phone_number",
+          value:phone
+        },
+        {
+          display_name:"Delivery Address",
+          variable_name:"delivery_address",
+          value:address
+        },
+        {
+          display_name:"Product",
+          variable_name:"product",
+          value:selectedProduct.name
         }
+      ]
+    },
+
+    callback:function(response){
+
+      alert(
+      "✅ Payment Successful!\nReference: "
+      + response.reference
+      );
+
+    },
+
+    onClose:function(){
+
+      alert("Payment Cancelled");
+
     }
 
-    // Paystack Payment Portal Gate Driver
-    window.payNow = function() {
-        if(!selectedProduct) return;
+  });
 
-        const email = prompt("Enter your Email Address:");
-        if(!email) return alert("Email is required!");
+  handler.openIframe();
 
-        const fullName = prompt("Enter your Full Name:");
-        if(!fullName) return alert("Full name is required!");
+}
 
-        const phone = prompt("Enter your Phone Number:");
-        if(!phone) return alert("Phone number is required!");
-
-        const address = prompt("Enter Full Delivery Address:");
-        if(!address) return alert("Delivery address is required!");
-
-        let handler = PaystackPop.setup({
-            key: 'pk_live_74b79dcbb6afc98ea13aa66c2c0f154e923643bc',
-            email: email,
-            amount: Number(selectedProduct.price) * 100, 
-            currency: "NGN",
-            metadata: {
-                custom_fields: [
-                    { display_name: "Customer Name", variable_name: "customer_name", value: fullName },
-                    { display_name: "Phone Number", variable_name: "phone_number", value: phone },
-                    { display_name: "Delivery Address", variable_name: "delivery_address", value: address },
-                    { display_name: "Product Purchased", variable_name: "product", value: selectedProduct.name }
-                ]
-            },
-            callback: function(response) {
-                alert(
-                    "✅ Payment Successful!\n\n" +
-                    "Reference Transaction: " + response.reference +
-                    "\n\nYour order details have been logged. Delivery will proceed immediately."
-                );
-                
-                // Post-payment cart management cleanup updates
-                cart = cart.filter(item => item.id !== selectedProduct.id);
-                localStorage.setItem("megaStoreCart", JSON.stringify(cart));
-                updateCartBadge();
-                closeDetails();
-            },
-            onClose: function() {
-                alert("Transaction processing suspended by user.");
-            }
-        });
-
-        handler.openIframe();
-    }
 </script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Holuwafemi Mega Store</title>
+
+  <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+
+  <!-- PAYSTACK -->
+  <script src="https://js.paystack.co/v1/inline.js"></script>
+
+  <style>
+
+    :root{
+      --orange:#f68b1e;
+      --bg:#f1f1f2;
+      --dark:#333;
+    }
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Roboto,sans-serif;
+    }
+
+    body{
+      background:var(--bg);
+      padding-bottom:80px;
+    }
+
+    header{
+      background:#fff;
+      padding:14px;
+      position:sticky;
+      top:0;
+      z-index:100;
+      box-shadow:0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .nav-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .logo{
+      font-size:18px;
+      font-weight:bold;
+      color:var(--orange);
+      text-transform:uppercase;
+    }
+
+    .cat-bar{
+      display:flex;
+      gap:10px;
+      overflow-x:auto;
+      padding:12px;
+      background:#fff;
+    }
+
+    .cat-btn{
+      border:none;
+      background:#eee;
+      padding:8px 16px;
+      border-radius:20px;
+      cursor:pointer;
+      white-space:nowrap;
+      font-size:13px;
+      font-weight:bold;
+    }
+
+    .cat-btn.active{
+      background:var(--orange);
+      color:#fff;
+    }
+
+    .section-title{
+      padding:14px;
+      font-weight:bold;
+      text-transform:uppercase;
+      font-size:14px;
+      color:#666;
+    }
+
+    .grid-container{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+      padding:0 12px 20px;
+    }
+
+    .product-card{
+      background:#fff;
+      border-radius:6px;
+      padding:10px;
+      position:relative;
+      box-shadow:0 2px 4px rgba(0,0,0,0.05);
+      cursor:pointer;
+    }
+
+    .product-card img{
+      width:100%;
+      height:150px;
+      object-fit:contain;
+    }
+
+    .discount{
+      position:absolute;
+      top:10px;
+      right:10px;
+      background:#feebd8;
+      color:var(--orange);
+      padding:2px 6px;
+      font-size:11px;
+      font-weight:bold;
+      border-radius:3px;
+    }
+
+    .p-title{
+      font-size:13px;
+      margin-top:10px;
+      height:35px;
+      overflow:hidden;
+    }
+
+    .p-price{
+      font-size:16px;
+      font-weight:bold;
+      margin-top:5px;
+    }
+
+    .modal{
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.8);
+      z-index:1000;
+      overflow-y:auto;
+    }
+
+    .modal-content{
+      background:#fff;
+      width:100%;
+      max-width:500px;
+      min-height:100vh;
+      margin:auto;
+      position:relative;
+    }
+
+    .close-btn{
+      position:absolute;
+      top:15px;
+      left:15px;
+      width:35px;
+      height:35px;
+      border-radius:50%;
+      background:#fff;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      cursor:pointer;
+      z-index:10;
+      box-shadow:0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .detail-img{
+      width:100%;
+      height:320px;
+      object-fit:contain;
+      background:#fff;
+    }
+
+    .detail-info{
+      padding:20px;
+    }
+
+    .detail-name{
+      font-size:20px;
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+
+    .detail-price{
+      color:var(--orange);
+      font-size:24px;
+      font-weight:bold;
+    }
+
+    .detail-old{
+      text-decoration:line-through;
+      color:#999;
+      margin-left:10px;
+    }
+
+    .detail-desc{
+      margin-top:20px;
+      color:#666;
+      line-height:1.6;
+    }
+
+    .action-bar{
+      position:fixed;
+      bottom:0;
+      width:100%;
+      max-width:500px;
+      left:50%;
+      transform:translateX(-50%);
+      background:#fff;
+      display:flex;
+      gap:10px;
+      padding:12px;
+      box-shadow:0 -2px 10px rgba(0,0,0,0.1);
+    }
+
+    .btn{
+      flex:1;
+      border:none;
+      padding:14px;
+      border-radius:5px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+
+    .cart-btn{
+      background:#feebd8;
+      color:var(--orange);
+    }
+
+    .buy-btn{
+      background:var(--orange);
+      color:#fff;
+    }
+
+    .socials{
+      background:#fff;
+      padding:30px;
+      text-align:center;
+      margin-top:20px;
+    }
+
+    .socials a{
+      margin:10px;
+      font-size:28px;
+      text-decoration:none;
+    }
+
+    .fa-facebook{color:#1877f2;}
+    .fa-instagram{color:#e1306c;}
+    .fa-whatsapp{color:#25D366;}
+    .fa-tiktok{color:#000;}
+    .fa-twitter{color:#000;}
+
+  </style>
+</head>
+
+<body>
+
+<header>
+
+  <div class="nav-top">
+
+    <div class="logo">
+      Holuwafemi Mega Store
+    </div>
+
+    <i class="fas fa-shopping-cart"></i>
+
+  </div>
+
+</header>
+
+<div class="cat-bar">
+
+  <button class="cat-btn active"
+  onclick="filterCategory('all',this)">
+  All
+  </button>
+
+  <button class="cat-btn"
+  onclick="filterCategory('electronics',this)">
+  Electronics
+  </button>
+
+  <button class="cat-btn"
+  onclick="filterCategory('solar',this)">
+  Solar
+  </button>
+
+  <button class="cat-btn"
+  onclick="filterCategory('phones',this)">
+  Phones
+  </button>
+
+</div>
+
+<div class="section-title">
+  Flash Sales
+</div>
+
+<div class="grid-container"
+id="mainCatalogGrid">
+
+  <p style="padding:20px;color:#999;">
+    Loading products...
+  </p>
+
+</div>
+
+<!-- PRODUCT MODAL -->
+
+<div class="modal" id="productModal">
+
+  <div class="modal-content">
+
+    <div class="close-btn"
+    onclick="closeDetails()">
+
+      <i class="fas fa-arrow-left"></i>
+
+    </div>
+
+    <img id="mImg"
+    class="detail-img">
+
+    <div class="detail-info">
+
+      <div id="mName"
+      class="detail-name"></div>
+
+      <div>
+
+        <span id="mPrice"
+        class="detail-price"></span>
+
+        <span id="mOld"
+        class="detail-old"></span>
+
+      </div>
+
+      <div class="detail-desc"
+      id="mDesc"></div>
+
+      <div style="height:120px;"></div>
+
+    </div>
+
+    <div class="action-bar">
+
+      <button class="btn cart-btn"
+      onclick="addToCart()">
+
+        ADD TO CART
+
+      </button>
+
+      <button class="btn buy-btn"
+      onclick="payNow()">
+
+        BUY NOW
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- SOCIALS -->
+
+<div class="socials">
+
+  <h3>Follow Holuwafemi Mega Store</h3>
+
+  <br>
+
+  <a href="https://facebook.com">
+    <i class="fab fa-facebook"></i>
+  </a>
+
+  <a href="https://instagram.com">
+    <i class="fab fa-instagram"></i>
+  </a>
+
+  <a href="https://tiktok.com">
+    <i class="fab fa-tiktok"></i>
+  </a>
+
+  <a href="https://x.com">
+    <i class="fab fa-twitter"></i>
+  </a>
+
+  <a href="https://wa.me/2349061989529">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+</div>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+query,
+orderBy,
+onSnapshot
+}
+from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyBCu34RlTpqeGFPRCI7xDVYVQJLwjL6Tbo",
+
+  authDomain: "femitech-1-e26ca.firebaseapp.com",
+
+  projectId: "femitech-1-e26ca",
+
+  storageBucket: "femitech-1-e26ca.firebasestorage.app",
+
+  messagingSenderId: "562859904708",
+
+  appId: "1:562859904708:web:df49e4b09dc2f81cf44391"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+let allProducts = [];
+
+let selectedProduct = null;
+
+// REALTIME PRODUCTS
+
+const q = query(
+collection(db,"products"),
+orderBy("timestamp","desc")
+);
+
+onSnapshot(q,(snapshot)=>{
+
+  allProducts = [];
+
+  snapshot.forEach((doc)=>{
+
+    allProducts.push({
+      id:doc.id,
+      ...doc.data()
+    });
+
+  });
+
+  renderProducts(allProducts);
+
+});
+
+// RENDER PRODUCTS
+
+function renderProducts(products){
+
+  const grid =
+  document.getElementById("mainCatalogGrid");
+
+  if(products.length === 0){
+
+    grid.innerHTML = `
+    <p style="padding:20px;color:red;">
+    No products found.
+    </p>
+    `;
+
+    return;
+  }
+
+  grid.innerHTML = products.map(p => `
+
+    <div class="product-card"
+    onclick="openDetails('${p.id}')">
+
+      <div class="discount">
+      -${p.pct || 0}%
+      </div>
+
+      <img src="${p.img}">
+
+      <div class="p-title">
+      ${p.name}
+      </div>
+
+      <div class="p-price">
+      ₦${Number(p.price).toLocaleString()}
+      </div>
+
+    </div>
+
+  `).join("");
+
+}
+
+// PRODUCT DETAILS
+
+window.openDetails = function(id){
+
+  const p =
+  allProducts.find(x => x.id === id);
+
+  if(!p) return;
+
+  selectedProduct = p;
+
+  document.getElementById("mImg").src = p.img;
+
+  document.getElementById("mName").innerText =
+  p.name;
+
+  document.getElementById("mPrice").innerText =
+  "₦" + Number(p.price).toLocaleString();
+
+  document.getElementById("mOld").innerText =
+  p.old
+  ? "₦" + Number(p.old).toLocaleString()
+  : "";
+
+  document.getElementById("mDesc").innerText =
+  p.desc || "No description available.";
+
+  document.getElementById("productModal").style.display =
+  "block";
+
+}
+
+// CLOSE MODAL
+
+window.closeDetails = function(){
+
+  document.getElementById("productModal").style.display =
+  "none";
+
+}
+
+// FILTER CATEGORY
+
+window.filterCategory = function(cat,btn){
+
+  document.querySelectorAll(".cat-btn")
+  .forEach(b => b.classList.remove("active"));
+
+  btn.classList.add("active");
+
+  const filtered =
+  cat === "all"
+  ? allProducts
+  : allProducts.filter(p => p.cat === cat);
+
+  renderProducts(filtered);
+
+}
+
+// ADD TO CART
+
+window.addToCart = function(){
+
+  alert("Product added to cart!");
+
+}
+
+// PAYSTACK PAYMENT
+
+window.payNow = function(){
+
+  if(!selectedProduct) return;
+
+  const email =
+  prompt("Enter Email Address");
+
+  if(!email){
+    alert("Email required!");
+    return;
+  }
+
+  const fullName =
+  prompt("Enter Full Name");
+
+  if(!fullName){
+    alert("Full name required!");
+    return;
+  }
+
+  const phone =
+  prompt("Enter Phone Number");
+
+  if(!phone){
+    alert("Phone number required!");
+    return;
+  }
+
+  const address =
+  prompt("Enter Full Delivery Address");
+
+  if(!address){
+    alert("Delivery address required!");
+    return;
+  }
+
+  let handler = PaystackPop.setup({
+
+    key:'pk_live_74b79dcbb6afc98ea13aa66c2c0f154e923643bc',
+
+    email:email,
+
+    amount:Number(selectedProduct.price) * 100,
+
+    currency:"NGN",
+
+    metadata:{
+      custom_fields:[
+        {
+          display_name:"Customer Name",
+          variable_name:"customer_name",
+          value:fullName
+        },
+        {
+          display_name:"Phone Number",
+          variable_name:"phone_number",
+          value:phone
+        },
+        {
+          display_name:"Delivery Address",
+          variable_name:"delivery_address",
+          value:address
+        },
+        {
+          display_name:"Product",
+          variable_name:"product",
+          value:selectedProduct.name
+        }
+      ]
+    },
+
+    callback:function(response){
+
+      alert(
+      "✅ Payment Successful!\nReference: "
+      + response.reference
+      );
+
+    },
+
+    onClose:function(){
+
+      alert("Payment Cancelled");
+
+    }
+
+  });
+
+  handler.openIframe();
+
+}
+
+</script>
+
 </body>
 </html>
