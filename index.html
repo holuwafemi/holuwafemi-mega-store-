@@ -1,192 +1,565 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Holuwafemi Mega Store</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
-    <style>
-        :root { --jumia-orange: #f68b1e; --bg-gray: #f1f1f2; --dark: #333; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
-        body { background: var(--bg-gray); padding-bottom: 60px; color: var(--dark); }
-        
-        /* Layout Components */
-        header { background: #fff; padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .nav-top { display: flex; align-items: center; justify-content: space-between; }
-        .logo { font-size: 18px; font-weight: bold; color: var(--jumia-orange); text-transform: uppercase; }
-        
-        .cat-bar { display: flex; gap: 10px; overflow-x: auto; padding: 12px 16px; background: #fff; border-top: 1px solid #eee; scrollbar-width: none; }
-        .cat-btn { background: #f1f1f2; border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: 0.2s; }
-        .cat-btn.active { background: var(--jumia-orange); color: #fff; }
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Holuwafemi Mega Store</title>
 
-        .section-title { font-size: 14px; font-weight: bold; text-transform: uppercase; padding: 12px 16px 4px 16px; color: #555; }
-        
-        /* Main Grid */
-        .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 0 16px 16px 16px; }
-        .grid-product-card { background: #fff; padding: 10px; border-radius: 4px; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.05); cursor: pointer; display: flex; flex-direction: column; }
-        .grid-product-card img { width: 100%; height: 140px; object-fit: contain; margin-bottom: 8px; }
-        .discount-badge { position: absolute; top: 8px; right: 8px; background: #feebd8; color: var(--jumia-orange); font-size: 11px; padding: 2px 6px; font-weight: bold; border-radius: 2px; }
-        
-        .product-title { font-size: 13px; color: #333; height: 32px; overflow: hidden; margin-bottom: 4px; }
-        .product-price { font-size: 15px; font-weight: bold; color: #333; }
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
 
-        /* Jumia-Style Details Modal */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; overflow-y: auto; }
-        .modal-content { background: #fff; width: 100%; max-width: 500px; margin: 0 auto; min-height: 100vh; position: relative; }
-        .close-modal { position: absolute; top: 15px; left: 15px; font-size: 20px; color: #333; z-index: 1001; cursor: pointer; background: #fff; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+  <!-- PAYSTACK -->
+  <script src="https://js.paystack.co/v1/inline.js"></script>
 
-        .detail-img { width: 100%; height: 350px; object-fit: contain; background: #fff; border-bottom: 1px solid #eee; }
-        .detail-info { padding: 20px; }
-        .detail-name { font-size: 20px; font-weight: bold; color: #333; margin-bottom: 8px; }
-        .detail-price-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-        .detail-price { font-size: 24px; font-weight: bold; color: var(--jumia-orange); }
-        .detail-old { text-decoration: line-through; color: #999; font-size: 16px; }
-        .detail-desc { font-size: 15px; line-height: 1.6; color: #666; border-top: 1px solid #eee; padding-top: 15px; white-space: pre-wrap; }
+  <style>
+    :root{
+      --orange:#f68b1e;
+      --bg:#f1f1f2;
+      --dark:#333;
+    }
 
-        /* Bottom Action Bar */
-        .action-bar { position: fixed; bottom: 0; width: 100%; max-width: 500px; display: flex; padding: 12px; gap: 10px; background: #fff; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); left: 50%; transform: translateX(-50%); }
-        .btn-cart { flex: 1; background: #feebd8; color: var(--jumia-orange); border: none; padding: 14px; font-weight: bold; border-radius: 4px; cursor: pointer; }
-        .btn-buy { flex: 1; background: var(--jumia-orange); color: #fff; border: none; padding: 14px; font-weight: bold; border-radius: 4px; cursor: pointer; text-decoration: none; text-align: center; }
-    </style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Roboto,sans-serif;
+    }
+
+    body{
+      background:var(--bg);
+      color:var(--dark);
+      padding-bottom:80px;
+    }
+
+    header{
+      background:#fff;
+      padding:14px 16px;
+      position:sticky;
+      top:0;
+      z-index:1000;
+      box-shadow:0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .nav-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .logo{
+      font-size:18px;
+      font-weight:bold;
+      color:var(--orange);
+    }
+
+    .cart-icon{
+      position:relative;
+      font-size:22px;
+      cursor:pointer;
+    }
+
+    #cartCount{
+      position:absolute;
+      top:-8px;
+      right:-10px;
+      background:red;
+      color:white;
+      font-size:10px;
+      padding:3px 6px;
+      border-radius:50%;
+    }
+
+    .cat-bar{
+      display:flex;
+      gap:10px;
+      overflow-x:auto;
+      padding:12px 16px;
+      background:#fff;
+      border-top:1px solid #eee;
+    }
+
+    .cat-btn{
+      border:none;
+      padding:8px 16px;
+      border-radius:20px;
+      background:#eee;
+      cursor:pointer;
+      font-size:13px;
+      white-space:nowrap;
+    }
+
+    .cat-btn.active{
+      background:var(--orange);
+      color:white;
+    }
+
+    .section-title{
+      padding:16px;
+      font-weight:bold;
+      font-size:14px;
+      color:#666;
+    }
+
+    .grid-container{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+      padding:0 16px 16px;
+    }
+
+    .product-card{
+      background:white;
+      border-radius:6px;
+      padding:10px;
+      cursor:pointer;
+      position:relative;
+      box-shadow:0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .product-card img{
+      width:100%;
+      height:150px;
+      object-fit:contain;
+    }
+
+    .discount{
+      position:absolute;
+      top:8px;
+      right:8px;
+      background:#feebd8;
+      color:var(--orange);
+      font-size:11px;
+      padding:3px 6px;
+      border-radius:4px;
+      font-weight:bold;
+    }
+
+    .product-title{
+      font-size:13px;
+      margin-top:10px;
+      height:35px;
+      overflow:hidden;
+    }
+
+    .price{
+      font-weight:bold;
+      margin-top:6px;
+      font-size:16px;
+    }
+
+    .old{
+      color:#999;
+      text-decoration:line-through;
+      font-size:12px;
+    }
+
+    /* MODAL */
+
+    .modal{
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.8);
+      z-index:2000;
+    }
+
+    .modal-content{
+      background:#fff;
+      min-height:100vh;
+      max-width:500px;
+      margin:auto;
+      position:relative;
+    }
+
+    .close{
+      position:absolute;
+      top:15px;
+      left:15px;
+      width:35px;
+      height:35px;
+      border-radius:50%;
+      background:white;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      box-shadow:0 2px 5px rgba(0,0,0,0.2);
+      z-index:10;
+    }
+
+    .detail-img{
+      width:100%;
+      height:320px;
+      object-fit:contain;
+      background:white;
+    }
+
+    .detail-info{
+      padding:20px;
+    }
+
+    .detail-name{
+      font-size:20px;
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+
+    .detail-price{
+      color:var(--orange);
+      font-size:24px;
+      font-weight:bold;
+    }
+
+    .detail-old{
+      color:#999;
+      text-decoration:line-through;
+      margin-left:10px;
+    }
+
+    .detail-desc{
+      margin-top:20px;
+      color:#666;
+      line-height:1.6;
+    }
+
+    .action-bar{
+      position:fixed;
+      bottom:0;
+      width:100%;
+      max-width:500px;
+      left:50%;
+      transform:translateX(-50%);
+      background:white;
+      display:flex;
+      gap:10px;
+      padding:12px;
+      box-shadow:0 -2px 10px rgba(0,0,0,0.1);
+    }
+
+    .btn{
+      flex:1;
+      border:none;
+      padding:14px;
+      border-radius:4px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+
+    .cart-btn{
+      background:#feebd8;
+      color:var(--orange);
+    }
+
+    .buy-btn{
+      background:var(--orange);
+      color:white;
+    }
+
+    footer{
+      background:#111;
+      color:white;
+      padding:40px 20px;
+      text-align:center;
+      margin-top:40px;
+    }
+
+    .socials{
+      margin-top:20px;
+      display:flex;
+      justify-content:center;
+      gap:20px;
+      font-size:24px;
+    }
+
+    .socials a{
+      color:white;
+    }
+
+  </style>
 </head>
+
 <body>
 
-    <header>
-        <div class="nav-top">
-            <div class="logo">Holuwafemi Mega Store</div>
-            <i class="fas fa-shopping-cart" style="font-size: 20px;"></i>
-        </div>
-    </header>
+<header>
+  <div class="nav-top">
 
-    <div class="cat-bar">
-        <button class="cat-btn active" onclick="filterCategory('all', this)">All</button>
-        <button class="cat-btn" onclick="filterCategory('electronics', this)">Electronics</button>
-        <button class="cat-btn" onclick="filterCategory('solar', this)">Solar</button>
-        <button class="cat-btn" onclick="filterCategory('phones', this)">Phones</button>
+    <div class="logo">
+      Holuwafemi Mega Store
     </div>
 
-    <div class="section-title">Flash Sales</div>
-    <div id="topSellersScrollBox" style="display: flex; gap: 10px; overflow-x: auto; padding: 0 16px 16px 16px;">
-        </div>
-
-    <div class="section-title">All Products</div>
-    <div class="grid-container" id="mainCatalogGrid">
-        <p style="padding:20px; color:#999;">Fetching latest products...</p>
+    <div class="cart-icon">
+      <i class="fas fa-shopping-cart"></i>
+      <span id="cartCount">0</span>
     </div>
 
-    <div id="productModal" class="modal">
-        <div class="modal-content">
-            <div class="close-modal" onclick="closeDetails()"><i class="fas fa-arrow-left"></i></div>
-            <img id="mImg" class="detail-img" src="">
-            <div class="detail-info">
-                <div id="mName" class="detail-name"></div>
-                <div class="detail-price-row">
-                    <span id="mPrice" class="detail-price"></span>
-                    <span id="mOld" class="detail-old"></span>
-                </div>
-                <div style="font-weight: bold; margin-bottom: 10px; text-transform: uppercase; font-size: 12px; color: #888;">Product Description</div>
-                <p id="mDesc" class="detail-desc"></p>
-                <div style="height: 100px;"></div>
-            </div>
-            <div class="action-bar">
-                <button class="btn-cart" onclick="addToCart()">ADD TO CART</button>
-                <a id="buyNowLink" href="#" class="btn-buy">BUY NOW</a>
-            </div>
-        </div>
+  </div>
+</header>
+
+<div class="cat-bar">
+  <button class="cat-btn active" onclick="filterCategory('all', this)">All</button>
+  <button class="cat-btn" onclick="filterCategory('electronics', this)">Electronics</button>
+  <button class="cat-btn" onclick="filterCategory('solar', this)">Solar</button>
+  <button class="cat-btn" onclick="filterCategory('phones', this)">Phones</button>
+</div>
+
+<div class="section-title">
+  Flash Sales
+</div>
+
+<div class="grid-container" id="productGrid"></div>
+
+<!-- MODAL -->
+
+<div class="modal" id="modal">
+
+  <div class="modal-content">
+
+    <div class="close" onclick="closeModal()">
+      <i class="fas fa-arrow-left"></i>
     </div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+    <img id="mImg" class="detail-img">
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyBCu34RlTpqeGFPRCI7xDVYVQJLwjL6Tbo",
-        authDomain: "femitech-1-e26ca.firebaseapp.com",
-        projectId: "femitech-1-e26ca",
-        storageBucket: "femitech-1-e26ca.firebasestorage.app",
-        messagingSenderId: "562859904708",
-        appId: "1:562859904708:web:df49e4b09dc2f81cf44391",
-        measurementId: "G-WPFKNZ20E3"
-    };
+    <div class="detail-info">
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    let allProducts = [];
+      <div id="mName" class="detail-name"></div>
 
-    // Real-time Database Sync
-    const q = query(collection(db, "products"), orderBy("timestamp", "desc"));
-    onSnapshot(q, (snapshot) => {
-        allProducts = [];
-        snapshot.forEach((doc) => {
-            allProducts.push({ id: doc.id, ...doc.data() });
-        });
-        renderProducts(allProducts);
-    });
+      <div>
+        <span id="mPrice" class="detail-price"></span>
+        <span id="mOld" class="detail-old"></span>
+      </div>
 
-    function renderProducts(productsList) {
-        const grid = document.getElementById("mainCatalogGrid");
-        const top = document.getElementById("topSellersScrollBox");
+      <div id="mDesc" class="detail-desc"></div>
 
-        if(productsList.length === 0) {
-            grid.innerHTML = "<p style='padding:20px;'>No items available yet.</p>";
-            return;
-        }
+    </div>
 
-        // Fill Scrollable Top Row
-        top.innerHTML = productsList.slice(0, 5).map(p => `
-            <div class="grid-product-card" style="min-width: 150px;" onclick="openDetails('${p.id}')">
-                <img src="${p.img}">
-                <div class="product-title">${p.name}</div>
-                <div class="product-price">₦${Number(p.price).toLocaleString()}</div>
-            </div>
-        `).join("");
+    <div class="action-bar">
 
-        // Fill Main Grid
-        grid.innerHTML = productsList.map(p => `
-            <div class="grid-product-card" onclick="openDetails('${p.id}')">
-                <div class="discount-badge">-${p.pct || 0}%</div>
-                <img src="${p.img}">
-                <div class="product-title">${p.name}</div>
-                <div class="product-price">₦${Number(p.price).toLocaleString()}</div>
-            </div>
-        `).join("");
-    }
+      <button class="btn cart-btn" onclick="addToCart()">
+        ADD TO CART
+      </button>
 
-    // Modal UI Logic
-    window.openDetails = function(id) {
-        const p = allProducts.find(item => item.id === id);
-        if(!p) return;
+      <button class="btn buy-btn" onclick="payNow()">
+        BUY NOW
+      </button>
 
-        document.getElementById("mImg").src = p.img;
-        document.getElementById("mName").innerText = p.name;
-        document.getElementById("mPrice").innerText = "₦" + Number(p.price).toLocaleString();
-        document.getElementById("mOld").innerText = p.old ? "₦" + Number(p.old).toLocaleString() : "";
-        document.getElementById("mDesc").innerText = p.desc || "No specific details provided.";
-        
-        // WhatsApp Integration
-        const phoneNumber = "2349061989529";
-        const message = encodeURIComponent(`Hello Holuwafemi Mega Store,\n\nI want to order this item:\n📦 *${p.name}*\n💰 *Price: ₦${p.price.toLocaleString()}*\n\nPlease provide payment details.`);
-        document.getElementById("buyNowLink").href = `https://wa.me/${phoneNumber}?text=${message}`;
+    </div>
 
-        document.getElementById("productModal").style.display = "block";
-        document.body.style.overflow = "hidden"; // Stop background scroll
-    }
+  </div>
 
-    window.closeDetails = function() {
-        document.getElementById("productModal").style.display = "none";
-        document.body.style.overflow = "auto";
-    }
+</div>
 
-    window.filterCategory = function(category, btn) {
-        document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        const filtered = category === 'all' ? allProducts : allProducts.filter(p => p.cat === category);
-        renderProducts(filtered);
-    }
+<footer>
 
-    window.addToCart = function() {
-        alert("Success: Added to your cart!");
-    }
+  <h2 style="color:#f68b1e;">
+    Holuwafemi Mega Store
+  </h2>
+
+  <p style="margin-top:10px;">
+    Solar • Electronics • Phones • Gadgets
+  </p>
+
+  <div class="socials">
+
+    <a href="https://facebook.com/" target="_blank">
+      <i class="fab fa-facebook"></i>
+    </a>
+
+    <a href="https://instagram.com/" target="_blank">
+      <i class="fab fa-instagram"></i>
+    </a>
+
+    <a href="https://tiktok.com/" target="_blank">
+      <i class="fab fa-tiktok"></i>
+    </a>
+
+    <a href="https://x.com/" target="_blank">
+      <i class="fab fa-twitter"></i>
+    </a>
+
+  </div>
+
+  <p style="margin-top:20px;font-size:13px;color:#aaa;">
+    © 2026 Holuwafemi Mega Store
+  </p>
+
+</footer>
+
+<script>
+
+const products = [
+
+{
+id:1,
+name:"300W Solar Panel",
+price:65000,
+old:76000,
+img:"Solar Panel.jpg",
+desc:"High quality solar panel for homes and offices.",
+cat:"solar",
+pct:15
+},
+
+{
+id:2,
+name:"iPhone 11 Pro",
+price:320000,
+old:350000,
+img:"iphone11.jpg",
+desc:"Premium Apple iPhone 11 Pro smartphone.",
+cat:"phones",
+pct:10
+},
+
+{
+id:3,
+name:"32 Inch Smart TV",
+price:145000,
+old:160000,
+img:"smarttv.jpg",
+desc:"HD Smart TV with YouTube and Netflix.",
+cat:"electronics",
+pct:9
+},
+
+{
+id:4,
+name:"4G CCTV Camera",
+price:80000,
+old:95000,
+img:"4g.jpg",
+desc:"Smart security camera with mobile monitoring.",
+cat:"electronics",
+pct:12
+}
+
+];
+
+let cart = [];
+
+function renderProducts(items){
+
+const grid = document.getElementById("productGrid");
+
+grid.innerHTML = items.map(p => `
+
+<div class="product-card" onclick="openProduct(${p.id})">
+
+<div class="discount">
+-${p.pct}%
+</div>
+
+<img src="${p.img}">
+
+<div class="product-title">
+${p.name}
+</div>
+
+<div class="price">
+₦${p.price.toLocaleString()}
+</div>
+
+<div class="old">
+₦${p.old.toLocaleString()}
+</div>
+
+</div>
+
+`).join("");
+
+}
+
+renderProducts(products);
+
+function filterCategory(cat, btn){
+
+document.querySelectorAll(".cat-btn")
+.forEach(b => b.classList.remove("active"));
+
+btn.classList.add("active");
+
+if(cat === "all"){
+renderProducts(products);
+}else{
+renderProducts(products.filter(p => p.cat === cat));
+}
+
+}
+
+let currentProduct = null;
+
+function openProduct(id){
+
+const p = products.find(item => item.id === id);
+
+currentProduct = p;
+
+document.getElementById("mImg").src = p.img;
+document.getElementById("mName").innerText = p.name;
+document.getElementById("mPrice").innerText = "₦" + p.price.toLocaleString();
+document.getElementById("mOld").innerText = "₦" + p.old.toLocaleString();
+document.getElementById("mDesc").innerText = p.desc;
+
+document.getElementById("modal").style.display = "block";
+
+}
+
+function closeModal(){
+
+document.getElementById("modal").style.display = "none";
+
+}
+
+function addToCart(){
+
+cart.push(currentProduct);
+
+document.getElementById("cartCount").innerText = cart.length;
+
+alert(currentProduct.name + " added to cart");
+
+}
+
+function payNow(){
+
+const email = prompt("Enter your email");
+
+if(!email){
+alert("Email required");
+return;
+}
+
+let handler = PaystackPop.setup({
+
+key:'pk_live_74b79dcbb6afc98ea13aa66c2c0f154e923643bc',
+
+email:email,
+
+amount:currentProduct.price * 100,
+
+currency:"NGN",
+
+callback:function(response){
+
+alert(
+"Payment successful! Ref: " +
+response.reference
+);
+
+},
+
+onClose:function(){
+
+alert("Transaction cancelled");
+
+}
+
+});
+
+handler.openIframe();
+
+}
+
 </script>
+
 </body>
-</html>
+    </html>
