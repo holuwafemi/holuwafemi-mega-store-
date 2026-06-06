@@ -3,195 +3,556 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mega Store - Admin Dashboard</title>
+    <title>Holuwafemi Mega Store</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+
+    <!-- PAYSTACK -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+
     <style>
-        :root { --jumia-orange: #f68b1e; --bg-gray: #f1f1f2; --dark: #333; --danger: #e61601; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
-        body { background: var(--bg-gray); padding: 16px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        
-        .admin-card { background: white; padding: 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 450px; margin-bottom: 20px; }
-        h2 { color: var(--jumia-orange); text-align: center; margin-bottom: 20px; font-size: 20px; text-transform: uppercase; }
-        
-        label { display: block; font-size: 11px; font-weight: bold; margin-top: 15px; color: #666; text-transform: uppercase; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px; font-size: 14px; outline: none; }
-        input:focus { border-color: var(--jumia-orange); }
-        
-        button { width: 100%; padding: 14px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.2s; }
-        .btn-publish { background: var(--jumia-orange); color: white; font-size: 16px; }
-        .btn-ai { background: #25D366; color: white; margin-top: 10px; font-size: 12px; }
+        :root {
+            --jumia-orange: #f68b1e;
+            --bg-gray: #f1f1f2;
+            --dark: #333;
+        }
 
-        #preview-box { width: 100%; height: 180px; border: 2px dashed #ccc; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: #fafafa; overflow: hidden; margin-bottom: 10px; }
-        #preview-img { max-width: 100%; max-height: 100%; display: none; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+        }
 
-        /* Inventory Manager */
-        .catalog-list { margin-top: 10px; max-height: 300px; overflow-y: auto; }
-        .catalog-item { display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; gap: 10px; }
-        .catalog-item img { width: 40px; height: 40px; object-fit: contain; border-radius: 4px; }
-        .catalog-info { flex: 1; min-width: 0; }
-        .catalog-name { font-size: 13px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .catalog-price { font-size: 12px; color: var(--jumia-orange); }
-        .btn-delete { background: var(--danger); color: white; padding: 6px 10px; font-size: 12px; width: auto; margin-top: 0; }
+        body {
+            background: var(--bg-gray);
+            padding-bottom: 60px;
+            color: var(--dark);
+        }
+
+        header {
+            background: #fff;
+            padding: 12px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .nav-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--jumia-orange);
+            text-transform: uppercase;
+        }
+
+        .cat-bar {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 12px 16px;
+            background: #fff;
+            border-top: 1px solid #eee;
+        }
+
+        .cat-btn {
+            background: #f1f1f2;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .cat-btn.active {
+            background: var(--jumia-orange);
+            color: #fff;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 12px 16px 4px 16px;
+            color: #555;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            padding: 0 16px 16px 16px;
+        }
+
+        .grid-product-card {
+            background: #fff;
+            padding: 10px;
+            border-radius: 4px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            cursor: pointer;
+        }
+
+        .grid-product-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: contain;
+            margin-bottom: 8px;
+        }
+
+        .discount-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #feebd8;
+            color: var(--jumia-orange);
+            font-size: 11px;
+            padding: 2px 6px;
+            font-weight: bold;
+            border-radius: 2px;
+        }
+
+        .product-title {
+            font-size: 13px;
+            color: #333;
+            height: 32px;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+
+        .product-price {
+            font-size: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background: #fff;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 20px;
+            color: #333;
+            z-index: 1001;
+            cursor: pointer;
+            background: #fff;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .detail-img {
+            width: 100%;
+            height: 350px;
+            object-fit: contain;
+            background: #fff;
+        }
+
+        .detail-info {
+            padding: 20px;
+        }
+
+        .detail-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .detail-price-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        .detail-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--jumia-orange);
+        }
+
+        .detail-old {
+            text-decoration: line-through;
+            color: #999;
+        }
+
+        .detail-desc {
+            line-height: 1.6;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .action-bar {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            padding: 12px;
+            gap: 10px;
+            background: #fff;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn-cart {
+            flex: 1;
+            background: #feebd8;
+            color: var(--jumia-orange);
+            border: none;
+            padding: 14px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-buy {
+            flex: 1;
+            background: var(--jumia-orange);
+            color: white;
+            border: none;
+            padding: 14px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* SOCIALS */
+        .social-box {
+            background: white;
+            padding: 30px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .social-box a {
+            margin: 10px;
+            font-size: 26px;
+            text-decoration: none;
+        }
+
+        .facebook { color: #1877f2; }
+        .instagram { color: #e1306c; }
+        .tiktok { color: black; }
+        .twitter { color: black; }
+        .whatsapp { color: #25D366; }
     </style>
 </head>
+
 <body>
 
-    <div class="admin-card">
-        <h2>Add New Product</h2>
-        
-        <div id="preview-box">
-            <span id="pre-text" style="color:#999">Product Image Preview</span>
-            <img id="preview-img" src="">
+<header>
+    <div class="nav-top">
+        <div class="logo">Holuwafemi Mega Store</div>
+        <i class="fas fa-shopping-cart"></i>
+    </div>
+</header>
+
+<div class="cat-bar">
+    <button class="cat-btn active" onclick="filterCategory('all', this)">All</button>
+    <button class="cat-btn" onclick="filterCategory('electronics', this)">Electronics</button>
+    <button class="cat-btn" onclick="filterCategory('appliances', this)">Appliances</button>
+    <button class="cat-btn" onclick="filterCategory('solar', this)">Solar</button>
+    <button class="cat-btn" onclick="filterCategory('phones', this)">Phones</button>
+    <button class="cat-btn" onclick="filterCategory('computer', this)">Computer</button>
+</div>
+
+<div class="section-title">Flash Sales</div>
+
+<div id="topSellersScrollBox" style="display:flex; gap:10px; overflow-x:auto; padding:0 16px 16px 16px;"></div>
+
+<div class="section-title">All Products</div>
+
+<div class="grid-container" id="mainCatalogGrid">
+    <p>Loading products...</p>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div id="productModal" class="modal">
+
+    <div class="modal-content">
+
+        <div class="close-modal" onclick="closeDetails()">
+            <i class="fas fa-arrow-left"></i>
         </div>
 
-        <label>Image URL (Direct Link)</label>
-        <input type="text" id="finalImgUrl" placeholder="Paste link ending in .jpg or .png" oninput="updatePreview(this.value)">
+        <img id="mImg" class="detail-img">
 
-        <label>Product Name</label>
-        <input type="text" id="pName" placeholder="e.g. Earphones Wireless">
-        
-        <label>Current Price (₦)</label>
-        <input type="number" id="pPrice" placeholder="Selling price">
-        
-        <label>Old Price (₦)</label>
-        <input type="number" id="pOld" placeholder="Original price for discount badge">
-        
-        <label>Category</label>
-        <select id="pCat">
-            <option value="electronics">Electronics</option>
-            <option value="solar">Solar</option>
-            <option value="phones">Phones</option>
-        </select>
-        
-        <label>Description</label>
-        <textarea id="pDesc" rows="3" placeholder="Key specs..."></textarea>
+        <div class="detail-info">
 
-        <button id="publishBtn" class="btn-publish" onclick="publishProduct()">PUBLISH TO STORE</button>
-    </div>
+            <div id="mName" class="detail-name"></div>
 
-    <div class="admin-card">
-        <h3 style="font-size: 14px; text-transform: uppercase; margin-bottom: 10px;">
-            <i class="fas fa-list"></i> Current Inventory
-        </h3>
-        <div class="catalog-list" id="adminCatalogList">
-            <p style="text-align:center; color:#999; font-size:12px; padding:10px;">Loading...</p>
+            <div class="detail-price-row">
+                <span id="mPrice" class="detail-price"></span>
+                <span id="mOld" class="detail-old"></span>
+            </div>
+
+            <div style="font-weight:bold;">Product Description</div>
+
+            <p id="mDesc" class="detail-desc"></p>
+
+            <div style="height:100px;"></div>
+
         </div>
+
+        <div class="action-bar">
+            <button class="btn-cart" onclick="addToCart()">ADD TO CART</button>
+
+            <button class="btn-buy" onclick="payNow()">BUY NOW</button>
+        </div>
+
     </div>
 
-    <div class="admin-card" style="max-width: 350px; padding: 15px;">
-        <button class="btn-ai" onclick="setupAiKey()">ACTIVATE AI SYSTEM</button>
-    </div>
+</div>
+
+<!-- SOCIAL MEDIA -->
+<div class="social-box">
+
+    <h3>Follow Holuwafemi Mega Store</h3>
+
+    <br>
+
+    <a href="https://facebook.com/" class="facebook" target="_blank">
+        <i class="fab fa-facebook"></i>
+    </a>
+
+    <a href="https://instagram.com/" class="instagram" target="_blank">
+        <i class="fab fa-instagram"></i>
+    </a>
+
+    <a href="https://tiktok.com/" class="tiktok" target="_blank">
+        <i class="fab fa-tiktok"></i>
+    </a>
+
+    <a href="https://x.com/" class="twitter" target="_blank">
+        <i class="fab fa-twitter"></i>
+    </a>
+
+    <a href="https://wa.me/2349061989529" class="whatsapp" target="_blank">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+</div>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-    // 🖥️ Your Real App Credentials Built In
-    const firebaseConfig = {
-        apiKey: "AIzaSyBCu34RlTpqeGFPRCI7xDVYVQJLwjL6Tbo",
-        authDomain: "femitech-1-e26ca.firebaseapp.com",
-        projectId: "femitech-1-e26ca",
-        storageBucket: "femitech-1-e26ca.firebasestorage.app",
-        messagingSenderId: "562859904708",
-        appId: "1:562859904708:web:df49e4b09dc2f81cf44391",
-        measurementId: "G-WPFKNZ20E3"
-    };
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 
-    // 🛡️ ADMIN ACCESS
-    const ADMIN_PASS = "MyMegaStoreSecret2026";
-    if (sessionStorage.getItem("adminAuth") !== "true") {
-        const attempt = prompt("Enter Admin Access Key:");
-        if (attempt === ADMIN_PASS) {
-            sessionStorage.setItem("adminAuth", "true");
-        } else {
-            alert("Unauthorized!");
-            window.location.href = "index.html";
-        }
-    }
+import {
+getFirestore,
+collection,
+onSnapshot,
+query,
+orderBy
+}
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-    // Live Preview Tracker
-    window.updatePreview = (url) => {
-        if(url.trim()){
-            document.getElementById('pre-text').style.display='none';
-            const img = document.getElementById('preview-img');
-            img.src = url; img.style.display='block';
-        }
-    };
+const firebaseConfig = {
 
-    // Live Synchronized Inventory Module
-    const q = query(collection(db, "products"), orderBy("timestamp", "desc"));
-    onSnapshot(q, (snapshot) => {
-        const list = document.getElementById("adminCatalogList");
-        let html = "";
-        snapshot.forEach((pDoc) => {
-            const p = pDoc.data();
-            html += `
-                <div class="catalog-item">
-                    <img src="${p.img || 'https://via.placeholder.com/40'}">
-                    <div class="catalog-info">
-                        <div class="catalog-name">${p.name}</div>
-                        <div class="catalog-price">₦${p.price.toLocaleString()}</div>
-                    </div>
-                    <button class="btn-delete" onclick="deleteProduct('${pDoc.id}')"><i class="fas fa-trash"></i></button>
-                </div>`;
+apiKey: "AIzaSyBCu34RlTpqeGFPRCI7xDVYVQJLwjL6Tbo",
+
+authDomain: "femitech-1-e26ca.firebaseapp.com",
+
+projectId: "femitech-1-e26ca",
+
+storageBucket: "femitech-1-e26ca.firebasestorage.app",
+
+messagingSenderId: "562859904708",
+
+appId: "1:562859904708:web:df49e4b09dc2f81cf44391"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+let allProducts = [];
+
+let selectedProduct = null;
+
+const q = query(collection(db, "products"), orderBy("timestamp", "desc"));
+
+onSnapshot(q, (snapshot) => {
+
+    allProducts = [];
+
+    snapshot.forEach((doc) => {
+        allProducts.push({
+            id: doc.id,
+            ...doc.data()
         });
-        list.innerHTML = html || "<p style='text-align:center; font-size:12px; color:#999; padding:10px;'>No products found.</p>";
     });
 
-    window.deleteProduct = async (id) => {
-        if(confirm("Delete this product permanently?")) {
-            try {
-                await deleteDoc(doc(db, "products", id));
-                alert("🗑️ Product removed!");
-            } catch(e) { alert(e.message); }
+    renderProducts(allProducts);
+
+});
+
+function renderProducts(productsList) {
+
+    const grid = document.getElementById("mainCatalogGrid");
+
+    const top = document.getElementById("topSellersScrollBox");
+
+    top.innerHTML = productsList.slice(0,5).map(p => `
+
+        <div class="grid-product-card" style="min-width:150px;" onclick="openDetails('${p.id}')">
+
+            <img src="${p.img}">
+
+            <div class="product-title">${p.name}</div>
+
+            <div class="product-price">₦${Number(p.price).toLocaleString()}</div>
+
+        </div>
+
+    `).join("");
+
+    grid.innerHTML = productsList.map(p => `
+
+        <div class="grid-product-card" onclick="openDetails('${p.id}')">
+
+            <div class="discount-badge">-${p.pct || 0}%</div>
+
+            <img src="${p.img}">
+
+            <div class="product-title">${p.name}</div>
+
+            <div class="product-price">₦${Number(p.price).toLocaleString()}</div>
+
+        </div>
+
+    `).join("");
+
+}
+
+window.openDetails = function(id) {
+
+    const p = allProducts.find(item => item.id === id);
+
+    if(!p) return;
+
+    selectedProduct = p;
+
+    document.getElementById("mImg").src = p.img;
+
+    document.getElementById("mName").innerText = p.name;
+
+    document.getElementById("mPrice").innerText =
+    "₦" + Number(p.price).toLocaleString();
+
+    document.getElementById("mOld").innerText =
+    p.old ? "₦" + Number(p.old).toLocaleString() : "";
+
+    document.getElementById("mDesc").innerText =
+    p.desc || "No description available.";
+
+    document.getElementById("productModal").style.display = "block";
+
+}
+
+window.closeDetails = function() {
+
+    document.getElementById("productModal").style.display = "none";
+
+}
+
+window.filterCategory = function(category, btn) {
+
+    document.querySelectorAll(".cat-btn")
+    .forEach(b => b.classList.remove("active"));
+
+    btn.classList.add("active");
+
+    const filtered = category === "all"
+    ? allProducts
+    : allProducts.filter(p => p.cat === category);
+
+    renderProducts(filtered);
+
+}
+
+window.addToCart = function() {
+
+    alert("Added to cart successfully!");
+
+}
+
+// PAYSTACK
+window.payNow = function() {
+
+    if(!selectedProduct) return;
+
+    const email = prompt("Enter your email");
+
+    if(!email) {
+        alert("Email required");
+        return;
+    }
+
+    let handler = PaystackPop.setup({
+
+        key: 'pk_live_74b79dcbb6afc98ea13aa66c2c0f154e923643bc',
+
+        email: email,
+
+        amount: Number(selectedProduct.price) * 100,
+
+        currency: "NGN",
+
+        callback: function(response) {
+
+            alert(
+            "Payment successful!\nReference: "
+            + response.reference
+            );
+
+        },
+
+        onClose: function() {
+
+            alert("Payment cancelled");
+
         }
-    };
 
-    window.publishProduct = async () => {
-        const img = document.getElementById('finalImgUrl').value.trim();
-        const name = document.getElementById('pName').value.trim();
-        const price = Number(document.getElementById('pPrice').value);
-        const old = Number(document.getElementById('pOld').value) || price;
-        const cat = document.getElementById('pCat').value;
-        const desc = document.getElementById('pDesc').value.trim();
+    });
 
-        if(!img || !name || !price) return alert("Fill Name, Price and Image URL!");
+    handler.openIframe();
 
-        const btn = document.getElementById("publishBtn");
-        btn.disabled = true; btn.innerText = "Publishing...";
+}
 
-        try {
-            await addDoc(collection(db, "products"), {
-                name, price, old, img, cat, desc,
-                pct: Math.round(((old - price)/old)*100),
-                timestamp: new Date(),
-                password: ADMIN_PASS
-            });
-            alert("🎉 Success! Product is now Live.");
-            document.getElementById('finalImgUrl').value = "";
-            document.getElementById('pName').value = "";
-            document.getElementById('pPrice').value = "";
-            document.getElementById('pOld').value = "";
-            document.getElementById('pDesc').value = "";
-            document.getElementById('preview-img').style.display = 'none';
-            document.getElementById('pre-text').style.display = 'block';
-            btn.disabled = false; btn.innerText = "PUBLISH TO STORE";
-        } catch(e) { 
-            alert("Error writing to database: " + e.message); 
-            btn.disabled = false; btn.innerText = "PUBLISH TO STORE";
-        }
-    };
-
-    window.setupAiKey = () => {
-        const key = prompt("Paste Groq API Key:");
-        if(key && key.startsWith("gsk_")) {
-            localStorage.setItem("GROQ_API_KEY", key);
-            alert("AI Activated!");
-        }
-    };
 </script>
+
 </body>
 </html>
