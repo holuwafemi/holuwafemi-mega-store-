@@ -69,7 +69,7 @@
         /* WhatsApp Button */
         .btn-whatsapp { background: var(--whatsapp-green); color: #fff; border: none; padding: 14px; font-weight: bold; border-radius: 4px; cursor: pointer; text-align: center; font-size: 12px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 5px; }
 
-        /* Jumia Style Cart View Layout Elements */
+        /* Shopping Cart View Layout Elements */
         .cart-item-row { display: flex; gap: 15px; padding: 15px; border-bottom: 1px solid #eee; align-items: center; background: #fff; }
         .cart-item-row img { width: 60px; height: 60px; object-fit: contain; background: #f9f9f9; border-radius: 4px; }
         .cart-item-details { flex: 1; }
@@ -123,10 +123,8 @@
     <div class="cat-bar">
         <button class="cat-btn active" onclick="filterCategory('all', this)">All</button>
         <button class="cat-btn" onclick="filterCategory('electronics', this)">Electronics</button>
-        <button class="cat-btn" onclick="filterCategory('appliances', this)">Appliances</button>
-         <button class="cat-btn" onclick="filterCategory('solar', this)">Solar</button>
+        <button class="cat-btn" onclick="filterCategory('solar', this)">Solar</button>
         <button class="cat-btn" onclick="filterCategory('phones', this)">Phones</button>
-         <button class="cat-btn" onclick="filterCategory('computer', this)">Computer</button>
     </div>
 
     <div class="section-title">Flash Sales</div>
@@ -424,17 +422,15 @@
             return;
         }
 
-        // Change button layout state to prevent multiple click bugs
         payButton.innerText = "OPENING SECURE GATEWAY...";
         payButton.disabled = true;
 
         try {
-            // New, bulletproof Paystack Pop Inline standard initialization rule
-            const paystack = new PaystackPop();
-            paystack.newTransaction({
-                key: 'pk_live_74b79dcbb6afc98ea13aa66c2c0f154e923643bc', // Double check this is your PUBLIC key (starts with pk_, NOT sk_)
+            // Using the universally compatible setup engine configuration 
+            let handler = PaystackPop.setup({
+                key: 'pk_live_74b79dcbb6afc98ea13aa66c2c0f154e923643bc', 
                 email: email,
-                amount: Math.round(checkoutAmount * 100), // Ensures absolute integer value for Kobo translation
+                amount: Math.round(checkoutAmount * 100), 
                 currency: "NGN",
                 metadata: {
                     custom_fields: [
@@ -444,9 +440,8 @@
                         { display_name: "Items Ordered", variable_name: "items_ordered", value: checkoutItemsDescription }
                     ]
                 },
-                onSuccess: async function(response) {
+                callback: async function(response) {
                     try {
-                        // Log straight into your Firestore orders tracker
                         await addDoc(collection(db, "orders"), {
                             customerName: name,
                             customerEmail: email,
@@ -470,20 +465,22 @@
                         updateCartBadge();
                     }
                     
-                    // Reset fields and close modal panel window
                     payButton.innerText = "CONFIRM & PAY NOW";
                     payButton.disabled = false;
                     closeCheckoutView();
                 },
-                onCancel: function() {
+                onClose: function() {
                     alert("Transaction cancelled by user.");
                     payButton.innerText = "CONFIRM & PAY NOW";
                     payButton.disabled = false;
                 }
             });
+
+            handler.openIframe();
+
         } catch (error) {
-            console.error("Paystack system crash details: ", error);
-            alert("⚠️ Error starting payment interface. Please check your internet connection.");
+            console.error("Paystack startup exception: ", error);
+            alert("⚠️ Error starting payment interface. Ensure your key is a valid Public Key (pk_).");
             payButton.innerText = "CONFIRM & PAY NOW";
             payButton.disabled = false;
         }
