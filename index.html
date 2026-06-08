@@ -66,7 +66,7 @@
         .btn-cart { flex: 1; background: #feebd8; color: var(--jumia-orange); border: none; padding: 14px; font-weight: bold; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-size: 12px; }
         .btn-buy { flex: 1; background: var(--jumia-orange); color: #fff; border: none; padding: 14px; font-weight: bold; border-radius: 4px; cursor: pointer; text-align: center; font-size: 12px; text-transform: uppercase; }
         
-        /* WhatsApp Secondary Layout Button */
+        /* WhatsApp Button */
         .btn-whatsapp { background: var(--whatsapp-green); color: #fff; border: none; padding: 14px; font-weight: bold; border-radius: 4px; cursor: pointer; text-align: center; font-size: 12px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 5px; }
 
         /* Jumia Style Cart View Layout Elements */
@@ -102,7 +102,6 @@
             text-decoration: none;
             transition: transform 0.2s;
         }
-        .whatsapp-floating-btn:active { transform: scale(0.9); }
     </style>
 </head>
 <body>
@@ -165,8 +164,7 @@
             <div class="close-modal" onclick="closeCartView()"><i class="fas fa-arrow-left"></i></div>
             <div style="padding: 20px 20px 10px 65px; font-weight: bold; font-size: 18px; background: #fff; border-bottom: 1px solid #eee;">My Shopping Cart</div>
             
-            <div id="cartItemsListContainer" style="margin-top: 10px;">
-                </div>
+            <div id="cartItemsListContainer" style="margin-top: 10px;"></div>
 
             <div id="cartTotalSummaryCard" style="background:#fff; padding:20px; margin-top:10px; display:none;">
                 <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-weight:500;">
@@ -216,14 +214,13 @@
             
             <div style="height: 100px;"></div>
             <div class="action-bar">
-                <button class="btn-buy" style="width:100%; background:#22a343;" onclick="processPaystackPayment()">CONFIRM & PAY NOW</button>
+                <button id="paystackTriggerBtn" class="btn-buy" style="width:100%; background:#22a343;" onclick="processPaystackPayment()">CONFIRM & PAY NOW</button>
             </div>
         </div>
     </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    // Added addDoc for automated background saving
     import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -299,8 +296,7 @@
         document.getElementById("mOld").innerText = p.old ? "₦" + Number(p.old).toLocaleString() : "";
         document.getElementById("mDesc").innerText = p.desc || "No specific details provided.";
 
-        // DYNAMIC PRODUCT-SPECIFIC CHAT GENERATOR
-        const encodedMsg = encodeURIComponent(`Hello Tolulope, I am looking at "${p.name}" priced at ₦${Number(p.price).toLocaleString()} on your store and I have a quick question about it.`);
+        const encodedMsg = encodeURIComponent(`Hello, I am looking at "${p.name}" priced at ₦${Number(p.price).toLocaleString()} on your store and I have a quick question about it.`);
         document.getElementById("whatsappProductChatBtn").href = `https://wa.me/2349061989529?text=${encodedMsg}`;
 
         document.getElementById("productModal").style.display = "block";
@@ -385,7 +381,7 @@
         openCartView(); 
     }
 
-    // --- CHECKOUT NAVIGATION HANDLERS ---
+    // --- CHECKOUT HANDLERS ---
     window.startCheckoutDirect = function() {
         if(!selectedProduct) return;
         checkoutMode = "direct";
@@ -413,70 +409,82 @@
         document.body.style.overflow = "auto";
     }
 
-    // --- INLINE PAYSTACK DRIVER + FIREBASE BACKEND RECIEVER ---
+    // --- RE-ENGINEERED PAYSTACK INLINE POP INTERCEPTOR ENGINE ---
     window.processPaystackPayment = function() {
         const name = document.getElementById("custName").value.trim();
         const email = document.getElementById("custEmail").value.trim();
         const phone = document.getElementById("custPhone").value.trim();
         const address = document.getElementById("custAddress").value.trim();
+        const payButton = document.getElementById("paystackTriggerBtn");
 
         if(!name || !email || !phone || !address) {
-            alert("⚠️ Please complete all shipping details fields before proceeding to payment.");
+            alert("⚠️ Please complete all delivery fields before proceeding.");
             return;
         }
 
-        let handler = PaystackPop.setup({
-            key: 'pk_live_74b79dcbb6afc98ea13aa66c2c0f154e923643bc',
-            email: email,
-            amount: checkoutAmount * 100, 
-            currency: "NGN",
-            metadata: {
-                custom_fields: [
-                    { display_name: "Customer Name", variable_name: "customer_name", value: name },
-                    { display_name: "Phone Number", variable_name: "phone_number", value: phone },
-                    { display_name: "Delivery Address", variable_name: "delivery_address", value: address },
-                    { display_name: "Items Ordered", variable_name: "items_ordered", value: checkoutItemsDescription }
-                ]
-            },
-            callback: async function(response) {
-                // --- BACKEND SECURITY RULES AUTOMATED LOGGER ENGINE ---
-                try {
-                    await addDoc(collection(db, "orders"), {
-                        customerName: name,
-                        customerEmail: email,
-                        customerPhone: phone,
-                        deliveryAddress: address,
-                        orderedItems: checkoutItemsDescription,
-                        totalPaid: checkoutAmount,
-                        paystackReference: response.reference,
-                        timestamp: serverTimestamp()
-                    });
-                    
-                    alert(
-                        "✅ Payment Successful & Order Logged!\n\n" +
-                        "Reference Transaction: " + response.reference +
-                        "\n\nYour order details have been saved safely in your system dashboard."
-                    );
-                } catch (error) {
-                    console.error("Database tracking error: ", error);
-                    // Standard payment success fallback alert if database write encounters an error
-                    alert("✅ Payment Successful! Reference: " + response.reference);
-                }
-                
-                if(checkoutMode === "cart") {
-                    cart = [];
-                    localStorage.removeItem("megaStoreCart");
-                    updateCartBadge();
-                }
-                
-                closeCheckoutView();
-            },
-            onClose: function() {
-                alert("Transaction processing suspended by user.");
-            }
-        });
+        // Change button layout state to prevent multiple click bugs
+        payButton.innerText = "OPENING SECURE GATEWAY...";
+        payButton.disabled = true;
 
-        handler.openIframe();
+        try {
+            // New, bulletproof Paystack Pop Inline standard initialization rule
+            const paystack = new PaystackPop();
+            paystack.newTransaction({
+                key: 'pk_live_74b79dcbb6afc98ea13aa66c2c0f154e923643bc', // Double check this is your PUBLIC key (starts with pk_, NOT sk_)
+                email: email,
+                amount: Math.round(checkoutAmount * 100), // Ensures absolute integer value for Kobo translation
+                currency: "NGN",
+                metadata: {
+                    custom_fields: [
+                        { display_name: "Customer Name", variable_name: "customer_name", value: name },
+                        { display_name: "Phone Number", variable_name: "phone_number", value: phone },
+                        { display_name: "Delivery Address", variable_name: "delivery_address", value: address },
+                        { display_name: "Items Ordered", variable_name: "items_ordered", value: checkoutItemsDescription }
+                    ]
+                },
+                onSuccess: async function(response) {
+                    try {
+                        // Log straight into your Firestore orders tracker
+                        await addDoc(collection(db, "orders"), {
+                            customerName: name,
+                            customerEmail: email,
+                            customerPhone: phone,
+                            deliveryAddress: address,
+                            orderedItems: checkoutItemsDescription,
+                            totalPaid: checkoutAmount,
+                            paystackReference: response.reference,
+                            timestamp: serverTimestamp()
+                        });
+                        
+                        alert("✅ Payment Successful! Your order has been registered securely.");
+                    } catch (dbError) {
+                        console.error("Firestore logging error: ", dbError);
+                        alert("✅ Payment Received! Reference: " + response.reference);
+                    }
+                    
+                    if(checkoutMode === "cart") {
+                        cart = [];
+                        localStorage.removeItem("megaStoreCart");
+                        updateCartBadge();
+                    }
+                    
+                    // Reset fields and close modal panel window
+                    payButton.innerText = "CONFIRM & PAY NOW";
+                    payButton.disabled = false;
+                    closeCheckoutView();
+                },
+                onCancel: function() {
+                    alert("Transaction cancelled by user.");
+                    payButton.innerText = "CONFIRM & PAY NOW";
+                    payButton.disabled = false;
+                }
+            });
+        } catch (error) {
+            console.error("Paystack system crash details: ", error);
+            alert("⚠️ Error starting payment interface. Please check your internet connection.");
+            payButton.innerText = "CONFIRM & PAY NOW";
+            payButton.disabled = false;
+        }
     }
 </script>
 </body>
