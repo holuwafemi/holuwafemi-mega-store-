@@ -358,7 +358,16 @@
     window.filterCategory = function(category, btn) {
         document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
-        const filtered = category === 'all' ? allProducts : allProducts.filter(p => p.cat === category);
+        
+        const filtered = category === 'all' ? allProducts : allProducts.filter(p => {
+            if (!p.cat) return false;
+            
+            const databaseCat = p.cat.toLowerCase().trim();
+            const buttonCat = category.toLowerCase().trim();
+            
+            return databaseCat === buttonCat || databaseCat.includes(buttonCat);
+        });
+        
         renderProducts(filtered);
     }
 
@@ -394,9 +403,4 @@
             let total = 0;
             listContainer.innerHTML = cart.map((p, index) => {
                 total += Number(p.price);
-                return `
-                    <div class="cart-item-row">
-                        <img src="${p.img || 'https://via.placeholder.com/140'}">
-                        <div class="cart-item-details">
-                            <div class="cart-item-title">${p.name}</div>
-             
+                retu
