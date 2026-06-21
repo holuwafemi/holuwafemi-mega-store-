@@ -289,6 +289,13 @@
     let checkoutItemsDescription = "";
     let cart = JSON.parse(localStorage.getItem("megaStoreCart")) || [];
 
+    // Safe parsing utility function to handle number formatting completely error-free
+    function safeFormatPrice(val) {
+        if (val === undefined || val === null || val === "") return "0";
+        const num = Number(val);
+        return isNaN(num) ? "0" : num.toLocaleString();
+    }
+
     // Firebase Data Real-time Sync Engine
     const q = query(collection(db, "products"), orderBy("timestamp", "desc"));
     onSnapshot(q, (snapshot) => {
@@ -314,8 +321,8 @@
         top.innerHTML = productsList.slice(0, 5).map(p => `
             <div class="grid-product-card" style="min-width: 110px; max-width: 110px;" onclick="openDetails('${p.id}')">
                 <img src="${p.img || 'https://via.placeholder.com/140'}">
-                <div class="product-title">${p.name}</div>
-                <div class="product-price">₦${Number(p.price).toLocaleString()}</div>
+                <div class="product-title">${p.name || 'Product'}</div>
+                <div class="product-price">₦${safeFormatPrice(p.price)}</div>
             </div>
         `).join("");
 
@@ -324,8 +331,8 @@
                 <div class="discount-badge">-${p.pct || 0}%</div>
                 <img src="${p.img || 'https://via.placeholder.com/140'}">
                 <div>
-                    <div class="product-title">${p.name}</div>
-                    <div class="product-price">₦${Number(p.price).toLocaleString()}</div>
+                    <div class="product-title">${p.name || 'Product'}</div>
+                    <div class="product-price">₦${safeFormatPrice(p.price)}</div>
                 </div>
             </div>
         `).join("");
@@ -336,13 +343,13 @@
         const p = allProducts.find(item => item.id === id);
         if(!p) return;
         selectedProduct = p; 
-        document.getElementById("mImg").src = p.img;
-        document.getElementById("mName").innerText = p.name;
-        document.getElementById("mPrice").innerText = "₦" + Number(p.price).toLocaleString();
-        document.getElementById("mOld").innerText = p.old ? "₦" + Number(p.old).toLocaleString() : "";
+        document.getElementById("mImg").src = p.img || 'https://via.placeholder.com/140';
+        document.getElementById("mName").innerText = p.name || 'Product';
+        document.getElementById("mPrice").innerText = "₦" + safeFormatPrice(p.price);
+        document.getElementById("mOld").innerText = p.old ? "₦" + safeFormatPrice(p.old) : "";
         document.getElementById("mDesc").innerText = p.desc || "No specific details provided.";
 
-        const encodedMsg = encodeURIComponent(`Hello, I am looking at "${p.name}" priced at ₦${Number(p.price).toLocaleString()} on your store and I have a quick question about it.`);
+        const encodedMsg = encodeURIComponent(`Hello, I am looking at "${p.name}" priced at ₦${safeFormatPrice(p.price)} on your store and I have a quick question about it.`);
         document.getElementById("whatsappProductChatBtn").href = `https://wa.me/2349061989529?text=${encodedMsg}`;
 
         document.getElementById("productModal").style.display = "block";
@@ -362,8 +369,8 @@
         const filtered = category === 'all' ? allProducts : allProducts.filter(p => {
             if (!p.cat) return false;
             
-            const databaseCat = p.cat.toLowerCase().trim();
-            const buttonCat = category.toLowerCase().trim();
+            const databaseCat = String(p.cat).toLowerCase().trim();
+            const buttonCat = String(category).toLowerCase().trim();
             
             return databaseCat === buttonCat || databaseCat.includes(buttonCat);
         });
@@ -395,12 +402,4 @@
             listContainer.innerHTML = `
                 <div style="text-align:center; padding:50px 20px; color:#666;">
                     <i class="fas fa-shopping-basket" style="font-size:48px; color:#ccc; margin-bottom:15px;"></i>
-                    <p>Your shopping cart is empty!</p>
-                </div>`;
-            totalSummary.style.display = "none";
-            actionBtn.style.display = "none";
-        } else {
-            let total = 0;
-            listContainer.innerHTML = cart.map((p, index) => {
-                total += Number(p.price);
-                retu
+ 
