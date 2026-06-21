@@ -61,8 +61,8 @@
             <option value="electronics">Electronics</option>
             <option value="solar">Solar</option>
             <option value="appliances">Appliances</option>
-            <option value="phones">Phones📱</option>
-            <option value="computers">Computers💻</option>
+            <option value="computers">Computers</option>
+            <option value="phones">Phones</option>
         </select>
         
         <label>Description</label>
@@ -86,7 +86,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
     // 🖥️ Your Real App Credentials Built In
     const firebaseConfig = {
@@ -130,12 +130,13 @@
         let html = "";
         snapshot.forEach((pDoc) => {
             const p = pDoc.data();
+            const priceValue = p.price ? Number(p.price).toLocaleString() : "0";
             html += `
                 <div class="catalog-item">
                     <img src="${p.img || 'https://via.placeholder.com/40'}">
                     <div class="catalog-info">
-                        <div class="catalog-name">${p.name}</div>
-                        <div class="catalog-price">₦${p.price.toLocaleString()}</div>
+                        <div class="catalog-name">${p.name || 'Unnamed Product'}</div>
+                        <div class="catalog-price">₦${priceValue}</div>
                     </div>
                     <button class="btn-delete" onclick="deleteProduct('${pDoc.id}')"><i class="fas fa-trash"></i></button>
                 </div>`;
@@ -169,7 +170,7 @@
             await addDoc(collection(db, "products"), {
                 name, price, old, img, cat, desc,
                 pct: Math.round(((old - price)/old)*100),
-                timestamp: new Date(),
+                timestamp: serverTimestamp(),
                 password: ADMIN_PASS
             });
             alert("🎉 Success! Product is now Live.");
