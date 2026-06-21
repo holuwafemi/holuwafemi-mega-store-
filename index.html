@@ -39,14 +39,61 @@
 
         .section-title { font-size: 14px; font-weight: bold; text-transform: uppercase; padding: 12px 16px 4px 16px; color: #555; }
         
-        /* Product Cards Grid */
-        .grid-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; padding: 0 16px 16px 16px; }
-        .grid-product-card { background: #fff; padding: 10px; border-radius: 4px; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.05); cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; }
-        .grid-product-card img { width: 100%; height: 140px; object-fit: contain; margin-bottom: 8px; }
-        .discount-badge { position: absolute; top: 8px; right: 8px; background: #feebd8; color: var(--jumia-orange); font-size: 11px; padding: 2px 6px; font-weight: bold; border-radius: 2px; }
+        /* UPDATED: Main 3-Column Grid Layout Configuration */
+        .grid-container { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); /* Forces exactly 3 items per line */
+            gap: 6px; 
+            padding: 0 12px 12px 12px; 
+        }
         
-        .product-title { font-size: 13px; color: #333; height: 32px; overflow: hidden; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-        .product-price { font-size: 15px; font-weight: bold; color: #333; }
+        /* UPDATED: Compact Cards Style Configuration for 3-Column Scaling */
+        .grid-product-card { 
+            background: #fff; 
+            padding: 6px; 
+            border-radius: 4px; 
+            position: relative; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+            cursor: pointer; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+        }
+        .grid-product-card img { 
+            width: 100%; 
+            height: 95px; /* Scaled down perfectly to fit 3 items beautifully */
+            object-fit: contain; 
+            margin-bottom: 6px; 
+        }
+        .discount-badge { 
+            position: absolute; 
+            top: 4px; 
+            right: 4px; 
+            background: #feebd8; 
+            color: var(--jumia-orange); 
+            font-size: 9px; 
+            padding: 1px 4px; 
+            font-weight: bold; 
+            border-radius: 2px; 
+            z-index: 2;
+        }
+        
+        .product-title { 
+            font-size: 11px; /* Highly optimized micro-font size for mobile scannability */
+            color: #333; 
+            height: 28px; 
+            overflow: hidden; 
+            margin-bottom: 2px; 
+            display: -webkit-box; 
+            -webkit-line-clamp: 2; 
+            -webkit-box-orient: vertical; 
+            line-height: 1.3;
+        }
+        .product-price { 
+            font-size: 12px; 
+            font-weight: bold; 
+            color: #333; 
+        }
 
         /* General Overlay Screen Base */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; overflow-y: auto; }
@@ -123,7 +170,7 @@
     <div class="cat-bar">
         <button class="cat-btn active" onclick="filterCategory('all', this)">All</button>
         <button class="cat-btn" onclick="filterCategory('electronics', this)">Electronics</button>
-        <button class="cat-btn" onclick="filterCategory('appliances', this)">Aplliances</button>
+        <button class="cat-btn" onclick="filterCategory('appliances', this)">Appliances</button>
         <button class="cat-btn" onclick="filterCategory('solar', this)">Solar</button>
         <button class="cat-btn" onclick="filterCategory('computers', this)">Computers</button>
         <button class="cat-btn" onclick="filterCategory('phones', this)">Phones</button>
@@ -136,7 +183,7 @@
 
     <div class="section-title">All Products</div>
     <div class="grid-container" id="mainCatalogGrid">
-        <p style="padding:10px; color:#999; font-size:10px;">Syncing product lines...</p>
+        <p style="padding:20px; color:#999; font-size:13px;">Syncing product lines...</p>
     </div>
 
     <div id="productModal" class="modal">
@@ -257,7 +304,7 @@
             renderProducts(allProducts);
         } else {
             document.getElementById("mainCatalogGrid").innerHTML = 
-                `<p style='grid-column: span 2; padding:40px; text-align:center; color:#999; font-size:13px;'>Your store inventory is empty. Open admin.html to publish your products!</p>`;
+                `<p style='grid-column: span 3; padding:40px; text-align:center; color:#999; font-size:13px;'>Your store inventory is empty. Open admin.html to publish your products!</p>`;
             document.getElementById("topSellersScrollBox").innerHTML = "";
         }
         updateCartBadge(); 
@@ -268,7 +315,7 @@
         const top = document.getElementById("topSellersScrollBox");
 
         top.innerHTML = productsList.slice(0, 5).map(p => `
-            <div class="grid-product-card" style="min-width: 145px; max-width: 145px;" onclick="openDetails('${p.id}')">
+            <div class="grid-product-card" style="min-width: 110px; max-width: 110px;" onclick="openDetails('${p.id}')">
                 <img src="${p.img || 'https://via.placeholder.com/140'}">
                 <div class="product-title">${p.name}</div>
                 <div class="product-price">₦${Number(p.price).toLocaleString()}</div>
@@ -348,145 +395,4 @@
             actionBtn.style.display = "none";
         } else {
             let total = 0;
-            listContainer.innerHTML = cart.map((p, index) => {
-                total += Number(p.price);
-                return `
-                    <div class="cart-item-row">
-                        <img src="${p.img || 'https://via.placeholder.com/140'}">
-                        <div class="cart-item-details">
-                            <div class="cart-item-title">${p.name}</div>
-                            <div class="cart-item-price">₦${Number(p.price).toLocaleString()}</div>
-                            <button class="btn-remove" onclick="removeCartItem(${index})"><i class="fas fa-trash-alt"></i> Remove</button>
-                        </div>
-                    </div>`;
-            }).join("");
-
-            document.getElementById("cartSubtotalAmount").innerText = "₦" + total.toLocaleString();
-            document.getElementById("cartTotalAmount").innerText = "₦" + total.toLocaleString();
-            totalSummary.style.display = "block";
-            actionBtn.style.display = "flex";
-        }
-
-        document.getElementById("cartModal").style.display = "block";
-        document.body.style.overflow = "hidden";
-    }
-
-    window.closeCartView = function() {
-        document.getElementById("cartModal").style.display = "none";
-        document.body.style.overflow = "auto";
-    }
-
-    window.removeCartItem = function(index) {
-        cart.splice(index, 1);
-        localStorage.setItem("megaStoreCart", JSON.stringify(cart));
-        updateCartBadge();
-        openCartView(); 
-    }
-
-    // --- CHECKOUT HANDLERS ---
-    window.startCheckoutDirect = function() {
-        if(!selectedProduct) return;
-        checkoutMode = "direct";
-        checkoutAmount = Number(selectedProduct.price);
-        checkoutItemsDescription = selectedProduct.name;
-
-        document.getElementById("checkoutPayableAmount").innerText = "₦" + checkoutAmount.toLocaleString();
-        closeDetails();
-        document.getElementById("checkoutModal").style.display = "block";
-    }
-
-    window.startCheckoutCart = function() {
-        if(cart.length === 0) return;
-        checkoutMode = "cart";
-        checkoutAmount = cart.reduce((sum, item) => sum + Number(item.price), 0);
-        checkoutItemsDescription = cart.map(item => item.name).join(", ");
-
-        document.getElementById("checkoutPayableAmount").innerText = "₦" + checkoutAmount.toLocaleString();
-        closeCartView();
-        document.getElementById("checkoutModal").style.display = "block";
-    }
-
-    window.closeCheckoutView = function() {
-        document.getElementById("checkoutModal").style.display = "none";
-        document.body.style.overflow = "auto";
-    }
-
-    // --- RE-ENGINEERED PAYSTACK INLINE POP INTERCEPTOR ENGINE ---
-    window.processPaystackPayment = function() {
-        const name = document.getElementById("custName").value.trim();
-        const email = document.getElementById("custEmail").value.trim();
-        const phone = document.getElementById("custPhone").value.trim();
-        const address = document.getElementById("custAddress").value.trim();
-        const payButton = document.getElementById("paystackTriggerBtn");
-
-        if(!name || !email || !phone || !address) {
-            alert("⚠️ Please complete all delivery fields before proceeding.");
-            return;
-        }
-
-        payButton.innerText = "OPENING SECURE GATEWAY...";
-        payButton.disabled = true;
-
-        try {
-            // Using the universally compatible setup engine configuration 
-            let handler = PaystackPop.setup({
-                key: 'pk_live_74b79dcbb6afc98ea13aa66c2c0f154e923643bc', 
-                email: email,
-                amount: Math.round(checkoutAmount * 100), 
-                currency: "NGN",
-                metadata: {
-                    custom_fields: [
-                        { display_name: "Customer Name", variable_name: "customer_name", value: name },
-                        { display_name: "Phone Number", variable_name: "phone_number", value: phone },
-                        { display_name: "Delivery Address", variable_name: "delivery_address", value: address },
-                        { display_name: "Items Ordered", variable_name: "items_ordered", value: checkoutItemsDescription }
-                    ]
-                },
-                callback: async function(response) {
-                    try {
-                        await addDoc(collection(db, "orders"), {
-                            customerName: name,
-                            customerEmail: email,
-                            customerPhone: phone,
-                            deliveryAddress: address,
-                            orderedItems: checkoutItemsDescription,
-                            totalPaid: checkoutAmount,
-                            paystackReference: response.reference,
-                            timestamp: serverTimestamp()
-                        });
-                        
-                        alert("✅ Payment Successful! Your order has been registered securely.");
-                    } catch (dbError) {
-                        console.error("Firestore logging error: ", dbError);
-                        alert("✅ Payment Received! Reference: " + response.reference);
-                    }
-                    
-                    if(checkoutMode === "cart") {
-                        cart = [];
-                        localStorage.removeItem("megaStoreCart");
-                        updateCartBadge();
-                    }
-                    
-                    payButton.innerText = "CONFIRM & PAY NOW";
-                    payButton.disabled = false;
-                    closeCheckoutView();
-                },
-                onClose: function() {
-                    alert("Transaction cancelled by user.");
-                    payButton.innerText = "CONFIRM & PAY NOW";
-                    payButton.disabled = false;
-                }
-            });
-
-            handler.openIframe();
-
-        } catch (error) {
-            console.error("Paystack startup exception: ", error);
-            alert("⚠️ Error starting payment interface. Ensure your key is a valid Public Key (pk_).");
-            payButton.innerText = "CONFIRM & PAY NOW";
-            payButton.disabled = false;
-        }
-    }
-</script>
-</body>
-</html>
+            listContainer.innerHTML = cart.map
