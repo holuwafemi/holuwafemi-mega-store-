@@ -39,15 +39,15 @@
 
         .section-title { font-size: 14px; font-weight: bold; text-transform: uppercase; padding: 12px 16px 4px 16px; color: #555; }
         
-        /* UPDATED: Main 3-Column Grid Layout Configuration */
+        /* Main 3-Column Grid Layout */
         .grid-container { 
             display: grid; 
-            grid-template-columns: repeat(3, 1fr); /* Forces exactly 3 items per line */
+            grid-template-columns: repeat(3, 1fr); 
             gap: 6px; 
             padding: 0 12px 12px 12px; 
         }
         
-        /* UPDATED: Compact Cards Style Configuration for 3-Column Scaling */
+        /* Compact Cards Style Configuration for 3 Columns */
         .grid-product-card { 
             background: #fff; 
             padding: 6px; 
@@ -61,7 +61,7 @@
         }
         .grid-product-card img { 
             width: 100%; 
-            height: 95px; /* Scaled down perfectly to fit 3 items beautifully */
+            height: 95px; 
             object-fit: contain; 
             margin-bottom: 6px; 
         }
@@ -79,7 +79,7 @@
         }
         
         .product-title { 
-            font-size: 11px; /* Highly optimized micro-font size for mobile scannability */
+            font-size: 11px; 
             color: #333; 
             height: 28px; 
             overflow: hidden; 
@@ -95,7 +95,7 @@
             color: #333; 
         }
 
-        /* General Overlay Screen Base */
+        /* Modals and Overlays */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; overflow-y: auto; }
         .modal-content { background: #fff; width: 100%; max-width: 500px; margin: 0 auto; min-height: 100vh; position: relative; }
         .close-modal { position: absolute; top: 15px; left: 15px; font-size: 20px; color: #333; z-index: 1001; cursor: pointer; background: #fff; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
@@ -108,15 +108,13 @@
         .detail-old { text-decoration: line-through; color: #999; font-size: 16px; }
         .detail-desc { font-size: 15px; line-height: 1.6; color: #666; border-top: 1px solid #eee; padding-top: 15px; white-space: pre-wrap; }
 
-        /* Bottom Fixed Navigation Bar */
+        /* Action Bars */
         .action-bar { position: fixed; bottom: 0; width: 100%; max-width: 500px; display: flex; padding: 12px; gap: 8px; background: #fff; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); left: 50%; transform: translateX(-50%); z-index: 1002; }
         .btn-cart { flex: 1; background: #feebd8; color: var(--jumia-orange); border: none; padding: 14px; font-weight: bold; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-size: 12px; }
         .btn-buy { flex: 1; background: var(--jumia-orange); color: #fff; border: none; padding: 14px; font-weight: bold; border-radius: 4px; cursor: pointer; text-align: center; font-size: 12px; text-transform: uppercase; }
-        
-        /* WhatsApp Button */
         .btn-whatsapp { background: var(--whatsapp-green); color: #fff; border: none; padding: 14px; font-weight: bold; border-radius: 4px; cursor: pointer; text-align: center; font-size: 12px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 5px; }
 
-        /* Shopping Cart View Layout Elements */
+        /* Cart View Rows */
         .cart-item-row { display: flex; gap: 15px; padding: 15px; border-bottom: 1px solid #eee; align-items: center; background: #fff; }
         .cart-item-row img { width: 60px; height: 60px; object-fit: contain; background: #f9f9f9; border-radius: 4px; }
         .cart-item-details { flex: 1; }
@@ -124,13 +122,12 @@
         .cart-item-price { font-size: 15px; font-weight: bold; color: var(--jumia-orange); }
         .btn-remove { color: #d9534f; border: none; background: none; font-size: 13px; cursor: pointer; margin-top: 5px; }
 
-        /* Custom Input Form Panels Styles */
+        /* Inputs */
         .form-group { margin-bottom: 16px; padding: 0 20px; }
         .form-group label { display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 6px; text-transform: uppercase; }
         .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; outline: none; }
         .form-group input:focus, .form-group textarea:focus { border-color: var(--jumia-orange); }
 
-        /* Floating General Chat Badge Button Widget */
         .whatsapp-floating-btn {
             position: fixed;
             bottom: 75px;
@@ -395,4 +392,11 @@
             actionBtn.style.display = "none";
         } else {
             let total = 0;
-            listContainer.innerHTML = cart.map
+            listContainer.innerHTML = cart.map((p, index) => {
+                total += Number(p.price);
+                return `
+                    <div class="cart-item-row">
+                        <img src="${p.img || 'https://via.placeholder.com/140'}">
+                        <div class="cart-item-details">
+                            <div class="cart-item-title">${p.name}</div>
+             
