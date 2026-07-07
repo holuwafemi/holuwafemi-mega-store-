@@ -5,117 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Holuwafemi Mega Store</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
-    <!-- Official Paystack Inline Script -->
+    <!-- Paystack Inline Script -->
     <script src="https://js.paystack.co/v1/inline.js"></script>
     <style>
         :root { --jumia-orange: #f68b1e; --bg-gray: #f1f1f2; --dark: #333; --whatsapp-green: #25D366; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
         body { background: var(--bg-gray); padding-bottom: 80px; color: var(--dark); }
         
-        /* Layout Header */
         header { background: #fff; padding: 12px 16px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .nav-top { display: flex; align-items: center; justify-content: space-between; }
         .logo { font-size: 18px; font-weight: bold; color: var(--jumia-orange); text-transform: uppercase; }
         
         .cart-icon-container { position: relative; cursor: pointer; padding: 5px; }
         .cart-badge { 
-            position: absolute; 
-            top: -2px; 
-            right: -5px; 
-            background: var(--jumia-orange); 
-            color: white; 
-            font-size: 10px; 
-            font-weight: bold; 
-            border-radius: 50%; 
-            width: 16px; 
-            height: 16px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
+            position: absolute; top: -2px; right: -5px; background: var(--jumia-orange); 
+            color: white; font-size: 10px; font-weight: bold; border-radius: 50%; 
+            width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; 
         }
 
         .cat-bar { display: flex; gap: 10px; overflow-x: auto; padding: 12px 16px; background: #fff; border-top: 1px solid #eee; scrollbar-width: none; }
-        .cat-btn { background: #f1f1f2; border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: 0.2s; }
+        .cat-btn { background: #f1f1f2; border: none; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; transition: 0.2s; color: #333; }
         .cat-btn.active { background: var(--jumia-orange); color: #fff; }
 
-        .section-title { font-size: 14px; font-weight: bold; text-transform: uppercase; padding: 12px 16px 4px 16px; color: #555; }
+        .section-title { font-size: 14px; font-weight: bold; text-transform: uppercase; padding: 16px 16px 6px 16px; color: #555; }
         
-        /* Main 3-Column Grid Layout */
-        .grid-container { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 6px; 
-            padding: 0 12px 12px 12px; 
-        }
+        .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 0 12px 12px 12px; }
+        .grid-product-card { background: #fff; padding: 8px; border-radius: 4px; position: relative; box-shadow: 0 1px 3px rgba(0,0,0,0.05); cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; }
+        .grid-product-card img { width: 100%; height: 95px; object-fit: contain; margin-bottom: 6px; background: #fafafa; }
+        .discount-badge { position: absolute; top: 4px; right: 4px; background: #feebd8; color: var(--jumia-orange); font-size: 9px; padding: 1px 4px; font-weight: bold; border-radius: 2px; z-index: 2; }
         
-        /* Compact Cards Style Configuration for 3 Columns */
-        .grid-product-card { 
-            background: #fff; 
-            padding: 6px; 
-            border-radius: 4px; 
-            position: relative; 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
-            cursor: pointer; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: space-between; 
-        }
-        .grid-product-card img { 
-            width: 100%; 
-            height: 95px; 
-            object-fit: contain; 
-            margin-bottom: 6px; 
-        }
-        .discount-badge { 
-            position: absolute; 
-            top: 4px; 
-            right: 4px; 
-            background: #feebd8; 
-            color: var(--jumia-orange); 
-            font-size: 9px; 
-            padding: 1px 4px; 
-            font-weight: bold; 
-            border-radius: 2px; 
-            z-index: 2;
-        }
-        
-        .product-title { 
-            font-size: 11px; 
-            color: #333; 
-            height: 28px; 
-            overflow: hidden; 
-            margin-bottom: 2px; 
-            display: -webkit-box; 
-            -webkit-line-clamp: 2; 
-            -webkit-box-orient: vertical; 
-            line-height: 1.3;
-        }
-        .product-price { 
-            font-size: 12px; 
-            font-weight: bold; 
-            color: #333; 
-        }
+        .product-title { font-size: 11px; color: #333; height: 28px; overflow: hidden; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.3; }
+        .product-price { font-size: 12px; font-weight: bold; color: #333; }
 
-        /* Modals and Overlays */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; overflow-y: auto; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1000; overflow-y: auto; }
         .modal-content { background: #fff; width: 100%; max-width: 500px; margin: 0 auto; min-height: 100vh; position: relative; }
-        .close-modal { position: absolute; top: 15px; left: 15px; font-size: 20px; color: #333; z-index: 1001; cursor: pointer; background: #fff; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .close-modal { position: absolute; top: 15px; left: 15px; font-size: 18px; color: #333; z-index: 1001; cursor: pointer; background: #fff; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
 
-        .detail-img { width: 100%; height: 350px; object-fit: contain; background: #fff; border-bottom: 1px solid #eee; }
+        .detail-img { width: 100%; height: 320px; object-fit: contain; background: #fff; border-bottom: 1px solid #eee; }
         .detail-info { padding: 20px; }
-        .detail-name { font-size: 20px; font-weight: bold; color: #333; margin-bottom: 8px; }
+        .detail-name { font-size: 18px; font-weight: bold; color: #333; margin-bottom: 8px; }
         .detail-price-row { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-        .detail-price { font-size: 24px; font-weight: bold; color: var(--jumia-orange); }
-        .detail-old { text-decoration: line-through; color: #999; font-size: 16px; }
-        .detail-desc { font-size: 15px; line-height: 1.6; color: #666; border-top: 1px solid #eee; padding-top: 15px; white-space: pre-wrap; }
+        .detail-price { font-size: 22px; font-weight: bold; color: var(--jumia-orange); }
+        .detail-old { text-decoration: line-through; color: #999; font-size: 15px; }
+        .detail-desc { font-size: 14px; line-height: 1.6; color: #555; border-top: 1px solid #eee; padding-top: 15px; white-space: pre-wrap; }
 
-        /* Action Bars */
         .action-bar { position: fixed; bottom: 0; width: 100%; max-width: 500px; display: flex; padding: 12px; gap: 8px; background: #fff; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); left: 50%; transform: translateX(-50%); z-index: 1002; }
         .btn-cart { flex: 1; background: #feebd8; color: var(--jumia-orange); border: none; padding: 14px; font-weight: bold; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-size: 12px; }
         .btn-buy { flex: 1; background: var(--jumia-orange); color: #fff; border: none; padding: 14px; font-weight: bold; border-radius: 4px; cursor: pointer; text-align: center; font-size: 12px; text-transform: uppercase; }
         .btn-whatsapp { background: var(--whatsapp-green); color: #fff; border: none; padding: 14px; font-weight: bold; border-radius: 4px; cursor: pointer; text-align: center; font-size: 12px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 5px; }
 
-        /* Cart View Rows */
         .cart-item-row { display: flex; gap: 15px; padding: 15px; border-bottom: 1px solid #eee; align-items: center; background: #fff; }
         .cart-item-row img { width: 60px; height: 60px; object-fit: contain; background: #f9f9f9; border-radius: 4px; }
         .cart-item-details { flex: 1; }
@@ -123,35 +61,15 @@
         .cart-item-price { font-size: 15px; font-weight: bold; color: var(--jumia-orange); }
         .btn-remove { color: #d9534f; border: none; background: none; font-size: 13px; cursor: pointer; margin-top: 5px; }
 
-        /* Inputs */
         .form-group { margin-bottom: 16px; padding: 0 20px; }
-        .form-group label { display: block; font-size: 13px; font-weight: bold; color: #555; margin-bottom: 6px; text-transform: uppercase; }
+        .form-group label { display: block; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 6px; text-transform: uppercase; }
         .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; outline: none; }
-        .form-group input:focus, .form-group textarea:focus { border-color: var(--jumia-orange); }
+        
+        .whatsapp-floating-btn { position: fixed; bottom: 75px; right: 20px; background: var(--whatsapp-green); color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 999; text-decoration: none; }
 
-        .whatsapp-floating-btn {
-            position: fixed;
-            bottom: 75px;
-            right: 20px;
-            background: var(--whatsapp-green);
-            color: white;
-            width: 55px;
-            height: 55px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            z-index: 999;
-            text-decoration: none;
-        }
-
-        /* Paystack Compliance Footer Styles */
         footer { background: #fff; padding: 30px 20px; text-align: center; border-top: 1px solid #e1e1e2; margin-top: 40px; font-size: 12px; color: #666; }
         .footer-links { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
         .footer-links a { color: var(--jumia-orange); text-decoration: none; font-weight: 500; cursor: pointer; }
-        .footer-links a:hover { text-decoration: underline; }
         .policy-body { padding: 30px 20px; font-size: 14px; line-height: 1.6; color: #444; }
         .policy-body h3 { margin-bottom: 12px; color: #111; font-size: 16px; text-transform: uppercase; }
     </style>
@@ -162,26 +80,26 @@
     <header>
         <div class="nav-top">
             <div class="logo">Holuwafemi Mega Store</div>
-            <div class="cart-icon-container" onclick="openCartView()">
+            <div class="cart-icon-container" id="openCartIconBtn">
                 <i class="fas fa-shopping-cart" style="font-size: 20px;"></i>
                 <div id="cartCounter" class="cart-badge">0</div>
             </div>
         </div>
     </header>
 
-    <!-- FLOATING GENERAL WHATSAPP CHAT BUTTON -->
+    <!-- FLOATING GENERAL WHATSAPP -->
     <a href="https://wa.me/2349061989529?text=Hello%20Holuwafemi%20Mega%20Store%2C%20I%20have%20a%20question%20about%20your%20products." target="_blank" class="whatsapp-floating-btn">
         <i class="fab fa-whatsapp"></i>
     </a>
 
     <!-- SLIDER CATEGORY TABS -->
-    <div class="cat-bar">
-        <button class="cat-btn active" onclick="filterCategory('all', this)">All</button>
-        <button class="cat-btn" onclick="filterCategory('electronics', this)">Electronics</button>
-        <button class="cat-btn" onclick="filterCategory('appliances', this)">Appliances</button>
-        <button class="cat-btn" onclick="filterCategory('solar', this)">Solar</button>
-        <button class="cat-btn" onclick="filterCategory('computers', this)">Computers</button>
-        <button class="cat-btn" onclick="filterCategory('phones', this)">Phones</button>
+    <div class="cat-bar" id="categoryTabsBar">
+        <button class="cat-btn active" data-cat="all">All</button>
+        <button class="cat-btn" data-cat="electronics">Electronics</button>
+        <button class="cat-btn" data-cat="appliances">Appliances</button>
+        <button class="cat-btn" data-cat="solar">Solar</button>
+        <button class="cat-btn" data-cat="computers">Computers</button>
+        <button class="cat-btn" data-cat="phones">Phones</button>
     </div>
 
     <!-- FLASH SALES SLIDER -->
@@ -190,19 +108,19 @@
         <p style="padding:10px; color:#999; font-size:12px;">Syncing product lines...</p>
     </div>
 
-    <!-- MAIN PRODUCT LINES GRID (3 COLUMNS) -->
+    <!-- MAIN PRODUCT LINES GRID -->
     <div class="section-title">All Products</div>
     <div class="grid-container" id="mainCatalogGrid">
-        <p style="padding:20px; color:#999; font-size:13px;">Syncing product lines...</p>
+        <p style="padding:20px; color:#999; font-size:13px; grid-column: span 3; text-align: center;">Syncing product lines...</p>
     </div>
 
-    <!-- PAYSTACK LEGAL COMPLIANCE FOOTER -->
+    <!-- PAYSTACK COMPLIANCE FOOTER -->
     <footer>
         <div class="footer-links">
-            <a onclick="openPolicy('termsModal')">Terms and Conditions</a>
-            <a onclick="openPolicy('refundModal')">Refund Policy</a>
-            <a onclick="openPolicy('privacyModal')">Privacy and Policy</a>
-            <a onclick="openPolicy('shippingModal')">Shipping Policy</a>
+            <a data-policy="termsModal">Terms and Conditions</a>
+            <a data-policy="refundModal">Refund Policy</a>
+            <a data-policy="privacyModal">Privacy and Policy</a>
+            <a data-policy="shippingModal">Shipping Policy</a>
         </div>
         <p>&copy; 2026 Holuwafemi Mega Store. All Rights Reserved.</p>
     </footer>
@@ -210,48 +128,48 @@
     <!-- POLICY MODALS -->
     <div id="termsModal" class="modal">
         <div class="modal-content">
-            <div class="close-modal" onclick="closePolicy('termsModal')"><i class="fas fa-times"></i></div>
+            <div class="close-modal close-policy-btn"><i class="fas fa-times"></i></div>
             <div class="policy-body">
                 <h3>Terms and Conditions</h3>
-                <p>Welcome to Holuwafemi Mega Store. By accessing and purchasing from this digital storefront, you agree to comply with our commercial terms. All item listings, specifications, and prices are subjects of structured inventory counts. We reserve the right to review logs to prevent fraudulent card operations.</p>
+                <p>Welcome to Holuwafemi Mega Store. By accessing and purchasing from this digital storefront, you agree to comply with our commercial terms. All item listings, specifications, and prices are subjects of structured inventory counts.</p>
             </div>
         </div>
     </div>
 
     <div id="refundModal" class="modal">
         <div class="modal-content">
-            <div class="close-modal" onclick="closePolicy('refundModal')"><i class="fas fa-times"></i></div>
+            <div class="close-modal close-policy-btn"><i class="fas fa-times"></i></div>
             <div class="policy-body">
                 <h3>Refund Policy</h3>
-                <p>We stand behind our retail products. If any brand new appliance or electronic item arrives with manufacturing defects, customers are eligible for a replacement or a full refund within 7 days of arrival. Items must be returned unused in their original operational packaging setup.</p>
+                <p>We stand behind our retail products. If any brand new appliance or electronic item arrives with manufacturing defects, customers are eligible for a replacement or a full refund within 7 days of arrival.</p>
             </div>
         </div>
     </div>
 
     <div id="privacyModal" class="modal">
         <div class="modal-content">
-            <div class="close-modal" onclick="closePolicy('privacyModal')"><i class="fas fa-times"></i></div>
+            <div class="close-modal close-policy-btn"><i class="fas fa-times"></i></div>
             <div class="policy-body">
                 <h3>Privacy and Policy</h3>
-                <p>Your delivery particulars (Full Name, Address, Contact Line, Email) collected during the checkout operations are handled securely. We never share, trade, or distribute your customer details. Payments are processed safely and exclusively inside the sandboxed Paystack network engine layers.</p>
+                <p>Your delivery particulars collected during checkout operations are handled securely. We never share or distribute your details. Payments are processed safely inside the sandboxed Paystack network layers.</p>
             </div>
         </div>
     </div>
 
     <div id="shippingModal" class="modal">
         <div class="modal-content">
-            <div class="close-modal" onclick="closePolicy('shippingModal')"><i class="fas fa-times"></i></div>
+            <div class="close-modal close-policy-btn"><i class="fas fa-times"></i></div>
             <div class="policy-body">
                 <h3>Shipping Policy</h3>
-                <p>Orders are packaged and dispatched rapidly following clear payment confirmation signals from Paystack. Delivery timelines across regional destination fields typically span between 2 to 5 business days. Safe transit logs are maintained inside our primary order tracking databases.</p>
+                <p>Orders are packaged and dispatched rapidly following payment confirmation signals from Paystack. Delivery timelines across regional fields typically span between 2 to 5 business days.</p>
             </div>
         </div>
     </div>
 
-    <!-- SCREEN 1: PRODUCT DETAILS OVERLAY -->
+    <!-- SCREEN 1: PRODUCT DETAILS -->
     <div id="productModal" class="modal">
         <div class="modal-content">
-            <div class="close-modal" onclick="closeDetails()"><i class="fas fa-arrow-left"></i></div>
+            <div class="close-modal" id="closeDetailsBtn"><i class="fas fa-arrow-left"></i></div>
             <img id="mImg" class="detail-img" src="">
             <div class="detail-info">
                 <div id="mName" class="detail-name"></div>
@@ -264,17 +182,17 @@
                 <div style="height: 120px;"></div>
             </div>
             <div class="action-bar" style="padding: 10px 6px;">
-                <button class="btn-cart" onclick="addToCart()">ADD TO CART</button>
+                <button class="btn-cart" id="addToCartBtn">ADD TO CART</button>
                 <a id="whatsappProductChatBtn" href="#" target="_blank" class="btn-whatsapp"><i class="fab fa-whatsapp"></i> CHAT</a>
-                <button class="btn-buy" onclick="startCheckoutDirect()">BUY NOW</button>
+                <button class="btn-buy" id="directBuyBtn">BUY NOW</button>
             </div>
         </div>
     </div>
 
-    <!-- SCREEN 2: SHOPPING CART SLIDE SCREEN -->
+    <!-- SCREEN 2: SHOPPING CART -->
     <div id="cartModal" class="modal">
         <div class="modal-content" style="background:#f1f1f2;">
-            <div class="close-modal" onclick="closeCartView()"><i class="fas fa-arrow-left"></i></div>
+            <div class="close-modal" id="closeCartBtn"><i class="fas fa-arrow-left"></i></div>
             <div style="padding: 20px 20px 10px 65px; font-weight: bold; font-size: 18px; background: #fff; border-bottom: 1px solid #eee;">My Shopping Cart</div>
             
             <div id="cartItemsListContainer" style="margin-top: 10px;"></div>
@@ -291,15 +209,15 @@
             </div>
             <div style="height: 100px;"></div>
             <div class="action-bar" id="cartActionBar" style="display:none;">
-                <button class="btn-buy" style="width:100%;" onclick="startCheckoutCart()">PROCEED TO CHECKOUT</button>
+                <button class="btn-buy" style="width:100%;" id="cartCheckoutBtn">PROCEED TO CHECKOUT</button>
             </div>
         </div>
     </div>
 
-    <!-- SCREEN 3: DELIVERY DETAILS FORM PAGE -->
+    <!-- SCREEN 3: DELIVERY DETAILS -->
     <div id="checkoutModal" class="modal">
         <div class="modal-content">
-            <div class="close-modal" onclick="closeCheckoutView()"><i class="fas fa-arrow-left"></i></div>
+            <div class="close-modal" id="closeCheckoutBtn"><i class="fas fa-arrow-left"></i></div>
             <div style="padding: 20px 20px 20px 65px; font-weight: bold; font-size: 18px; border-bottom: 1px solid #eee; margin-bottom: 20px;">Delivery Address & Details</div>
             
             <div class="form-group">
@@ -316,7 +234,7 @@
             </div>
             <div class="form-group">
                 <label>Delivery Address</label>
-                <textarea id="custAddress" rows="3" placeholder="Enter house number, street name, city, state"></textarea>
+                <textarea id="custAddress" rows="3" placeholder="Enter address details..."></textarea>
             </div>
 
             <div style="background: #fff; padding: 20px; border-top: 1px solid #eee; margin-top: 30px;">
@@ -328,7 +246,7 @@
             
             <div style="height: 100px;"></div>
             <div class="action-bar">
-                <button id="paystackTriggerBtn" class="btn-buy" style="width:100%; background:#22a343;" onclick="processPaystackPayment()">CONFIRM & PAY NOW</button>
+                <button id="paystackTriggerBtn" class="btn-buy" style="width:100%; background:#22a343;">CONFIRM & PAY NOW</button>
             </div>
         </div>
     </div>
@@ -337,7 +255,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-    // 🖥️ Correct Firebase Credentials Configuration Verified from Settings Screen
     const firebaseConfig = {
         apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
         authDomain: "holuwafemi-mega-store.firebaseapp.com",
@@ -358,29 +275,67 @@
     let checkoutItemsDescription = "";
     let cart = JSON.parse(localStorage.getItem("megaStoreCart")) || [];
 
-    // Compliance Popups Handlers
-    window.openPolicy = function(modalId) {
-        document.getElementById(modalId).style.display = "block";
-        document.body.style.overflow = "hidden";
-    }
-    window.closePolicy = function(modalId) {
-        document.getElementById(modalId).style.display = "none";
-        document.body.style.overflow = "auto";
-    }
-
-    // Safe parsing utility function to handle number formatting completely error-free
     function safeFormatPrice(val) {
         if (val === undefined || val === null || val === "") return "0";
         const num = Number(val);
         return isNaN(num) ? "0" : num.toLocaleString();
     }
 
-    // Firebase Data Real-time Sync Engine
+    // Real-time Database Sync Listener
     const q = query(collection(db, "products"), orderBy("timestamp", "desc"));
     onSnapshot(q, (snapshot) => {
         allProducts = [];
         snapshot.forEach((doc) => {
             allProducts.push({ id: doc.id, ...doc.data() });
         });
+        renderProducts(allProducts);
+        updateCartBadge(); 
+    }, (error) => {
+        console.error("Firebase Sync Error: ", error);
+        document.getElementById("mainCatalogGrid").innerHTML = `<p style="grid-column:span 3; padding:20px; color:red; text-align:center;">Connection interrupted. Ensure Firestore permissions are updated.</p>`;
+    });
 
-        if (allPr
+    function renderProducts(productsList) {
+        const grid = document.getElementById("mainCatalogGrid");
+        const top = document.getElementById("topSellersScrollBox");
+
+        if (productsList.length === 0) {
+            grid.innerHTML = `<p style='grid-column: span 3; padding:40px; text-align:center; color:#999; font-size:13px;'>Your store inventory is empty. Open admin.html to publish items!</p>`;
+            top.innerHTML = "";
+            return;
+        }
+
+        top.innerHTML = productsList.slice(0, 5).map(p => `
+            <div class="grid-product-card product-clickable" data-id="${p.id}" style="min-width: 110px; max-width: 110px;">
+                <img src="${p.img || 'https://via.placeholder.com/140'}">
+                <div class="product-title">${p.name || 'Product'}</div>
+                <div class="product-price">₦${safeFormatPrice(p.price)}</div>
+            </div>
+        `).join("");
+
+        grid.innerHTML = productsList.map(p => `
+            <div class="grid-product-card product-clickable" data-id="${p.id}">
+                <div class="discount-badge">-${p.pct || 0}%</div>
+                <img src="${p.img || 'https://via.placeholder.com/140'}">
+                <div>
+                    <div class="product-title">${p.name || 'Product'}</div>
+                    <div class="product-price">₦${safeFormatPrice(p.price)}</div>
+                </div>
+            </div>
+        `).join("");
+
+        // Attach event dynamically to rendered elements to respect module limits
+        document.querySelectorAll(".product-clickable").forEach(card => {
+            card.addEventListener("click", () => openDetails(card.getAttribute("data-id")));
+        });
+    }
+
+    function openDetails(id) {
+        const p = allProducts.find(item => item.id === id);
+        if(!p) return;
+        selectedProduct = p; 
+        document.getElementById("mImg").src = p.img || 'https://via.placeholder.com/140';
+        document.getElementById("mName").innerText = p.name || 'Product';
+        document.getElementById("mPrice").innerText = "₦" + safeFormatPrice(p.price);
+        document.getElementById("mOld").innerText = p.old ? "₦" + safeFormatPrice(p.old) : "";
+ 
