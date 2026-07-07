@@ -338,4 +338,213 @@
         document.getElementById("mName").innerText = p.name || 'Product';
         document.getElementById("mPrice").innerText = "₦" + safeFormatPrice(p.price);
         document.getElementById("mOld").innerText = p.old ? "₦" + safeFormatPrice(p.old) : "";
- 
+ document.getElementById("mDesc").innerText = p.desc || "No specific details provided.";
+
+        const encodedMsg = encodeURIComponent(`Hello, I am looking at "${p.name}" priced at ₦${safeFormatPrice(p.price)} on your store.`);
+        document.getElementById("whatsappProductChatBtn").href = `https://wa.me/2349061989529?text=${encodedMsg}`;
+
+        document.getElementById("productModal").style.display = "block";
+        document.body.style.overflow = "hidden"; 
+    }
+
+    function closeDetails() {
+        document.getElementById("productModal").style.display = "none";
+        document.body.style.overflow = "auto";
+        selectedProduct = null;
+    }
+
+    // Setup Category filtering tabs events
+    document.querySelectorAll("#categoryTabsBar .cat-btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            document.querySelectorAll("#categoryTabsBar .cat-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            
+            const category = btn.getAttribute("data-cat");
+            const filtered = category === 'all' ? allProducts : allProducts.filter(p => {
+                return p.cat && String(p.cat).toLowerCase().trim() === String(category).toLowerCase().trim();
+            });
+            renderProducts(filtered);
+        });
+    });
+
+    // Cart and Popup Logic Setup
+    document.getElementById("openCartIconBtn").addEventListener("click", openCartView);
+    document.getElementById("closeDetailsBtn").addEventListener("click", closeDetails);
+    document.getElementById("closeCartBtn").addEventListener("click", () => {
+        document.getElementById("cartModal").style.display = "none";
+        document.body.style.overflow = "auto";
+    });
+    document.getElementById("closeCheckoutBtn").addEventListener("click", () => {
+        document.getElementById("checkoutModal").style.display = "none";
+        document.body.style.overflow = "auto";
+    });
+
+    document.getElementById("addToCartBtn").addEventListener("click", () => {
+        if (!selectedProduct) return;
+        cart.push(selectedProduct);
+        localStorage.setItem("megaStoreCart", JSON.stringify(cart));
+        updateCartBadge();
+        alert(`🛒 Added "${selectedProduct.name}" to cart!`);
+        closeDetails();
+    });
+
+    function updateCartBadge() {
+        document.getElementById("cartCounter").innerText = cart.length;
+    }
+
+    function openCartView() {
+        const listContainer = document.getElementById("cartItemsListContainer");
+        const totalSummary = document.getElementById("cartTotalSummaryCard");
+        const actionBtn = document.getElementById("cartActionBar");
+
+        if(cart.length === 0) {
+            listContainer.innerHTML = `
+                <div style="text-align:center; padding:50px 20px; color:#666;">
+                    <i class="fas fa-shopping-basket" style="font-size:48px; color:#ccc; margin-bottom:15px;"></i>
+                    <p>Your shopping cart is empty!</p>
+                </div>`;
+            totalSummary.style.display = "none";
+            actionBtn.style.display = "none";
+        } else {
+            let total = 0;
+            listContainer.innerHTML = cart.map((p, index) => {
+                total += Number(p.price || 0);
+                return `
+                    <div class="cart-item-row">
+                        <img src="${p.img || 'https://via.placeholder.com/140'}">
+                        <div class="cart-item-details">
+                            <div class="cart-item-title">${p.name || 'Product'}</div>
+                            <div class="cart-item-price">₦${safeFormatPrice(p.price)}</div>
+                            <button class="btn-remove remove-cart-item-btn" data-index="${index}"><i class="fas fa-trash-alt"></i> Remove</button>
+                        </div>
+                    </div>`;
+            }).join("");
+
+            document.querySelectorAll(".remove-cart-item-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const idx = btn.getAttribute("data-index");
+                    cart.splice(idx, 1);
+                    localStorage.setItem("megaStoreCart", JSON.stringify(cart));
+                    updateCartBadge();
+                    openCartView();
+                });
+            });
+
+            document.getElementById("cartSubtotalAmount").innerText = "₦" + total.toLocaleString();
+            document.getElementById("cartTotalAmount").innerText = "₦" + total.toLocaleString();
+            totalSummary.style.display = "block";
+            actionBtn.style.display = "flex";
+        }
+
+        document.getElementById("cartModal").style.display = "block";
+        document.body.style.overflow = "hidden";
+    }
+
+    // Checkout Routing
+    document.getElementById("directBuyBtn").addEventListener("click", () => {
+        if(!selectedProduct) return;
+        checkoutMode = "direct";
+        checkoutAmount = Number(selectedProduct.price || 0);
+        checkoutItemsDescription = selectedProduct.name || "Product";
+        document.getElementById("checkoutPayableAmount").innerText = "₦" + checkoutAmount.toLocaleString();
+        closeDetails();
+        document.getElementById("checkoutModal").style.display = "block";
+    });
+
+    document.getElementById("cartCheckoutBtn").addEventListener("click", () => {
+        if(cart.length === 0) return;
+        checkoutMode = "cart";
+        checkoutAmount = cart.reduce((sum, item) => sum + Number(item.price || 0), 0);
+        checkoutItemsDescription = cart.map(item => item.name || "Product").join(", ");
+        document.getElementById("checkoutPayableAmount").innerText = "₦" + checkoutAmount.toLocaleString();
+        document.getElementById("cartModal").style.display = "none";
+        document.getElementById("checkoutModal").style.display = "block";
+    });
+
+    // Paystack Execution
+    document.getElementById("paystackTriggerBtn").addEventListener("click", () => {
+        const name = document.getElementById("custName").value.trim();
+        const email = document.getElementById("custEmail").value.trim();
+        const phone = document.getElementById("custPhone").value.trim();
+        const address = document.getElementById("custAddress").value.trim();
+        const payButton = document.getElementById("paystackTriggerBtn");
+
+        if(!name || !email || !phone || !address) {
+            alert("⚠️ Please complete all delivery fields before proceeding.");
+            return;
+        }
+
+        payButton.innerText = "OPENING SECURE GATEWAY...";
+        payButton.disabled = true;
+
+        try {
+            let handler = PaystackPop.setup({
+                key: 'pk_live_74b79dcbb6afc98ea13aa66c2c0f154e923643bc', 
+                email: email,
+                amount: Math.round(checkoutAmount * 100), 
+                currency: "NGN",
+                metadata: {
+                    custom_fields: [
+                        { display_name: "Customer Name", value: name },
+                        { display_name: "Phone Number", value: phone },
+                        { display_name: "Delivery Address", value: address },
+                        { display_name: "Items Ordered", value: checkoutItemsDescription }
+                    ]
+                },
+                callback: async function(response) {
+                    try {
+                        await addDoc(collection(db, "orders"), {
+                            customerName: name,
+                            customerEmail: email,
+                            customerPhone: phone,
+                            deliveryAddress: address,
+                            orderedItems: checkoutItemsDescription,
+                            totalPaid: checkoutAmount,
+                            paystackReference: response.reference,
+                            timestamp: serverTimestamp()
+                        });
+                        alert("✅ Payment Successful! Your order has been registered securely.");
+                    } catch (dbError) {
+                        alert("✅ Payment Received! Reference: " + response.reference);
+                    }
+                    if(checkoutMode === "cart") {
+                        cart = [];
+                        localStorage.removeItem("megaStoreCart");
+                        updateCartBadge();
+                    }
+                    payButton.innerText = "CONFIRM & PAY NOW";
+                    payButton.disabled = false;
+                    document.getElementById("checkoutModal").style.display = "none";
+                    document.body.style.overflow = "auto";
+                },
+                onClose: function() {
+                    alert("Transaction cancelled.");
+                    payButton.innerText = "CONFIRM & PAY NOW";
+                    payButton.disabled = false;
+                }
+            });
+            handler.openIframe();
+        } catch (error) {
+            alert("⚠️ Error loading Paystack interface.");
+            payButton.innerText = "CONFIRM & PAY NOW";
+            payButton.disabled = false;
+        }
+    });
+
+    // Footers / Policy Actions Mapping
+    document.querySelectorAll(".footer-links a").forEach(link => {
+        link.addEventListener("click", () => {
+            const modalId = link.getAttribute("data-policy");
+            document.getElementById(modalId).style.display = "block";
+            document.body.style.overflow = "hidden";
+        });
+    });
+    document.querySelectorAll(".close-policy-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            btn.closest(".modal").style.display = "none";
+            document.body.style.overflow = "auto";
+        });
+    });
+</script>
+</body>
+</html>
