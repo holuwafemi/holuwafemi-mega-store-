@@ -31,7 +31,7 @@
         .catalog-info { flex: 1; min-width: 0; }
         .catalog-name { font-size: 13px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .catalog-price { font-size: 12px; color: var(--jumia-orange); }
-        .btn-delete { background: var(--danger); color: white; padding: 6px 10px; font-size: 12px; width: auto; margin-top: 0; }
+        .btn-delete { background: var(--danger); color: white; padding: 6px 10px; font-size: 12px; width: auto; margin-top: 0; border: none; border-radius: 4px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -45,7 +45,7 @@
         </div>
 
         <label>Image URL (Direct Link)</label>
-        <input type="text" id="finalImgUrl" placeholder="Paste link ending in .jpg or .png" oninput="updatePreview(this.value)">
+        <input type="text" id="finalImgUrl" placeholder="Paste link ending in .jpg or .png">
 
         <label>Product Name</label>
         <input type="text" id="pName" placeholder="e.g. Earphones Wireless">
@@ -68,7 +68,7 @@
         <label>Description</label>
         <textarea id="pDesc" rows="3" placeholder="Key specs..."></textarea>
 
-        <button id="publishBtn" class="btn-publish" onclick="publishProduct()">PUBLISH TO STORE</button>
+        <button id="publishBtn" class="btn-publish">PUBLISH TO STORE</button>
     </div>
 
     <div class="admin-card">
@@ -81,21 +81,21 @@
     </div>
 
     <div class="admin-card" style="max-width: 350px; padding: 15px;">
-        <button class="btn-ai" onclick="setupAiKey()">ACTIVATE AI SYSTEM</button>
+        <button id="aiSetupBtn" class="btn-ai">ACTIVATE AI SYSTEM</button>
     </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-    // 🖥️ Your Real App Credentials Built In
+    // 🖥️ Corrected Firebase Credentials pointed to your updated project workspace
     const firebaseConfig = {
-        apiKey: "AIzaSyBCu34RlTpqeGFPRCI7xDVYVQJLwjL6Tbo",
-        authDomain: "femitech-1-e26ca.firebaseapp.com",
-        projectId: "femitech-1-e26ca",
-        storageBucket: "femitech-1-e26ca.firebasestorage.app",
-        messagingSenderId: "562859904708",
-        appId: "1:562859904708:web:df49e4b09dc2f81cf44391",
+        apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
+        authDomain: "holuwafemi-mega-store.firebaseapp.com",
+        projectId: "holuwafemi-mega-store",
+        storageBucket: "holuwafemi-mega-store.firebasestorage.app",
+        messagingSenderId: "1002214759367",
+        appId: "1:1002214759367:web:0f3afecb88c0f8a0f397e2",
         measurementId: "G-WPFKNZ20E3"
     };
 
@@ -114,16 +114,22 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Live Preview Tracker
-    window.updatePreview = (url) => {
-        if(url.trim()){
-            document.getElementById('pre-text').style.display='none';
+    // Live Preview Event Handling
+    const imgUrlInput = document.getElementById('finalImgUrl');
+    imgUrlInput.addEventListener('input', (e) => {
+        const url = e.target.value.trim();
+        if(url){
+            document.getElementById('pre-text').style.display = 'none';
             const img = document.getElementById('preview-img');
-            img.src = url; img.style.display='block';
+            img.src = url; 
+            img.style.display = 'block';
+        } else {
+            document.getElementById('preview-img').style.display = 'none';
+            document.getElementById('pre-text').style.display = 'block';
         }
-    };
+    });
 
-    // Live Synchronized Inventory Module
+    // Real-time Synchronized Inventory Module
     const q = query(collection(db, "products"), orderBy("timestamp", "desc"));
     onSnapshot(q, (snapshot) => {
         const list = document.getElementById("adminCatalogList");
@@ -138,42 +144,61 @@
                         <div class="catalog-name">${p.name || 'Unnamed Product'}</div>
                         <div class="catalog-price">₦${priceValue}</div>
                     </div>
-                    <button class="btn-delete" onclick="deleteProduct('${pDoc.id}')"><i class="fas fa-trash"></i></button>
+                    <button class="btn-delete item-delete-btn" data-id="${pDoc.id}"><i class="fas fa-trash"></i></button>
                 </div>`;
         });
         list.innerHTML = html || "<p style='text-align:center; font-size:12px; color:#999; padding:10px;'>No products found.</p>";
+
+        // Dynamically attach listeners to the delete buttons to prevent module closure crashes
+        document.querySelectorAll(".item-delete-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const docId = btn.getAttribute("data-id");
+                deleteProduct(docId);
+            });
+        });
     });
 
-    window.deleteProduct = async (id) => {
+    async function deleteProduct(id) {
         if(confirm("Delete this product permanently?")) {
             try {
                 await deleteDoc(doc(db, "products", id));
                 alert("🗑️ Product removed!");
-            } catch(e) { alert(e.message); }
+            } catch(e) { 
+                alert("Delete failed: " + e.message); 
+            }
         }
-    };
+    }
 
-    window.publishProduct = async () => {
+    // Publish to Firestore Engine
+    document.getElementById("publishBtn").addEventListener("click", async () => {
         const img = document.getElementById('finalImgUrl').value.trim();
         const name = document.getElementById('pName').value.trim();
-        const price = Number(document.getElementById('pPrice').value);
-        const old = Number(document.getElementById('pOld').value) || price;
+        const priceInput = document.getElementById('pPrice').value;
+        const oldInput = document.getElementById('pOld').value;
+
+        if(!img || !name || !priceInput) {
+            return alert("Fill Name, Price and Image URL!");
+        }
+
+        const price = Number(priceInput);
+        const old = oldInput ? Number(oldInput) : price;
         const cat = document.getElementById('pCat').value;
         const desc = document.getElementById('pDesc').value.trim();
 
-        if(!img || !name || !price) return alert("Fill Name, Price and Image URL!");
-
         const btn = document.getElementById("publishBtn");
-        btn.disabled = true; btn.innerText = "Publishing...";
+        btn.disabled = true; 
+        btn.innerText = "Publishing...";
 
         try {
             await addDoc(collection(db, "products"), {
                 name, price, old, img, cat, desc,
-                pct: Math.round(((old - price)/old)*100),
+                pct: old > price ? Math.round(((old - price) / old) * 100) : 0,
                 timestamp: serverTimestamp(),
                 password: ADMIN_PASS
             });
             alert("🎉 Success! Product is now Live.");
+            
+            // Clear Dashboard Inputs cleanly
             document.getElementById('finalImgUrl').value = "";
             document.getElementById('pName').value = "";
             document.getElementById('pPrice').value = "";
@@ -181,20 +206,26 @@
             document.getElementById('pDesc').value = "";
             document.getElementById('preview-img').style.display = 'none';
             document.getElementById('pre-text').style.display = 'block';
-            btn.disabled = false; btn.innerText = "PUBLISH TO STORE";
+            
+            btn.disabled = false; 
+            btn.innerText = "PUBLISH TO STORE";
         } catch(e) { 
             alert("Error writing to database: " + e.message); 
-            btn.disabled = false; btn.innerText = "PUBLISH TO STORE";
+            btn.disabled = false; 
+            btn.innerText = "PUBLISH TO STORE";
         }
-    };
+    });
 
-    window.setupAiKey = () => {
+    // AI Configuration Setup Handler
+    document.getElementById("aiSetupBtn").addEventListener("click", () => {
         const key = prompt("Paste Groq API Key:");
         if(key && key.startsWith("gsk_")) {
             localStorage.setItem("GROQ_API_KEY", key);
             alert("AI Activated!");
+        } else if (key) {
+            alert("Invalid Key format. Should start with 'gsk_'.");
         }
-    };
+    });
 </script>
 </body>
 </html>
