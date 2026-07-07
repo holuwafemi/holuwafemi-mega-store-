@@ -147,7 +147,7 @@
             text-decoration: none;
         }
 
-        /* Paystack Required Compliance Footer Elements */
+        /* Paystack Compliance Footer Styles */
         footer { background: #fff; padding: 30px 20px; text-align: center; border-top: 1px solid #e1e1e2; margin-top: 40px; font-size: 12px; color: #666; }
         .footer-links { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 15px; }
         .footer-links a { color: var(--jumia-orange); text-decoration: none; font-weight: 500; cursor: pointer; }
@@ -187,7 +187,7 @@
     <!-- FLASH SALES SLIDER -->
     <div class="section-title">Flash Sales</div>
     <div id="topSellersScrollBox" style="display: flex; gap: 10px; overflow-x: auto; padding: 0 16px 16px 16px; scrollbar-width: none;">
-        <p style="padding:10px; color:#999; font-size:12px;">Connecting to database...</p>
+        <p style="padding:10px; color:#999; font-size:12px;">Syncing product lines...</p>
     </div>
 
     <!-- MAIN PRODUCT LINES GRID (3 COLUMNS) -->
@@ -196,7 +196,7 @@
         <p style="padding:20px; color:#999; font-size:13px;">Syncing product lines...</p>
     </div>
 
-    <!-- PAYSTACK COMPLIANCE LEGAL FOOTER -->
+    <!-- PAYSTACK LEGAL COMPLIANCE FOOTER -->
     <footer>
         <div class="footer-links">
             <a onclick="openPolicy('termsModal')">Terms and Conditions</a>
@@ -213,7 +213,7 @@
             <div class="close-modal" onclick="closePolicy('termsModal')"><i class="fas fa-times"></i></div>
             <div class="policy-body">
                 <h3>Terms and Conditions</h3>
-                <p>Welcome to Holuwafemi Mega Store. By accessing and purchasing from this store, you agree to comply with our commercial operating guidelines. All item listings, transactional data processed via continuous secure validation layers, and product quotes are final. We reserve the right to review order logs to prevent fraudulent card operations.</p>
+                <p>Welcome to Holuwafemi Mega Store. By accessing and purchasing from this digital storefront, you agree to comply with our commercial terms. All item listings, specifications, and prices are subjects of structured inventory counts. We reserve the right to review logs to prevent fraudulent card operations.</p>
             </div>
         </div>
     </div>
@@ -223,7 +223,7 @@
             <div class="close-modal" onclick="closePolicy('refundModal')"><i class="fas fa-times"></i></div>
             <div class="policy-body">
                 <h3>Refund Policy</h3>
-                <p>We stand behind our retail products. If any brand new appliance or electronic item arrives with manufacturing defects, customers are eligible for a replacement or a full refund within 7 days of verified structural arrival. Items must be returned unused in their original operational retail packaging setup.</p>
+                <p>We stand behind our retail products. If any brand new appliance or electronic item arrives with manufacturing defects, customers are eligible for a replacement or a full refund within 7 days of arrival. Items must be returned unused in their original operational packaging setup.</p>
             </div>
         </div>
     </div>
@@ -233,7 +233,7 @@
             <div class="close-modal" onclick="closePolicy('privacyModal')"><i class="fas fa-times"></i></div>
             <div class="policy-body">
                 <h3>Privacy and Policy</h3>
-                <p>Your delivery particulars (Full Name, Address, Contact Line, Email) collected during the checkout operations are encrypted. We never share, trade, or distribute customer details. Payment tokens are safely processed exclusively inside the sandboxed Paystack network engine layers.</p>
+                <p>Your delivery particulars (Full Name, Address, Contact Line, Email) collected during the checkout operations are handled securely. We never share, trade, or distribute your customer details. Payments are processed safely and exclusively inside the sandboxed Paystack network engine layers.</p>
             </div>
         </div>
     </div>
@@ -243,7 +243,7 @@
             <div class="close-modal" onclick="closePolicy('shippingModal')"><i class="fas fa-times"></i></div>
             <div class="policy-body">
                 <h3>Shipping Policy</h3>
-                <p>Orders are packaged and dispatched rapidly following clear validation signals from Paystack. Delivery timelines across regional destination fields span between 2 to 5 business days. Safe tracking references are logged immediately into our primary order databases.</p>
+                <p>Orders are packaged and dispatched rapidly following clear payment confirmation signals from Paystack. Delivery timelines across regional destination fields typically span between 2 to 5 business days. Safe transit logs are maintained inside our primary order tracking databases.</p>
             </div>
         </div>
     </div>
@@ -337,13 +337,14 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
+    // 🖥️ Correct Firebase Credentials Configuration Verified from Settings Screen
     const firebaseConfig = {
-        apiKey: "AIzaSyBCu34RlTpqeGFPRCI7xDVYVQJLwjL6Tbo",
-        authDomain: "femitech-1-e26ca.firebaseapp.com",
-        projectId: "femitech-1-e26ca",
-        storageBucket: "femitech-1-e26ca.firebasestorage.app",
-        messagingSenderId: "562859904708",
-        appId: "1:562859904708:web:df49e4b09dc2f81cf44391",
+        apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
+        authDomain: "holuwafemi-mega-store.firebaseapp.com",
+        projectId: "holuwafemi-mega-store",
+        storageBucket: "holuwafemi-mega-store.firebasestorage.app",
+        messagingSenderId: "1002214759367",
+        appId: "1:1002214759367:web:0f3afecb88c0f8a0f397e2",
         measurementId: "G-WPFKNZ20E3"
     };
 
@@ -357,7 +358,7 @@
     let checkoutItemsDescription = "";
     let cart = JSON.parse(localStorage.getItem("megaStoreCart")) || [];
 
-    // Safe policy view window actions
+    // Compliance Popups Handlers
     window.openPolicy = function(modalId) {
         document.getElementById(modalId).style.display = "block";
         document.body.style.overflow = "hidden";
@@ -367,6 +368,7 @@
         document.body.style.overflow = "auto";
     }
 
+    // Safe parsing utility function to handle number formatting completely error-free
     function safeFormatPrice(val) {
         if (val === undefined || val === null || val === "") return "0";
         const num = Number(val);
@@ -381,7 +383,4 @@
             allProducts.push({ id: doc.id, ...doc.data() });
         });
 
-        if (allProducts.length > 0) {
-            renderProducts(allProducts);
-        } else {
-            document.getElementById("mainCatalogGrid").
+        if (allPr
