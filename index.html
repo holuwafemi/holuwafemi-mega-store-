@@ -17,7 +17,7 @@
         .logo { font-size: 18px; font-weight: bold; color: var(--jumia-orange); text-transform: uppercase; }
         
         .nav-right-controls { display: flex; align-items: center; gap: 15px; }
-        .user-badge { font-size: 12px; color: #666; font-weight: bold; background: #eee; padding: 4px 8px; border-radius: 4px; display: none; }
+        .user-badge { font-size: 12px; color: #fff; font-weight: bold; background: var(--jumia-orange); padding: 5px 10px; border-radius: 4px; display: none; }
 
         .cart-icon-container { position: relative; cursor: pointer; padding: 5px; }
         .cart-badge { 
@@ -76,7 +76,7 @@
         .policy-body { padding: 30px 20px; font-size: 14px; line-height: 1.6; color: #444; }
         .policy-body h3 { margin-bottom: 12px; color: #111; font-size: 16px; text-transform: uppercase; }
         
-        /* Gate Modal Styles */
+        /* Account Gateway Overlay Styles */
         .gate-container { padding: 40px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; background: #fff; }
     </style>
 </head>
@@ -134,23 +134,23 @@
         <p>&copy; 2026 Holuwafemi Mega Store. All Rights Reserved.</p>
     </footer>
 
-    <!-- MANDATORY VISITOR GATEWAY MODAL (NO PASSWORD REQUIRED) -->
-    <div id="gateModal" class="modal" style="display: block;">
+    <!-- STRICT REGISTRATION & SIGN UP GATEWAY -->
+    <div id="gateModal" class="modal" style="display: block; z-index: 9999;">
         <div class="modal-content" style="max-width: 450px;">
             <div class="gate-container">
-                <h3 style="color:var(--jumia-orange); text-transform:uppercase; margin-bottom:10px; text-align:center;">Welcome to Our Store</h3>
-                <p style="font-size:13px; color:#666; margin-bottom:25px; text-align:center; padding: 0 10px;">Please enter your details below to continue to the marketplace.</p>
+                <h3 style="color:var(--jumia-orange); text-transform:uppercase; margin-bottom:10px; text-align:center;">Customer Sign Up</h3>
+                <p style="font-size:13px; color:#666; margin-bottom:25px; text-align:center; padding: 0 10px;">Please enter your details to register and access our mega catalog.</p>
                 
                 <div class="form-group" style="width:100%; padding:0;">
                     <label>Your Full Name</label>
                     <input type="text" id="gateName" placeholder="e.g. John Doe">
                 </div>
                 <div class="form-group" style="width:100%; padding:0; margin-top:15px;">
-                    <label>Email Address</label>
-                    <input type="email" id="gateEmail" placeholder="e.g. johndoe@gmail.com">
+                    <label>Gmail / Email Address</label>
+                    <input type="email" id="gateEmail" placeholder="e.g. yourname@gmail.com">
                 </div>
                 
-                <button id="gateSubmitBtn" class="btn-buy" style="width:100%; margin-top:30px; padding: 16px;">ENTER STORE</button>
+                <button id="gateSubmitBtn" class="btn-buy" style="width:100%; margin-top:30px; padding: 16px;">CREATE ACCOUNT & ENTER</button>
             </div>
         </div>
     </div>
@@ -311,15 +311,15 @@
         return isNaN(num) ? "0" : num.toLocaleString();
     }
 
-    // Checking for saved Session customer data
+    // Checking for saved customer data strictly
     function checkVisitorSession() {
-        const savedName = sessionStorage.getItem("storeCustomerName");
-        const savedEmail = sessionStorage.getItem("storeCustomerEmail");
+        const savedName = localStorage.getItem("storeCustomerName");
+        const savedEmail = localStorage.getItem("storeCustomerEmail");
         const gate = document.getElementById("gateModal");
         const badge = document.getElementById("headerUserBadge");
 
         if (savedName && savedEmail) {
-            gate.style.display = "none";
+            gate.style.setProperty("display", "none", "important");
             document.body.style.overflow = "auto";
             badge.innerText = "👤 " + savedName.split(" ")[0];
             badge.style.display = "block";
@@ -328,7 +328,7 @@
             document.getElementById("custName").value = savedName;
             document.getElementById("custEmail").value = savedEmail;
         } else {
-            gate.style.display = "block";
+            gate.style.setProperty("display", "block", "important");
             document.body.style.overflow = "hidden";
         }
     }
@@ -337,16 +337,17 @@
         const name = document.getElementById("gateName").value.trim();
         const email = document.getElementById("gateEmail").value.trim();
 
-        if (!name || !email) return alert("Please enter both your name and email address to proceed.");
+        if (!name || !email) return alert("Please enter both your name and email address to sign up.");
         if (!email.includes("@")) return alert("Please enter a valid email address.");
 
-        sessionStorage.setItem("storeCustomerName", name);
-        sessionStorage.setItem("storeCustomerEmail", email);
+        // Storing data into localStorage so it remains saved even when tab is closed
+        localStorage.setItem("storeCustomerName", name);
+        localStorage.setItem("storeCustomerEmail", email);
         
         checkVisitorSession();
     });
 
-    // Run session management engine loop immediately on page render
+    // Run verification gate setup immediately
     checkVisitorSession();
 
     // Real-time Database Sync Listener
@@ -415,8 +416,7 @@
 
     function closeDetails() {
         document.getElementById("productModal").style.display = "none";
-        // Ensure standard backdrop parameters don't overlay active blocks
-        if (sessionStorage.getItem("storeCustomerEmail")) {
+        if (localStorage.getItem("storeCustomerEmail")) {
             document.body.style.overflow = "auto";
         }
         selectedProduct = null;
@@ -611,7 +611,7 @@
     document.querySelectorAll(".close-policy-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             btn.closest(".modal").style.display = "none";
-            if (sessionStorage.getItem("storeCustomerEmail")) {
+            if (localStorage.getItem("storeCustomerEmail")) {
                 document.body.style.overflow = "auto";
             }
         });
