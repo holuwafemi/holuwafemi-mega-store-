@@ -64,9 +64,9 @@
         .cart-item-price { font-size: 15px; font-weight: bold; color: var(--jumia-orange); }
         .btn-remove { color: #d9534f; border: none; background: none; font-size: 13px; cursor: pointer; margin-top: 5px; }
 
-        .form-group { margin-bottom: 16px; padding: 0 20px; }
+        .form-group { margin-bottom: 14px; padding: 0 20px; }
         .form-group label { display: block; font-size: 12px; font-weight: bold; color: #555; margin-bottom: 6px; text-transform: uppercase; }
-        .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; outline: none; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 11px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; outline: none; background: #fff; }
         
         .whatsapp-floating-btn { position: fixed; bottom: 75px; right: 20px; background: var(--whatsapp-green); color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 999; text-decoration: none; }
 
@@ -77,7 +77,7 @@
         .policy-body h3 { margin-bottom: 12px; color: #111; font-size: 16px; text-transform: uppercase; }
         
         /* Account Gateway Overlay Styles */
-        .gate-container { padding: 40px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; background: #fff; }
+        .gate-container { padding: 30px 15px; display: flex; flex-direction: column; width: 100%; }
     </style>
 </head>
 <body>
@@ -136,21 +136,35 @@
 
     <!-- STRICT REGISTRATION & SIGN UP GATEWAY -->
     <div id="gateModal" class="modal" style="display: block; z-index: 9999;">
-        <div class="modal-content" style="max-width: 450px;">
+        <div class="modal-content" style="max-width: 450px; min-height: 100vh;">
             <div class="gate-container">
-                <h3 style="color:var(--jumia-orange); text-transform:uppercase; margin-bottom:10px; text-align:center;">Customer Sign Up</h3>
-                <p style="font-size:13px; color:#666; margin-bottom:25px; text-align:center; padding: 0 10px;">Please enter your details to register and access our mega catalog.</p>
+                <h3 style="color:var(--jumia-orange); text-transform:uppercase; margin-bottom:5px; text-align:center;">Customer Registration</h3>
+                <p style="font-size:12px; color:#666; margin-bottom:20px; text-align:center; padding: 0 10px;">Please enter your identification details to open your account and browse our inventory.</p>
                 
-                <div class="form-group" style="width:100%; padding:0;">
-                    <label>Your Full Name</label>
-                    <input type="text" id="gateName" placeholder="e.g. John Doe">
+                <div class="form-group" style="padding:0 10px;">
+                    <label>Full Name</label>
+                    <input type="text" id="gateName" placeholder="e.g. Shokunbi Femi">
                 </div>
-                <div class="form-group" style="width:100%; padding:0; margin-top:15px;">
-                    <label>Gmail / Email Address</label>
+                <div class="form-group" style="padding:0 10px;">
+                    <label>Email Address</label>
                     <input type="email" id="gateEmail" placeholder="e.g. yourname@gmail.com">
                 </div>
+                <div class="form-group" style="padding:0 10px;">
+                    <label>Phone Number</label>
+                    <input type="tel" id="gatePhone" placeholder="e.g. 09061989529">
+                </div>
+                <div class="form-group" style="padding:0 10px;">
+                    <label>State of Residence</label>
+                    <select id="gateState"></select>
+                </div>
+                <div class="form-group" style="padding:0 10px;">
+                    <label>Delivery Address</label>
+                    <textarea id="gateAddress" rows="2" placeholder="Street name, City, Close landmarks..."></textarea>
+                </div>
                 
-                <button id="gateSubmitBtn" class="btn-buy" style="width:100%; margin-top:30px; padding: 16px;">CREATE ACCOUNT & ENTER</button>
+                <div style="padding: 0 10px;">
+                    <button id="gateSubmitBtn" class="btn-buy" style="width:100%; margin-top:15px; padding: 14px;">CREATE ACCOUNT & ENTER STORE</button>
+                </div>
             </div>
         </div>
     </div>
@@ -305,6 +319,18 @@
     let checkoutItemsDescription = "";
     let cart = JSON.parse(localStorage.getItem("megaStoreCart")) || [];
 
+    // Complete list of Nigerian States
+    const nigeriaStates = [
+        "Select State", "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue", "Borno", 
+        "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti", "Enugu", "FCT - Abuja", "Gombe", "Imo", 
+        "Jigawa", "Kaduna", "Kano", "Katsina", "Kebbi", "Kogi", "Kwara", "Lagos", "Nasarawa", 
+        "Niger", "Ogun", "Ondo", "Osun", "Oyo", "Plateau", "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara"
+    ];
+
+    // Populating State dropdown selection menu
+    const stateSelector = document.getElementById("gateState");
+    stateSelector.innerHTML = nigeriaStates.map(state => `<option value="${state === 'Select State' ? '' : state}">${state}</option>`).join("");
+
     function safeFormatPrice(val) {
         if (val === undefined || val === null || val === "") return "0";
         const num = Number(val);
@@ -315,6 +341,10 @@
     function checkVisitorSession() {
         const savedName = localStorage.getItem("storeCustomerName");
         const savedEmail = localStorage.getItem("storeCustomerEmail");
+        const savedPhone = localStorage.getItem("storeCustomerPhone");
+        const savedState = localStorage.getItem("storeCustomerState");
+        const savedAddress = localStorage.getItem("storeCustomerAddress");
+        
         const gate = document.getElementById("gateModal");
         const badge = document.getElementById("headerUserBadge");
 
@@ -324,9 +354,11 @@
             badge.innerText = "👤 " + savedName.split(" ")[0];
             badge.style.display = "block";
             
-            // Prefill checkout inputs
+            // Auto pre-fill checkout inputs with complete gathered data
             document.getElementById("custName").value = savedName;
             document.getElementById("custEmail").value = savedEmail;
+            document.getElementById("custPhone").value = savedPhone || "";
+            document.getElementById("custAddress").value = `${savedAddress || ""}, ${savedState || ""}`;
         } else {
             gate.style.setProperty("display", "block", "important");
             document.body.style.overflow = "hidden";
@@ -336,13 +368,21 @@
     document.getElementById("gateSubmitBtn").addEventListener("click", () => {
         const name = document.getElementById("gateName").value.trim();
         const email = document.getElementById("gateEmail").value.trim();
+        const phone = document.getElementById("gatePhone").value.trim();
+        const state = document.getElementById("gateState").value;
+        const address = document.getElementById("gateAddress").value.trim();
 
-        if (!name || !email) return alert("Please enter both your name and email address to sign up.");
+        if (!name || !email || !phone || !state || !address) {
+            return alert("⚠️ Please fill out all configuration fields to register successfully.");
+        }
         if (!email.includes("@")) return alert("Please enter a valid email address.");
 
-        // Storing data into localStorage so it remains saved even when tab is closed
+        // Storing full customer data properties into localStorage
         localStorage.setItem("storeCustomerName", name);
         localStorage.setItem("storeCustomerEmail", email);
+        localStorage.setItem("storeCustomerPhone", phone);
+        localStorage.setItem("storeCustomerState", state);
+        localStorage.setItem("storeCustomerAddress", address);
         
         checkVisitorSession();
     });
