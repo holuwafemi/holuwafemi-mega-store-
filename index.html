@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Holuwafemi Mega Store</title>
+    <title>Tolulope Global</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
     <!-- Paystack Inline Script -->
     <script src="https://js.paystack.co/v1/inline.js"></script>
@@ -16,8 +16,10 @@
         .nav-top { display: flex; align-items: center; justify-content: space-between; }
         .logo { font-size: 18px; font-weight: bold; color: var(--jumia-orange); text-transform: uppercase; }
         
-        .nav-right-controls { display: flex; align-items: center; gap: 12px; }
-        .user-badge { font-size: 12px; color: #fff; font-weight: bold; background: var(--jumia-orange); padding: 5px 10px; border-radius: 4px; display: none; }
+        .nav-right-controls { display: flex; align-items: center; gap: 10px; }
+        .user-badge { font-size: 12px; color: #fff; font-weight: bold; background: var(--jumia-orange); padding: 5px 10px; border-radius: 4px; display: none; cursor: pointer; }
+        .btn-profile-edit { background: #f1f1f2; color: #555; border: none; padding: 6px 8px; border-radius: 4px; font-size: 12px; cursor: pointer; display: none; transition: 0.2s; }
+        .btn-profile-edit:hover { background: #e0e0e0; color: var(--jumia-orange); }
         .btn-logout { background: #f1f1f2; color: #555; border: none; padding: 6px 8px; border-radius: 4px; font-size: 12px; cursor: pointer; display: none; transition: 0.2s; }
         .btn-logout:hover { background: #d9534f; color: white; }
 
@@ -80,6 +82,7 @@
         
         /* Account Gateway Overlay Styles */
         .gate-container { padding: 30px 15px; display: flex; flex-direction: column; width: 100%; }
+        .info-note { background: #fff8f0; border-left: 3px solid var(--jumia-orange); padding: 10px; margin: 0 20px 15px 20px; font-size: 12px; color: #666; border-radius: 0 4px 4px 0; }
     </style>
 </head>
 <body>
@@ -87,9 +90,10 @@
     <!-- SITE HEADER -->
     <header>
         <div class="nav-top">
-            <div class="logo">Holuwafemi Mega Store</div>
+            <div class="logo">Tolulope Global</div>
             <div class="nav-right-controls">
-                <div class="user-badge" id="headerUserBadge"></div>
+                <div class="user-badge" id="headerUserBadge" title="Click to view details"></div>
+                <button class="btn-profile-edit" id="headerEditProfileBtn" title="Edit Profile Details"><i class="fas fa-user-cog"></i></button>
                 <button class="btn-logout" id="headerLogoutBtn" title="Log Out"><i class="fas fa-sign-out-alt"></i></button>
                 <div class="cart-icon-container" id="openCartIconBtn">
                     <i class="fas fa-shopping-cart" style="font-size: 20px;"></i>
@@ -100,7 +104,7 @@
     </header>
 
     <!-- FLOATING GENERAL WHATSAPP -->
-    <a href="https://wa.me/2349061989529?text=Hello%20Holuwafemi%20Mega%20Store%2C%20I%20have%20a%20question%20about%20your%20products." target="_blank" class="whatsapp-floating-btn">
+    <a href="https://wa.me/2349061989529?text=Hello%20Tolulope%20Global%2C%20I%20have%20a%20question%20about%20your%20products." target="_blank" class="whatsapp-floating-btn">
         <i class="fab fa-whatsapp"></i>
     </a>
 
@@ -134,16 +138,23 @@
             <a data-policy="privacyModal">Privacy and Policy</a>
             <a data-policy="shippingModal">Shipping Policy</a>
         </div>
-        <p>&copy; 2026 Holuwafemi Mega Store. All Rights Reserved.</p>
+        <p>&copy; 2026 Tolulope Global. All Rights Reserved.</p>
     </footer>
 
-    <!-- STRICT REGISTRATION & SIGN UP GATEWAY -->
+    <!-- REGISTRATION / ACCOUNT MODAL GATEWAY -->
     <div id="gateModal" class="modal" style="display: block; z-index: 9999;">
         <div class="modal-content" style="max-width: 450px; min-height: 100vh;">
+            <div class="close-modal" id="closeGateBtn" style="display: none; left: auto; right: 15px; top: 15px;"><i class="fas fa-times"></i></div>
+            
             <div class="gate-container">
-                <h3 style="color:var(--jumia-orange); text-transform:uppercase; margin-bottom:5px; text-align:center;">Customer Registration</h3>
-                <p style="font-size:12px; color:#666; margin-bottom:20px; text-align:center; padding: 0 10px;">Please enter your identification details to open your account and browse our inventory.</p>
+                <h3 id="gateTitle" style="color:var(--jumia-orange); text-transform:uppercase; margin-bottom:5px; text-align:center;">Customer Registration</h3>
+                <p id="gateSubtitle" style="font-size:12px; color:#666; margin-bottom:15px; text-align:center; padding: 0 10px;">Please enter your delivery details to open your account instantly.</p>
                 
+                <div class="info-note" id="gateNote">
+                    <i class="fas fa-bolt" style="color:var(--jumia-orange); margin-right:5px;"></i> 
+                    <strong>Instant Access:</strong> No email verification codes or passwords required. Fill details to enter.
+                </div>
+
                 <div class="form-group" style="padding:0 10px;">
                     <label>Full Name</label>
                     <input type="text" id="gateName" placeholder="e.g. Shokunbi Femi">
@@ -178,7 +189,7 @@
             <div class="close-modal close-policy-btn"><i class="fas fa-times"></i></div>
             <div class="policy-body">
                 <h3>Terms and Conditions</h3>
-                <p>Welcome to Holuwafemi Mega Store. By accessing and purchasing from this digital storefront, you agree to comply with our commercial terms. All item listings, specifications, and prices are subjects of structured inventory counts.</p>
+                <p>Welcome to Tolulope Global. By accessing and purchasing from this digital storefront, you agree to comply with our commercial terms. All item listings, specifications, and prices are subjects of structured inventory counts.</p>
             </div>
         </div>
     </div>
@@ -322,7 +333,6 @@
     let checkoutItemsDescription = "";
     let cart = JSON.parse(localStorage.getItem("megaStoreCart")) || [];
 
-    // Complete list of Nigerian States
     const nigeriaStates = [
         "Select State", "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue", "Borno", 
         "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti", "Enugu", "FCT - Abuja", "Gombe", "Imo", 
@@ -330,7 +340,6 @@
         "Niger", "Ogun", "Ondo", "Osun", "Oyo", "Plateau", "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara"
     ];
 
-    // Populating State dropdown selection menu
     const stateSelector = document.getElementById("gateState");
     stateSelector.innerHTML = nigeriaStates.map(state => `<option value="${state === 'Select State' ? '' : state}">${state}</option>`).join("");
 
@@ -340,7 +349,6 @@
         return isNaN(num) ? "0" : num.toLocaleString();
     }
 
-    // Checking for saved customer data strictly
     function checkVisitorSession() {
         const savedName = localStorage.getItem("storeCustomerName");
         const savedEmail = localStorage.getItem("storeCustomerEmail");
@@ -351,6 +359,8 @@
         const gate = document.getElementById("gateModal");
         const badge = document.getElementById("headerUserBadge");
         const logoutBtn = document.getElementById("headerLogoutBtn");
+        const editProfileBtn = document.getElementById("headerEditProfileBtn");
+        const closeGateBtn = document.getElementById("closeGateBtn");
 
         if (savedName && savedEmail) {
             gate.style.setProperty("display", "none", "important");
@@ -358,8 +368,9 @@
             badge.innerText = "👤 " + savedName.split(" ")[0];
             badge.style.display = "block";
             logoutBtn.style.display = "block";
+            editProfileBtn.style.display = "block";
+            closeGateBtn.style.display = "none";
             
-            // Auto pre-fill checkout inputs with complete gathered data
             document.getElementById("custName").value = savedName;
             document.getElementById("custEmail").value = savedEmail;
             document.getElementById("custPhone").value = savedPhone || "";
@@ -369,6 +380,13 @@
             document.body.style.overflow = "hidden";
             badge.style.display = "none";
             logoutBtn.style.display = "none";
+            editProfileBtn.style.display = "none";
+            closeGateBtn.style.display = "none";
+            
+            document.getElementById("gateTitle").innerText = "Customer Registration";
+            document.getElementById("gateSubtitle").innerText = "Please enter your delivery details to open your account instantly.";
+            document.getElementById("gateNote").style.display = "block";
+            document.getElementById("gateSubmitBtn").innerText = "CREATE ACCOUNT & ENTER STORE";
         }
     }
 
@@ -380,21 +398,42 @@
         const address = document.getElementById("gateAddress").value.trim();
 
         if (!name || !email || !phone || !state || !address) {
-            return alert("⚠️ Please fill out all configuration fields to register successfully.");
+            return alert("⚠️ Please fill out all configuration fields to save details successfully.");
         }
         if (!email.includes("@")) return alert("Please enter a valid email address.");
 
-        // Storing full customer data properties into localStorage
         localStorage.setItem("storeCustomerName", name);
         localStorage.setItem("storeCustomerEmail", email);
         localStorage.setItem("storeCustomerPhone", phone);
         localStorage.setItem("storeCustomerState", state);
         localStorage.setItem("storeCustomerAddress", address);
         
+        alert("✅ Account details saved successfully!");
         checkVisitorSession();
     });
 
-    // Logout Functionality Logic
+    document.getElementById("headerEditProfileBtn").addEventListener("click", () => {
+        document.getElementById("gateName").value = localStorage.getItem("storeCustomerName") || "";
+        document.getElementById("gateEmail").value = localStorage.getItem("storeCustomerEmail") || "";
+        document.getElementById("gatePhone").value = localStorage.getItem("storeCustomerPhone") || "";
+        document.getElementById("gateState").value = localStorage.getItem("storeCustomerState") || "";
+        document.getElementById("gateAddress").value = localStorage.getItem("storeCustomerAddress") || "";
+        
+        document.getElementById("gateTitle").innerText = "Update Profile";
+        document.getElementById("gateSubtitle").innerText = "Modify your profile or shipping parameters. Click save to store updates locally.";
+        document.getElementById("gateNote").style.display = "none"; // Hide tip when editing an active profile
+        document.getElementById("gateSubmitBtn").innerText = "SAVE CHANGES";
+        
+        document.getElementById("closeGateBtn").style.display = "flex";
+        document.getElementById("gateModal").style.setProperty("display", "block", "important");
+        document.body.style.overflow = "hidden";
+    });
+
+    document.getElementById("closeGateBtn").addEventListener("click", () => {
+        document.getElementById("gateModal").style.setProperty("display", "none", "important");
+        document.body.style.overflow = "auto";
+    });
+
     document.getElementById("headerLogoutBtn").addEventListener("click", () => {
         if(confirm("Are you sure you want to log out of your account session?")) {
             localStorage.removeItem("storeCustomerName");
@@ -407,7 +446,6 @@
             cart = [];
             updateCartBadge();
             
-            // Clear inputs in form fields
             document.getElementById("gateName").value = "";
             document.getElementById("gateEmail").value = "";
             document.getElementById("gatePhone").value = "";
@@ -418,10 +456,8 @@
         }
     });
 
-    // Run verification gate setup immediately
     checkVisitorSession();
 
-    // Real-time Database Sync Listener
     const q = query(collection(db, "products"), orderBy("timestamp", "desc"));
     onSnapshot(q, (snapshot) => {
         allProducts = [];
@@ -493,7 +529,6 @@
         selectedProduct = null;
     }
 
-    // Category Tabs Filter logic
     document.querySelectorAll("#categoryTabsBar .cat-btn").forEach(btn => {
         btn.addEventListener("click", (e) => {
             document.querySelectorAll("#categoryTabsBar .cat-btn").forEach(b => b.classList.remove("active"));
@@ -507,7 +542,6 @@
         });
     });
 
-    // Interface Toggles
     document.getElementById("openCartIconBtn").addEventListener("click", openCartView);
     document.getElementById("closeDetailsBtn").addEventListener("click", closeDetails);
     document.getElementById("closeCartBtn").addEventListener("click", () => {
@@ -580,7 +614,6 @@
         document.body.style.overflow = "hidden";
     }
 
-    // Checkout Routing
     document.getElementById("directBuyBtn").addEventListener("click", () => {
         if(!selectedProduct) return;
         checkoutMode = "direct";
@@ -601,7 +634,6 @@
         document.getElementById("checkoutModal").style.display = "block";
     });
 
-    // Paystack Execution
     document.getElementById("paystackTriggerBtn").addEventListener("click", () => {
         const name = document.getElementById("custName").value.trim();
         const email = document.getElementById("custEmail").value.trim();
@@ -671,7 +703,6 @@
         }
     });
 
-    // Footers / Policy Actions Mapping
     document.querySelectorAll(".footer-links a").forEach(link => {
         link.addEventListener("click", () => {
             const modalId = link.getAttribute("data-policy");
