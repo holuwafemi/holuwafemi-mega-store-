@@ -16,8 +16,10 @@
         .nav-top { display: flex; align-items: center; justify-content: space-between; }
         .logo { font-size: 18px; font-weight: bold; color: var(--jumia-orange); text-transform: uppercase; }
         
-        .nav-right-controls { display: flex; align-items: center; gap: 15px; }
+        .nav-right-controls { display: flex; align-items: center; gap: 12px; }
         .user-badge { font-size: 12px; color: #fff; font-weight: bold; background: var(--jumia-orange); padding: 5px 10px; border-radius: 4px; display: none; }
+        .btn-logout { background: #f1f1f2; color: #555; border: none; padding: 6px 8px; border-radius: 4px; font-size: 12px; cursor: pointer; display: none; transition: 0.2s; }
+        .btn-logout:hover { background: #d9534f; color: white; }
 
         .cart-icon-container { position: relative; cursor: pointer; padding: 5px; }
         .cart-badge { 
@@ -88,6 +90,7 @@
             <div class="logo">Holuwafemi Mega Store</div>
             <div class="nav-right-controls">
                 <div class="user-badge" id="headerUserBadge"></div>
+                <button class="btn-logout" id="headerLogoutBtn" title="Log Out"><i class="fas fa-sign-out-alt"></i></button>
                 <div class="cart-icon-container" id="openCartIconBtn">
                     <i class="fas fa-shopping-cart" style="font-size: 20px;"></i>
                     <div id="cartCounter" class="cart-badge">0</div>
@@ -347,12 +350,14 @@
         
         const gate = document.getElementById("gateModal");
         const badge = document.getElementById("headerUserBadge");
+        const logoutBtn = document.getElementById("headerLogoutBtn");
 
         if (savedName && savedEmail) {
             gate.style.setProperty("display", "none", "important");
             document.body.style.overflow = "auto";
             badge.innerText = "👤 " + savedName.split(" ")[0];
             badge.style.display = "block";
+            logoutBtn.style.display = "block";
             
             // Auto pre-fill checkout inputs with complete gathered data
             document.getElementById("custName").value = savedName;
@@ -362,6 +367,8 @@
         } else {
             gate.style.setProperty("display", "block", "important");
             document.body.style.overflow = "hidden";
+            badge.style.display = "none";
+            logoutBtn.style.display = "none";
         }
     }
 
@@ -385,6 +392,30 @@
         localStorage.setItem("storeCustomerAddress", address);
         
         checkVisitorSession();
+    });
+
+    // Logout Functionality Logic
+    document.getElementById("headerLogoutBtn").addEventListener("click", () => {
+        if(confirm("Are you sure you want to log out of your account session?")) {
+            localStorage.removeItem("storeCustomerName");
+            localStorage.removeItem("storeCustomerEmail");
+            localStorage.removeItem("storeCustomerPhone");
+            localStorage.removeItem("storeCustomerState");
+            localStorage.removeItem("storeCustomerAddress");
+            localStorage.removeItem("megaStoreCart");
+            
+            cart = [];
+            updateCartBadge();
+            
+            // Clear inputs in form fields
+            document.getElementById("gateName").value = "";
+            document.getElementById("gateEmail").value = "";
+            document.getElementById("gatePhone").value = "";
+            document.getElementById("gateState").value = "";
+            document.getElementById("gateAddress").value = "";
+            
+            checkVisitorSession();
+        }
     });
 
     // Run verification gate setup immediately
