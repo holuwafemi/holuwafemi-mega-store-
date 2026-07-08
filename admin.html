@@ -63,6 +63,7 @@
             <option value="appliances">Appliances</option>
             <option value="computers">Computers</option>
             <option value="phones">Phones</option>
+            <option value="fashion">Fashion</option>
         </select>
         
         <label>Description</label>
@@ -88,7 +89,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-    // 🖥️ Corrected Firebase Credentials pointed to your updated project workspace
     const firebaseConfig = {
         apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
         authDomain: "holuwafemi-mega-store.firebaseapp.com",
@@ -99,7 +99,7 @@
         measurementId: "G-WPFKNZ20E3"
     };
 
-    // 🛡️ ADMIN ACCESS
+    // 🛡️ ADMIN ACCESS PASSKEY LAYER
     const ADMIN_PASS = "MyMegaStoreSecret2026";
     if (sessionStorage.getItem("adminAuth") !== "true") {
         const attempt = prompt("Enter Admin Access Key:");
@@ -114,7 +114,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Live Preview Event Handling
+    // Live Card Image Preview Listener
     const imgUrlInput = document.getElementById('finalImgUrl');
     imgUrlInput.addEventListener('input', (e) => {
         const url = e.target.value.trim();
@@ -129,7 +129,7 @@
         }
     });
 
-    // Real-time Synchronized Inventory Module
+    // Real-time Synchronized Panel Catalog Layout
     const q = query(collection(db, "products"), orderBy("timestamp", "desc"));
     onSnapshot(q, (snapshot) => {
         const list = document.getElementById("adminCatalogList");
@@ -149,7 +149,7 @@
         });
         list.innerHTML = html || "<p style='text-align:center; font-size:12px; color:#999; padding:10px;'>No products found.</p>";
 
-        // Dynamically attach listeners to the delete buttons to prevent module closure crashes
+        // Attach event listeners to newly populated DOM nodes safely
         document.querySelectorAll(".item-delete-btn").forEach(btn => {
             btn.addEventListener("click", () => {
                 const docId = btn.getAttribute("data-id");
@@ -159,17 +159,17 @@
     });
 
     async function deleteProduct(id) {
-        if(confirm("Delete this product permanently?")) {
+        if(confirm("Delete this product permanently from live customer storefront?")) {
             try {
                 await deleteDoc(doc(db, "products", id));
                 alert("🗑️ Product removed!");
             } catch(e) { 
-                alert("Delete failed: " + e.message); 
+                alert("Delete execution error: " + e.message); 
             }
         }
     }
 
-    // Publish to Firestore Engine
+    // Publish Entry Submission Node
     document.getElementById("publishBtn").addEventListener("click", async () => {
         const img = document.getElementById('finalImgUrl').value.trim();
         const name = document.getElementById('pName').value.trim();
@@ -177,7 +177,7 @@
         const oldInput = document.getElementById('pOld').value;
 
         if(!img || !name || !priceInput) {
-            return alert("Fill Name, Price and Image URL!");
+            return alert("Name, Price and Image URL fields are strictly mandatory!");
         }
 
         const price = Number(priceInput);
@@ -196,9 +196,9 @@
                 timestamp: serverTimestamp(),
                 password: ADMIN_PASS
             });
-            alert("🎉 Success! Product is now Live.");
+            alert("🎉 Success! Product line is now active on storefront.");
             
-            // Clear Dashboard Inputs cleanly
+            // Clean Dashboard UI Values
             document.getElementById('finalImgUrl').value = "";
             document.getElementById('pName').value = "";
             document.getElementById('pPrice').value = "";
@@ -210,20 +210,20 @@
             btn.disabled = false; 
             btn.innerText = "PUBLISH TO STORE";
         } catch(e) { 
-            alert("Error writing to database: " + e.message); 
+            alert("Database collection write failure: " + e.message); 
             btn.disabled = false; 
             btn.innerText = "PUBLISH TO STORE";
         }
     });
 
-    // AI Configuration Setup Handler
+    // AI Framework Switch
     document.getElementById("aiSetupBtn").addEventListener("click", () => {
-        const key = prompt("Paste Groq API Key:");
+        const key = prompt("Paste Groq API Key context token:");
         if(key && key.startsWith("gsk_")) {
             localStorage.setItem("GROQ_API_KEY", key);
-            alert("AI Activated!");
+            alert("AI Sandbox Activated successfully!");
         } else if (key) {
-            alert("Invalid Key format. Should start with 'gsk_'.");
+            alert("Invalid key blueprint format. Standard keys begin with 'gsk_'.");
         }
     });
 </script>
