@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Holuwafemi Mega Store</title>
+    <title>TOLULOPE Mega Store</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
     <!-- Paystack Inline Script -->
     <script src="https://js.paystack.co/v1/inline.js"></script>
@@ -79,7 +79,7 @@
     <!-- SITE HEADER -->
     <header>
         <div class="nav-top">
-            <div class="logo">Holuwafemi Mega Store</div>
+            <div class="logo">TOLULOPE Mega Store</div>
             <div class="cart-icon-container" id="openCartIconBtn">
                 <i class="fas fa-shopping-cart" style="font-size: 20px;"></i>
                 <div id="cartCounter" class="cart-badge">0</div>
@@ -100,7 +100,6 @@
         <button class="cat-btn" data-cat="solar">Solar</button>
         <button class="cat-btn" data-cat="computers">Computers</button>
         <button class="cat-btn" data-cat="phones">Phones</button>
-        <button class="cat-btn" data-cat="fashion">Fashion</button>
     </div>
 
     <!-- FLASH SALES SLIDER -->
@@ -123,7 +122,7 @@
             <a data-policy="privacyModal">Privacy and Policy</a>
             <a data-policy="shippingModal">Shipping Policy</a>
         </div>
-        <p>&copy; 2026 Holuwafemi Mega Store. All Rights Reserved.</p>
+        <p>&copy; 2026 TOLULOPE Mega Store. All Rights Reserved.</p>
     </footer>
 
     <!-- POLICY MODALS -->
@@ -132,7 +131,7 @@
             <div class="close-modal close-policy-btn"><i class="fas fa-times"></i></div>
             <div class="policy-body">
                 <h3>Terms and Conditions</h3>
-                <p>Welcome to Holuwafemi Mega Store. By accessing and purchasing from this digital storefront, you agree to comply with our commercial terms. All item listings, specifications, and prices are subjects of structured inventory counts.</p>
+                <p>Welcome to TOLULOPE Mega Store. By accessing and purchasing from this digital storefront, you agree to comply with our commercial terms. All item listings, specifications, and prices are subjects of structured inventory counts.</p>
             </div>
         </div>
     </div>
@@ -254,7 +253,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+    import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
@@ -282,13 +281,21 @@
         return isNaN(num) ? "0" : num.toLocaleString();
     }
 
-    // Real-time Database Sync Listener
-    const q = query(collection(db, "products"), orderBy("timestamp", "desc"));
+    // Unfiltered base query collection references to keep old layout nodes safe
+    const q = query(collection(db, "products"));
     onSnapshot(q, (snapshot) => {
         allProducts = [];
         snapshot.forEach((doc) => {
             allProducts.push({ id: doc.id, ...doc.data() });
         });
+        
+        // Local timestamp parsing fallback arrangement safely ordered in JS engine memory
+        allProducts.sort((a, b) => {
+            const timeA = a.timestamp ? (a.timestamp.seconds || 0) : 0;
+            const timeB = b.timestamp ? (b.timestamp.seconds || 0) : 0;
+            return timeB - timeA;
+        });
+
         renderProducts(allProducts);
         updateCartBadge(); 
     }, (error) => {
@@ -336,7 +343,7 @@
     }
 
     // Category Filter Navigation Event Layer
-    document.getElementById("categoryTabsBar").addEventListener("click", (e) => {
+  document.getElementById("categoryTabsBar").addEventListener("click", (e) => {
         if(e.target.classList.contains("cat-btn")) {
             document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
             e.target.classList.add("active");
@@ -344,7 +351,7 @@
             if(cat === "all") {
                 renderProducts(allProducts);
             } else {
-                renderProducts(allProducts.filter(item => item.cat === cat));
+                renderProducts(allProducts.filter(item => item.cat === cat || (!item.cat && cat === "electronics")));
             }
         }
     });
@@ -365,13 +372,13 @@
     // Screen Transitions & Detail Engine Actions
     function openDetails(product) {
         selectedProduct = product;
-        document.getElementById("mImg").src = product.img || "";
+        document.getElementById("mImg").src = product.img || "https://via.placeholder.com/320";
         document.getElementById("mName").innerText = product.name || "";
         document.getElementById("mPrice").innerText = `₦${safeFormatPrice(product.price)}`;
         document.getElementById("mOld").innerText = product.old ? `₦${safeFormatPrice(product.old)}` : "";
         document.getElementById("mDesc").innerText = product.desc || "No specifications listed.";
         
-        const chatText = encodeURIComponent(`Hello Holuwafemi Mega Store, I'm interested in buying: ${product.name} (Price: ₦${safeFormatPrice(product.price)}). Link: ${window.location.href}`);
+        const chatText = encodeURIComponent(`Hello, I'm interested in buying: ${product.name} (Price: ₦${safeFormatPrice(product.price)}).`);
         document.getElementById("whatsappProductChatBtn").href = `https://wa.me/2349061989529?text=${chatText}`;
         
         document.getElementById("productModal").style.display = "block";
@@ -490,39 +497,13 @@
             email: email,
             amount: checkoutAmount * 100, // Converting to Kobo
             currency: 'NGN',
-            metadata: {
-                custom_fields: [
-                    { display_name: "Customer Name", variable_name: "customer_name", value: name },
-                    { display_name: "Phone Number", variable_name: "phone_number", value: phone },
-                    { display_name: "Delivery Address", variable_name: "delivery_address", value: address },
-                    { display_name: "Order Breakdowns", variable_name: "order_breakdowns", value: checkoutItemsDescription }
-                ]
-            },
-            callback: async function(response) {
-                alert(`💳 Payment Confirmed! Reference No: ${response.reference}`);
-                
-                try {
-                    await addDoc(collection(db, "orders"), {
-                        customerName: name,
-                        email: email,
-                        phone: phone,
-                        address: address,
-                        items: checkoutItemsDescription,
-                        amountPaid: checkoutAmount,
-                        paystackRef: response.reference,
-                        timestamp: serverTimestamp()
-                    });
-                    
-                    if(checkoutMode === "cart") {
-                        cart = [];
-                        updateCartBadge();
-                    }
-                    document.getElementById("checkoutModal").style.display = "none";
-                    alert("🎉 Order successfully synced with dispatch network!");
-                } catch(err) {
-                    console.error("Order logging crash: ", err);
-                    alert("Payment passed but database sync dropped. Keep receipt reference!");
+            callback: function(response) {
+                alert(`\uD83D\uDCB3 Payment Confirmed! Reference No: ${response.reference}`);
+                if(checkoutMode === "cart") {
+                    cart = [];
+                    updateCartBadge();
                 }
+                document.getElementById("checkoutModal").style.display = "none";
             },
             onClose: function() {
                 alert("Payment operations dropped by customer signal.");
