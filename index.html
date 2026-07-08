@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOLULOPE Mega Store</title>
+    <title>Holuwafemi Mega Store</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
     <!-- Paystack Inline Script -->
     <script src="https://js.paystack.co/v1/inline.js"></script>
@@ -79,7 +79,7 @@
     <!-- SITE HEADER -->
     <header>
         <div class="nav-top">
-            <div class="logo">TOLULOPE Mega Store</div>
+            <div class="logo">Holuwafemi Mega Store</div>
             <div class="cart-icon-container" id="openCartIconBtn">
                 <i class="fas fa-shopping-cart" style="font-size: 20px;"></i>
                 <div id="cartCounter" class="cart-badge">0</div>
@@ -100,7 +100,6 @@
         <button class="cat-btn" data-cat="solar">Solar</button>
         <button class="cat-btn" data-cat="computers">Computers</button>
         <button class="cat-btn" data-cat="phones">Phones</button>
-        <button class="cat-btn" data-cat="fashion">Fashion</button>
     </div>
 
     <!-- FLASH SALES SLIDER -->
@@ -123,7 +122,7 @@
             <a data-policy="privacyModal">Privacy and Policy</a>
             <a data-policy="shippingModal">Shipping Policy</a>
         </div>
-        <p>&copy; 2026 TOLULOPE Mega Store. All Rights Reserved.</p>
+        <p>&copy; 2026 Holuwafemi Mega Store. All Rights Reserved.</p>
     </footer>
 
     <!-- POLICY MODALS -->
@@ -132,7 +131,7 @@
             <div class="close-modal close-policy-btn"><i class="fas fa-times"></i></div>
             <div class="policy-body">
                 <h3>Terms and Conditions</h3>
-                <p>Welcome to TOLULOPE Mega Store. By accessing and purchasing from this digital storefront, you agree to comply with our commercial terms. All item listings, specifications, and prices are subjects of structured inventory counts.</p>
+                <p>Welcome to Holuwafemi Mega Store. By accessing and purchasing from this digital storefront, you agree to comply with our commercial terms. All item listings, specifications, and prices are subjects of structured inventory counts.</p>
             </div>
         </div>
     </div>
@@ -254,7 +253,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+    import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
@@ -282,26 +281,18 @@
         return isNaN(num) ? "0" : num.toLocaleString();
     }
 
-    // Unfiltered base query collection references to keep old layout nodes safe
-    const q = query(collection(db, "products"));
+    // Real-time Database Sync Listener
+    const q = query(collection(db, "products"), orderBy("timestamp", "desc"));
     onSnapshot(q, (snapshot) => {
         allProducts = [];
         snapshot.forEach((doc) => {
             allProducts.push({ id: doc.id, ...doc.data() });
         });
-        
-        // Local timestamp parsing fallback arrangement safely ordered in JS engine memory
-        allProducts.sort((a, b) => {
-            const timeA = a.timestamp ? (a.timestamp.seconds || 0) : 0;
-            const timeB = b.timestamp ? (b.timestamp.seconds || 0) : 0;
-            return timeB - timeA;
-        });
-
         renderProducts(allProducts);
         updateCartBadge(); 
     }, (error) => {
         console.error("Firebase Sync Error: ", error);
-        document.getElementById("mainCatalogGrid").innerHTML = `<p style="grid-column:span 3; padding:20px; color:red; text-align:center;">Connection interrupted. Ensure Firestore rules are public.</p>`;
+        document.getElementById("mainCatalogGrid").innerHTML = `<p style="grid-column:span 3; padding:20px; color:red; text-align:center;">Connection interrupted. Ensure Firestore permissions are updated.</p>`;
     });
 
     function renderProducts(productsList) {
@@ -333,184 +324,226 @@
             </div>
         `).join("");
 
-        // Attach event listeners safely inside modular script layout
+        // Attach event dynamically to rendered elements to respect module limits
         document.querySelectorAll(".product-clickable").forEach(card => {
-            card.addEventListener("click", () => {
-                const id = card.getAttribute("data-id");
-                const matched = allProducts.find(item => item.id === id);
-                if(matched) openDetails(matched);
-            });
+            card.addEventListener("click", () => openDetails(card.getAttribute("data-id")));
         });
     }
 
-    // Category Filter Navigation Event Layer
-  document.getElementById("categoryTabsBar").addEventListener("click", (e) => {
-        if(e.target.classList.contains("cat-btn")) {
-            document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
-            e.target.classList.add("active");
-            const cat = e.target.getAttribute("data-cat");
-            if(cat === "all") {
-                renderProducts(allProducts);
-            } else {
-                renderProducts(allProducts.filter(item => item.cat === cat || (!item.cat && cat === "electronics")));
-            }
-        }
-    });
+    function openDetails(id) {
+        const p = allProducts.find(item => item.id === id);
+        if(!p) return;
+        selectedProduct = p; 
+        document.getElementById("mImg").src = p.img || 'https://via.placeholder.com/140';
+        document.getElementById("mName").innerText = p.name || 'Product';
+        document.getElementById("mPrice").innerText = "₦" + safeFormatPrice(p.price);
+        document.getElementById("mOld").innerText = p.old ? "₦" + safeFormatPrice(p.old) : "";
+        document.getElementById("mDesc").innerText = p.desc || "No specific details provided.";
 
-    // Handle Policy Layout Pops natively
-    document.querySelectorAll("[data-policy]").forEach(trigger => {
-        trigger.addEventListener("click", () => {
-            const modalId = trigger.getAttribute("data-policy");
-            document.getElementById(modalId).style.display = "block";
-        });
-    });
-    document.querySelectorAll(".close-policy-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            btn.closest(".modal").style.display = "none";
-        });
-    });
+        const encodedMsg = encodeURIComponent(`Hello, I am looking at "${p.name}" priced at ₦${safeFormatPrice(p.price)} on your store.`);
+        document.getElementById("whatsappProductChatBtn").href = `https://wa.me/2349061989529?text=${encodedMsg}`;
 
-    // Screen Transitions & Detail Engine Actions
-    function openDetails(product) {
-        selectedProduct = product;
-        document.getElementById("mImg").src = product.img || "https://via.placeholder.com/320";
-        document.getElementById("mName").innerText = product.name || "";
-        document.getElementById("mPrice").innerText = `₦${safeFormatPrice(product.price)}`;
-        document.getElementById("mOld").innerText = product.old ? `₦${safeFormatPrice(product.old)}` : "";
-        document.getElementById("mDesc").innerText = product.desc || "No specifications listed.";
-        
-        const chatText = encodeURIComponent(`Hello, I'm interested in buying: ${product.name} (Price: ₦${safeFormatPrice(product.price)}).`);
-        document.getElementById("whatsappProductChatBtn").href = `https://wa.me/2349061989529?text=${chatText}`;
-        
         document.getElementById("productModal").style.display = "block";
+        document.body.style.overflow = "hidden"; 
     }
 
-    document.getElementById("closeDetailsBtn").addEventListener("click", () => {
+    function closeDetails() {
         document.getElementById("productModal").style.display = "none";
+        document.body.style.overflow = "auto";
+        selectedProduct = null;
+    }
+
+    // Setup Category filtering tabs events
+    document.querySelectorAll("#categoryTabsBar .cat-btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            document.querySelectorAll("#categoryTabsBar .cat-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            
+            const category = btn.getAttribute("data-cat");
+            const filtered = category === 'all' ? allProducts : allProducts.filter(p => {
+                return p.cat && String(p.cat).toLowerCase().trim() === String(category).toLowerCase().trim();
+            });
+            renderProducts(filtered);
+        });
     });
 
-    // Cart Operational Subroutines
-    function updateCartBadge() {
-        const totalQty = cart.reduce((acc, item) => acc + (item.qty || 1), 0);
-        document.getElementById("cartCounter").innerText = totalQty;
-        localStorage.setItem("megaStoreCart", JSON.stringify(cart));
-    }
+    // Cart and Popup Logic Setup
+    document.getElementById("openCartIconBtn").addEventListener("click", openCartView);
+    document.getElementById("closeDetailsBtn").addEventListener("click", closeDetails);
+    document.getElementById("closeCartBtn").addEventListener("click", () => {
+        document.getElementById("cartModal").style.display = "none";
+        document.body.style.overflow = "auto";
+    });
+    document.getElementById("closeCheckoutBtn").addEventListener("click", () => {
+        document.getElementById("checkoutModal").style.display = "none";
+        document.body.style.overflow = "auto";
+    });
 
     document.getElementById("addToCartBtn").addEventListener("click", () => {
-        if(!selectedProduct) return;
-        const exists = cart.find(item => item.id === selectedProduct.id);
-        if(exists) {
-            exists.qty = (exists.qty || 1) + 1;
-        } else {
-            cart.push({ ...selectedProduct, qty: 1 });
-        }
+        if (!selectedProduct) return;
+        cart.push(selectedProduct);
+        localStorage.setItem("megaStoreCart", JSON.stringify(cart));
         updateCartBadge();
-        alert("🛒 Added to Cart successfully!");
-        document.getElementById("productModal").style.display = "none";
+        alert(`🛒 Added "${selectedProduct.name}" to cart!`);
+        closeDetails();
     });
 
-    // View Cart Modal Build out
-    document.getElementById("openCartIconBtn").addEventListener("click", () => {
-        const list = document.getElementById("cartItemsListContainer");
+    function updateCartBadge() {
+        document.getElementById("cartCounter").innerText = cart.length;
+    }
+
+    function openCartView() {
+        const listContainer = document.getElementById("cartItemsListContainer");
+        const totalSummary = document.getElementById("cartTotalSummaryCard");
+        const actionBtn = document.getElementById("cartActionBar");
+
         if(cart.length === 0) {
-            list.innerHTML = `<p style="text-align:center; padding:40px; color:#666;">Your cart is currently empty.</p>`;
-            document.getElementById("cartTotalSummaryCard").style.display = "none";
-            document.getElementById("cartActionBar").style.display = "none";
+            listContainer.innerHTML = `
+                <div style="text-align:center; padding:50px 20px; color:#666;">
+                    <i class="fas fa-shopping-basket" style="font-size:48px; color:#ccc; margin-bottom:15px;"></i>
+                    <p>Your shopping cart is empty!</p>
+                </div>`;
+            totalSummary.style.display = "none";
+            actionBtn.style.display = "none";
         } else {
             let total = 0;
-            list.innerHTML = cart.map((item, idx) => {
-                const price = Number(item.price) || 0;
-                const qty = item.qty || 1;
-                total += (price * qty);
+            listContainer.innerHTML = cart.map((p, index) => {
+                total += Number(p.price || 0);
                 return `
                     <div class="cart-item-row">
-                        <img src="${item.img || 'https://via.placeholder.com/60'}">
+                        <img src="${p.img || 'https://via.placeholder.com/140'}">
                         <div class="cart-item-details">
-                            <div class="cart-item-title">${item.name} (x${qty})</div>
-                            <div class="cart-item-price">₦${safeFormatPrice(price * qty)}</div>
-                            <button class="btn-remove cart-remove-trigger" data-index="${idx}"><i class="fas fa-trash"></i> Remove</button>
+                            <div class="cart-item-title">${p.name || 'Product'}</div>
+                            <div class="cart-item-price">₦${safeFormatPrice(p.price)}</div>
+                            <button class="btn-remove remove-cart-item-btn" data-index="${index}"><i class="fas fa-trash-alt"></i> Remove</button>
                         </div>
                     </div>`;
             }).join("");
-            
-            document.getElementById("cartSubtotalAmount").innerText = `₦${safeFormatPrice(total)}`;
-            document.getElementById("cartTotalAmount").innerText = `₦${safeFormatPrice(total)}`;
-            document.getElementById("cartTotalSummaryCard").style.display = "block";
-            document.getElementById("cartActionBar").style.display = "flex";
-        }
-        document.getElementById("cartModal").style.display = "block";
 
-        // Bind inner remove processing dynamically
-        document.querySelectorAll(".cart-remove-trigger").forEach(btn => {
-            btn.addEventListener("click", () => {
-                const idx = parseInt(btn.getAttribute("data-index"));
-                cart.splice(idx, 1);
-                updateCartBadge();
-                document.getElementById("openCartIconBtn").click(); // Refresh layout view
+            document.querySelectorAll(".remove-cart-item-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const idx = btn.getAttribute("data-index");
+                    cart.splice(idx, 1);
+                    localStorage.setItem("megaStoreCart", JSON.stringify(cart));
+                    updateCartBadge();
+                    openCartView();
+                });
             });
-        });
-    });
 
-    document.getElementById("closeCartBtn").addEventListener("click", () => {
-        document.getElementById("cartModal").style.display = "none";
-    });
+            document.getElementById("cartSubtotalAmount").innerText = "₦" + total.toLocaleString();
+            document.getElementById("cartTotalAmount").innerText = "₦" + total.toLocaleString();
+            totalSummary.style.display = "block";
+            actionBtn.style.display = "flex";
+        }
 
-    // Checkout Transitions Architecture
+        document.getElementById("cartModal").style.display = "block";
+        document.body.style.overflow = "hidden";
+    }
+
+    // Checkout Routing
     document.getElementById("directBuyBtn").addEventListener("click", () => {
         if(!selectedProduct) return;
         checkoutMode = "direct";
-        checkoutAmount = Number(selectedProduct.price) || 0;
-        checkoutItemsDescription = `Direct Purchase: ${selectedProduct.name}`;
-        
-        document.getElementById("checkoutPayableAmount").innerText = `₦${safeFormatPrice(checkoutAmount)}`;
-        document.getElementById("productModal").style.display = "none";
+        checkoutAmount = Number(selectedProduct.price || 0);
+        checkoutItemsDescription = selectedProduct.name || "Product";
+        document.getElementById("checkoutPayableAmount").innerText = "₦" + checkoutAmount.toLocaleString();
+        closeDetails();
         document.getElementById("checkoutModal").style.display = "block";
     });
 
     document.getElementById("cartCheckoutBtn").addEventListener("click", () => {
         if(cart.length === 0) return;
         checkoutMode = "cart";
-        checkoutAmount = cart.reduce((acc, item) => acc + ((Number(item.price) || 0) * (item.qty || 1)), 0);
-        checkoutItemsDescription = cart.map(item => `${item.name} (x${item.qty || 1})`).join(", ");
-        
-        document.getElementById("checkoutPayableAmount").innerText = `₦${safeFormatPrice(checkoutAmount)}`;
+        checkoutAmount = cart.reduce((sum, item) => sum + Number(item.price || 0), 0);
+        checkoutItemsDescription = cart.map(item => item.name || "Product").join(", ");
+        document.getElementById("checkoutPayableAmount").innerText = "₦" + checkoutAmount.toLocaleString();
         document.getElementById("cartModal").style.display = "none";
         document.getElementById("checkoutModal").style.display = "block";
     });
 
-    document.getElementById("closeCheckoutBtn").addEventListener("click", () => {
-        document.getElementById("checkoutModal").style.display = "none";
-    });
-
-    // Paystack Network Billing Execution Engine
+    // Paystack Execution
     document.getElementById("paystackTriggerBtn").addEventListener("click", () => {
         const name = document.getElementById("custName").value.trim();
         const email = document.getElementById("custEmail").value.trim();
         const phone = document.getElementById("custPhone").value.trim();
         const address = document.getElementById("custAddress").value.trim();
+        const payButton = document.getElementById("paystackTriggerBtn");
 
         if(!name || !email || !phone || !address) {
-            return alert("Please fulfill all checkout delivery rows!");
+            alert("⚠️ Please complete all delivery fields before proceeding.");
+            return;
         }
 
-        const handler = PaystackPop.setup({
-            key: 'pk_live_d81347ba8cc06ee555c697669d67baaa1551a196', 
-            email: email,
-            amount: checkoutAmount * 100, // Converting to Kobo
-            currency: 'NGN',
-            callback: function(response) {
-                alert(`\uD83D\uDCB3 Payment Confirmed! Reference No: ${response.reference}`);
-                if(checkoutMode === "cart") {
-                    cart = [];
-                    updateCartBadge();
+        payButton.innerText = "OPENING SECURE GATEWAY...";
+        payButton.disabled = true;
+
+        try {
+            let handler = PaystackPop.setup({
+                key: 'pk_live_74b79dcbb6afc98ea13aa66c2c0f154e923643bc', 
+                email: email,
+                amount: Math.round(checkoutAmount * 100), 
+                currency: "NGN",
+                metadata: {
+                    custom_fields: [
+                        { display_name: "Customer Name", value: name },
+                        { display_name: "Phone Number", value: phone },
+                        { display_name: "Delivery Address", value: address },
+                        { display_name: "Items Ordered", value: checkoutItemsDescription }
+                    ]
+                },
+                callback: async function(response) {
+                    try {
+                        await addDoc(collection(db, "orders"), {
+                            customerName: name,
+                            customerEmail: email,
+                            customerPhone: phone,
+                            deliveryAddress: address,
+                            orderedItems: checkoutItemsDescription,
+                            totalPaid: checkoutAmount,
+                            paystackReference: response.reference,
+                            timestamp: serverTimestamp()
+                        });
+                        alert("✅ Payment Successful! Your order has been registered securely.");
+                    } catch (dbError) {
+                        alert("✅ Payment Received! Reference: " + response.reference);
+                    }
+                    if(checkoutMode === "cart") {
+                        cart = [];
+                        localStorage.removeItem("megaStoreCart");
+                        updateCartBadge();
+                    }
+                    payButton.innerText = "CONFIRM & PAY NOW";
+                    payButton.disabled = false;
+                    document.getElementById("checkoutModal").style.display = "none";
+                    document.body.style.overflow = "auto";
+                },
+                onClose: function() {
+                    alert("Transaction cancelled.");
+                    payButton.innerText = "CONFIRM & PAY NOW";
+                    payButton.disabled = false;
                 }
-                document.getElementById("checkoutModal").style.display = "none";
-            },
-            onClose: function() {
-                alert("Payment operations dropped by customer signal.");
-            }
+            });
+            handler.openIframe();
+        } catch (error) {
+            alert("⚠️ Error loading Paystack interface.");
+            payButton.innerText = "CONFIRM & PAY NOW";
+            payButton.disabled = false;
+        }
+    });
+
+    // Footers / Policy Actions Mapping
+    document.querySelectorAll(".footer-links a").forEach(link => {
+        link.addEventListener("click", () => {
+            const modalId = link.getAttribute("data-policy");
+            document.getElementById(modalId).style.display = "block";
+            document.body.style.overflow = "hidden";
         });
-        handler.openIframe();
+    });
+    document.querySelectorAll(".close-policy-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            btn.closest(".modal").style.display = "none";
+            document.body.style.overflow = "auto";
+        });
     });
 </script>
 </body>
