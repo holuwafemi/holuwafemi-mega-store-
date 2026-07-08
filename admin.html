@@ -63,7 +63,6 @@
             <option value="appliances">Appliances</option>
             <option value="computers">Computers</option>
             <option value="phones">Phones</option>
-            <option value="fashion">Fashion</option>
         </select>
         
         <label>Description</label>
@@ -82,13 +81,14 @@
     </div>
 
     <div class="admin-card" style="max-width: 350px; padding: 15px;">
-        <button id="aiSetupBtn" class="btn-ai">DATABASE MIGRATION & REPAIR</button>
+        <button id="aiSetupBtn" class="btn-ai">ACTIVATE AI SYSTEM</button>
     </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, doc, updateDoc, getDocs, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
+    // 🖥️ Corrected Firebase Credentials pointed to your updated project workspace
     const firebaseConfig = {
         apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
         authDomain: "holuwafemi-mega-store.firebaseapp.com",
@@ -99,7 +99,7 @@
         measurementId: "G-WPFKNZ20E3"
     };
 
-    // 🛡️ ADMIN ACCESS PASSKEY LAYER
+    // 🛡️ ADMIN ACCESS
     const ADMIN_PASS = "MyMegaStoreSecret2026";
     if (sessionStorage.getItem("adminAuth") !== "true") {
         const attempt = prompt("Enter Admin Access Key:");
@@ -114,7 +114,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // Live Card Image Preview Listener
+    // Live Preview Event Handling
     const imgUrlInput = document.getElementById('finalImgUrl');
     imgUrlInput.addEventListener('input', (e) => {
         const url = e.target.value.trim();
@@ -129,25 +129,13 @@
         }
     });
 
-    // Real-time Dashboard Inventory Synchronization
-    const q = query(collection(db, "products"));
+    // Real-time Synchronized Inventory Module
+    const q = query(collection(db, "products"), orderBy("timestamp", "desc"));
     onSnapshot(q, (snapshot) => {
         const list = document.getElementById("adminCatalogList");
         let html = "";
-        let itemsArr = [];
-        
         snapshot.forEach((pDoc) => {
-            itemsArr.push({ id: pDoc.id, ...pDoc.data() });
-        });
-
-        // Localized descending sort wrapper
-        itemsArr.sort((a,b) => {
-            const tA = a.timestamp ? (a.timestamp.seconds || 0) : 0;
-            const tB = b.timestamp ? (b.timestamp.seconds || 0) : 0;
-            return tB - tA;
-        });
-
-        itemsArr.forEach((p) => {
+            const p = pDoc.data();
             const priceValue = p.price ? Number(p.price).toLocaleString() : "0";
             html += `
                 <div class="catalog-item">
@@ -156,11 +144,12 @@
                         <div class="catalog-name">${p.name || 'Unnamed Product'}</div>
                         <div class="catalog-price">₦${priceValue}</div>
                     </div>
-                    <button class="btn-delete item-delete-btn" data-id="${p.id}"><i class="fas fa-trash"></i></button>
+                    <button class="btn-delete item-delete-btn" data-id="${pDoc.id}"><i class="fas fa-trash"></i></button>
                 </div>`;
         });
         list.innerHTML = html || "<p style='text-align:center; font-size:12px; color:#999; padding:10px;'>No products found.</p>";
 
+        // Dynamically attach listeners to the delete buttons to prevent module closure crashes
         document.querySelectorAll(".item-delete-btn").forEach(btn => {
             btn.addEventListener("click", () => {
                 const docId = btn.getAttribute("data-id");
@@ -175,12 +164,12 @@
                 await deleteDoc(doc(db, "products", id));
                 alert("🗑️ Product removed!");
             } catch(e) { 
-                alert("Delete execution error: " + e.message); 
+                alert("Delete failed: " + e.message); 
             }
         }
     }
 
-    // Publish Entry Submission Node
+    // Publish to Firestore Engine
     document.getElementById("publishBtn").addEventListener("click", async () => {
         const img = document.getElementById('finalImgUrl').value.trim();
         const name = document.getElementById('pName').value.trim();
@@ -188,7 +177,7 @@
         const oldInput = document.getElementById('pOld').value;
 
         if(!img || !name || !priceInput) {
-            return alert("Name, Price and Image URL fields are mandatory!");
+            return alert("Fill Name, Price and Image URL!");
         }
 
         const price = Number(priceInput);
@@ -207,8 +196,9 @@
                 timestamp: serverTimestamp(),
                 password: ADMIN_PASS
             });
-            alert("🎉 Success! Product line is now active.");
+            alert("🎉 Success! Product is now Live.");
             
+            // Clear Dashboard Inputs cleanly
             document.getElementById('finalImgUrl').value = "";
             document.getElementById('pName').value = "";
             document.getElementById('pPrice').value = "";
@@ -220,44 +210,20 @@
             btn.disabled = false; 
             btn.innerText = "PUBLISH TO STORE";
         } catch(e) { 
-            alert("Database collection write failure: " + e.message); 
+            alert("Error writing to database: " + e.message); 
             btn.disabled = false; 
             btn.innerText = "PUBLISH TO STORE";
         }
     });
 
-    // ⚡ BATCH RUN ENGINE: Fixes missing timestamps or categories for all 50+ manual uploads
-    document.getElementById("aiSetupBtn").addEventListener("click", async () => {
-        if (!confirm("Run Auto-Repair migration to restore all 50+ manual entries on the storefront?")) return;
-        
-        const btn = document.getElementById("aiSetupBtn");
-        btn.disabled = true;
-        btn.innerText = "Repairing Database Nodes...";
-
-        try {
-            const querySnapshot = await getDocs(collection(db, "products"));
-            let updatedCount = 0;
-
-            for (const pDoc of querySnapshot.docs) {
-                const data = pDoc.data();
-                const updates = {};
-
-                if (!data.timestamp) updates.timestamp = serverTimestamp();
-                if (!data.cat) updates.cat = "electronics";
-                if (data.pct === undefined) updates.pct = 0;
-                if (!data.img) updates.img = "https://via.placeholder.com/140";
-
-                if (Object.keys(updates).length > 0) {
-                    await updateDoc(doc(db, "products", pDoc.id), updates);
-                    updatedCount++;
-                }
-            }
-            alert(`\u26A1 Data migration successful! ${updatedCount} old items completely repaired.`);
-        } catch(err) {
-            alert("Batch configuration failed: " + err.message);
-        } finally {
-            btn.disabled = false;
-            btn.innerText = "DATABASE MIGRATION & REPAIR";
+    // AI Configuration Setup Handler
+    document.getElementById("aiSetupBtn").addEventListener("click", () => {
+        const key = prompt("Paste Groq API Key:");
+        if(key && key.startsWith("gsk_")) {
+            localStorage.setItem("GROQ_API_KEY", key);
+            alert("AI Activated!");
+        } else if (key) {
+            alert("Invalid Key format. Should start with 'gsk_'.");
         }
     });
 </script>
