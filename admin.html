@@ -82,12 +82,12 @@
     </div>
 
     <div class="admin-card" style="max-width: 350px; padding: 15px;">
-        <button id="aiSetupBtn" class="btn-ai">ACTIVATE AI SYSTEM</button>
+        <button id="aiSetupBtn" class="btn-ai">DATABASE MIGRATION & REPAIR</button>
     </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, onSnapshot, query, doc, updateDoc, getDocs, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
@@ -129,13 +129,25 @@
         }
     });
 
-    // Real-time Synchronized Panel Catalog Layout
-    const q = query(collection(db, "products"), orderBy("timestamp", "desc"));
+    // Real-time Dashboard Inventory Synchronization
+    const q = query(collection(db, "products"));
     onSnapshot(q, (snapshot) => {
         const list = document.getElementById("adminCatalogList");
         let html = "";
+        let itemsArr = [];
+        
         snapshot.forEach((pDoc) => {
-            const p = pDoc.data();
+            itemsArr.push({ id: pDoc.id, ...pDoc.data() });
+        });
+
+        // Localized descending sort wrapper
+        itemsArr.sort((a,b) => {
+            const tA = a.timestamp ? (a.timestamp.seconds || 0) : 0;
+            const tB = b.timestamp ? (b.timestamp.seconds || 0) : 0;
+            return tB - tA;
+        });
+
+        itemsArr.forEach((p) => {
             const priceValue = p.price ? Number(p.price).toLocaleString() : "0";
             html += `
                 <div class="catalog-item">
@@ -144,12 +156,11 @@
                         <div class="catalog-name">${p.name || 'Unnamed Product'}</div>
                         <div class="catalog-price">₦${priceValue}</div>
                     </div>
-                    <button class="btn-delete item-delete-btn" data-id="${pDoc.id}"><i class="fas fa-trash"></i></button>
+                    <button class="btn-delete item-delete-btn" data-id="${p.id}"><i class="fas fa-trash"></i></button>
                 </div>`;
         });
         list.innerHTML = html || "<p style='text-align:center; font-size:12px; color:#999; padding:10px;'>No products found.</p>";
 
-        // Attach event listeners to newly populated DOM nodes safely
         document.querySelectorAll(".item-delete-btn").forEach(btn => {
             btn.addEventListener("click", () => {
                 const docId = btn.getAttribute("data-id");
@@ -159,7 +170,7 @@
     });
 
     async function deleteProduct(id) {
-        if(confirm("Delete this product permanently from live customer storefront?")) {
+        if(confirm("Delete this product permanently?")) {
             try {
                 await deleteDoc(doc(db, "products", id));
                 alert("🗑️ Product removed!");
@@ -177,7 +188,7 @@
         const oldInput = document.getElementById('pOld').value;
 
         if(!img || !name || !priceInput) {
-            return alert("Name, Price and Image URL fields are strictly mandatory!");
+            return alert("Name, Price and Image URL fields are mandatory!");
         }
 
         const price = Number(priceInput);
@@ -196,9 +207,8 @@
                 timestamp: serverTimestamp(),
                 password: ADMIN_PASS
             });
-            alert("🎉 Success! Product line is now active on storefront.");
+            alert("🎉 Success! Product line is now active.");
             
-            // Clean Dashboard UI Values
             document.getElementById('finalImgUrl').value = "";
             document.getElementById('pName').value = "";
             document.getElementById('pPrice').value = "";
@@ -216,14 +226,38 @@
         }
     });
 
-    // AI Framework Switch
-    document.getElementById("aiSetupBtn").addEventListener("click", () => {
-        const key = prompt("Paste Groq API Key context token:");
-        if(key && key.startsWith("gsk_")) {
-            localStorage.setItem("GROQ_API_KEY", key);
-            alert("AI Sandbox Activated successfully!");
-        } else if (key) {
-            alert("Invalid key blueprint format. Standard keys begin with 'gsk_'.");
+    // ⚡ BATCH RUN ENGINE: Fixes missing timestamps or categories for all 50+ manual uploads
+    document.getElementById("aiSetupBtn").addEventListener("click", async () => {
+        if (!confirm("Run Auto-Repair migration to restore all 50+ manual entries on the storefront?")) return;
+        
+        const btn = document.getElementById("aiSetupBtn");
+        btn.disabled = true;
+        btn.innerText = "Repairing Database Nodes...";
+
+        try {
+            const querySnapshot = await getDocs(collection(db, "products"));
+            let updatedCount = 0;
+
+            for (const pDoc of querySnapshot.docs) {
+                const data = pDoc.data();
+                const updates = {};
+
+                if (!data.timestamp) updates.timestamp = serverTimestamp();
+                if (!data.cat) updates.cat = "electronics";
+                if (data.pct === undefined) updates.pct = 0;
+                if (!data.img) updates.img = "https://via.placeholder.com/140";
+
+                if (Object.keys(updates).length > 0) {
+                    await updateDoc(doc(db, "products", pDoc.id), updates);
+                    updatedCount++;
+                }
+            }
+            alert(`\u26A1 Data migration successful! ${updatedCount} old items completely repaired.`);
+        } catch(err) {
+            alert("Batch configuration failed: " + err.message);
+        } finally {
+            btn.disabled = false;
+            btn.innerText = "DATABASE MIGRATION & REPAIR";
         }
     });
 </script>
