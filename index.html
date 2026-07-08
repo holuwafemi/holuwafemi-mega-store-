@@ -16,6 +16,10 @@
         .nav-top { display: flex; align-items: center; justify-content: space-between; }
         .logo { font-size: 18px; font-weight: bold; color: var(--jumia-orange); text-transform: uppercase; }
         
+        .nav-right-controls { display: flex; align-items: center; gap: 15px; }
+        .auth-status-btn { background: none; border: 1px solid var(--jumia-orange); color: var(--jumia-orange); padding: 5px 12px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer; }
+        .auth-status-btn.logged-in { background: var(--jumia-orange); color: #fff; border: none; }
+
         .cart-icon-container { position: relative; cursor: pointer; padding: 5px; }
         .cart-badge { 
             position: absolute; top: -2px; right: -5px; background: var(--jumia-orange); 
@@ -72,6 +76,10 @@
         .footer-links a { color: var(--jumia-orange); text-decoration: none; font-weight: 500; cursor: pointer; }
         .policy-body { padding: 30px 20px; font-size: 14px; line-height: 1.6; color: #444; }
         .policy-body h3 { margin-bottom: 12px; color: #111; font-size: 16px; text-transform: uppercase; }
+        
+        /* Auth Styles */
+        .auth-container { padding: 40px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80vh; }
+        .auth-toggle-text { margin-top: 15px; font-size: 13px; color: #666; cursor: pointer; text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -80,9 +88,12 @@
     <header>
         <div class="nav-top">
             <div class="logo">Holuwafemi Mega Store</div>
-            <div class="cart-icon-container" id="openCartIconBtn">
-                <i class="fas fa-shopping-cart" style="font-size: 20px;"></i>
-                <div id="cartCounter" class="cart-badge">0</div>
+            <div class="nav-right-controls">
+                <button class="auth-status-btn" id="headerAuthBtn">Sign In</button>
+                <div class="cart-icon-container" id="openCartIconBtn">
+                    <i class="fas fa-shopping-cart" style="font-size: 20px;"></i>
+                    <div id="cartCounter" class="cart-badge">0</div>
+                </div>
             </div>
         </div>
     </header>
@@ -100,7 +111,6 @@
         <button class="cat-btn" data-cat="solar">Solar</button>
         <button class="cat-btn" data-cat="computers">Computers</button>
         <button class="cat-btn" data-cat="phones">Phones</button>
-        <button class="cat-btn" data-cat="fashion">Fashion</button>
     </div>
 
     <!-- FLASH SALES SLIDER -->
@@ -125,6 +135,32 @@
         </div>
         <p>&copy; 2026 Holuwafemi Mega Store. All Rights Reserved.</p>
     </footer>
+
+    <!-- AUTHENTICATION MODAL -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <div class="close-modal" id="closeAuthBtn"><i class="fas fa-times"></i></div>
+            <div class="auth-container">
+                <h3 id="authModalTitle" style="color:var(--jumia-orange); text-transform:uppercase; margin-bottom:20px;">Customer Sign In</h3>
+                
+                <div class="form-group" style="width:100%; padding:0;" id="authNameFieldGroup">
+                    <label>Full Name</label>
+                    <input type="text" id="authName" placeholder="Enter your full name">
+                </div>
+                <div class="form-group" style="width:100%; padding:0; margin-top:10px;">
+                    <label>Email Address</label>
+                    <input type="email" id="authEmail" placeholder="Enter your email address">
+                </div>
+                <div class="form-group" style="width:100%; padding:0; margin-top:10px;">
+                    <label>Password</label>
+                    <input type="password" id="authPassword" placeholder="Minimum 6 characters">
+                </div>
+                
+                <button id="authSubmitBtn" class="btn-buy" style="width:100%; margin-top:20px;">SIGN IN</button>
+                <div id="authToggleBtn" class="auth-toggle-text">Don't have an account? Sign Up</div>
+            </div>
+        </div>
+    </div>
 
     <!-- POLICY MODALS -->
     <div id="termsModal" class="modal">
@@ -255,6 +291,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
@@ -268,6 +305,7 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
     
     let allProducts = [];
     let selectedProduct = null; 
@@ -275,6 +313,7 @@
     let checkoutAmount = 0;
     let checkoutItemsDescription = "";
     let cart = JSON.parse(localStorage.getItem("megaStoreCart")) || [];
+    let currentAuthMode = "signin"; // signin or signup
 
     function safeFormatPrice(val) {
         if (val === undefined || val === null || val === "") return "0";
@@ -325,7 +364,6 @@
             </div>
         `).join("");
 
-        // Attach event dynamically to rendered elements to respect module limits
         document.querySelectorAll(".product-clickable").forEach(card => {
             card.addEventListener("click", () => openDetails(card.getAttribute("data-id")));
         });
@@ -354,7 +392,7 @@
         selectedProduct = null;
     }
 
-    // Setup Category filtering tabs events
+    // Category Tabs Filter logic
     document.querySelectorAll("#categoryTabsBar .cat-btn").forEach(btn => {
         btn.addEventListener("click", (e) => {
             document.querySelectorAll("#categoryTabsBar .cat-btn").forEach(b => b.classList.remove("active"));
@@ -368,7 +406,7 @@
         });
     });
 
-    // Cart and Popup Logic Setup
+    // Interface Toggles
     document.getElementById("openCartIconBtn").addEventListener("click", openCartView);
     document.getElementById("closeDetailsBtn").addEventListener("click", closeDetails);
     document.getElementById("closeCartBtn").addEventListener("click", () => {
@@ -379,6 +417,104 @@
         document.getElementById("checkoutModal").style.display = "none";
         document.body.style.overflow = "auto";
     });
+
+    // --- Firebase Authentication Engine ---
+    const authModal = document.getElementById("authModal");
+    const headerAuthBtn = document.getElementById("headerAuthBtn");
+    const authToggleBtn = document.getElementById("authToggleBtn");
+    const authSubmitBtn = document.getElementById("authSubmitBtn");
+    const nameFieldGroup = document.getElementById("authNameFieldGroup");
+    const authModalTitle = document.getElementById("authModalTitle");
+
+    // Monitor logged in user status globally
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            headerAuthBtn.innerText = "Sign Out";
+            headerAuthBtn.classList.add("logged-in");
+            // Auto fill fields in shipping form if authenticated
+            document.getElementById("custName").value = user.displayName || "";
+            document.getElementById("custEmail").value = user.email || "";
+        } else {
+            headerAuthBtn.innerText = "Sign In";
+            headerAuthBtn.classList.remove("logged-in");
+            document.getElementById("custName").value = "";
+            document.getElementById("custEmail").value = "";
+        }
+    });
+
+    headerAuthBtn.addEventListener("click", () => {
+        if (auth.currentUser) {
+            if(confirm("Are you sure you want to log out?")) signOut(auth);
+        } else {
+            switchAuthMode("signin");
+            authModal.style.display = "block";
+            document.body.style.overflow = "hidden";
+        }
+    });
+
+    document.getElementById("closeAuthBtn").addEventListener("click", () => {
+        authModal.style.display = "none";
+        document.body.style.overflow = "auto";
+    });
+
+    authToggleBtn.addEventListener("click", () => {
+        switchAuthMode(currentAuthMode === "signin" ? "signup" : "signin");
+    });
+
+    function switchAuthMode(mode) {
+        currentAuthMode = mode;
+        if (mode === "signin") {
+            authModalTitle.innerText = "Customer Sign In";
+            nameFieldGroup.style.display = "none";
+            authSubmitBtn.innerText = "SIGN IN";
+            authToggleBtn.innerText = "Don't have an account? Sign Up";
+        } else {
+            authModalTitle.innerText = "Create Account";
+            nameFieldGroup.style.display = "block";
+            authSubmitBtn.innerText = "CREATE ACCOUNT";
+            authToggleBtn.innerText = "Already have an account? Sign In";
+        }
+    }
+
+    authSubmitBtn.addEventListener("click", async () => {
+        const email = document.getElementById("authEmail").value.trim();
+        const password = document.getElementById("authPassword").value;
+        const name = document.getElementById("authName").value.trim();
+
+        if (!email || !password) return alert("Please fill in Email and Password fields.");
+        if (password.length < 6) return alert("Password must be at least 6 characters.");
+
+        authSubmitBtn.disabled = true;
+        authSubmitBtn.innerText = "PROCESSING...";
+
+        try {
+            if (currentAuthMode === "signup") {
+                if (!name) {
+                    authSubmitBtn.disabled = false;
+                    authSubmitBtn.innerText = "CREATE ACCOUNT";
+                    return alert("Please enter your name.");
+                }
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                await updateProfile(userCredential.user, { displayName: name });
+                alert("🎉 Account created successfully!");
+            } else {
+                await signInWithEmailAndPassword(auth, email, password);
+                alert("👋 Welcome back!");
+            }
+            authModal.style.display = "none";
+            document.body.style.overflow = "auto";
+            
+            // Clean interface strings
+            document.getElementById("authEmail").value = "";
+            document.getElementById("authPassword").value = "";
+            document.getElementById("authName").value = "";
+        } catch (error) {
+            alert("Auth Error: " + error.message);
+        }
+        authSubmitBtn.disabled = false;
+        authSubmitBtn.innerText = currentAuthMode === "signin" ? "SIGN IN" : "CREATE ACCOUNT";
+    });
+    // --- End Authentication Engine ---
 
     document.getElementById("addToCartBtn").addEventListener("click", () => {
         if (!selectedProduct) return;
