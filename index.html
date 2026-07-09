@@ -3,707 +3,452 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Holuwafemi Mega Store</title>
-    <!-- Google Fonts & Font Awesome Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Holuwafemi Mega Store - Premium Marketplace</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Paystack Inline Inline JS SDK -->
     <script src="https://js.paystack.co/v1/inline.js"></script>
-    
     <style>
         :root {
-            --primary: #25d366;
-            --dark: #121b22;
-            --light: #f0f2f5;
-            --accent: #00a884;
-            --gray-text: #667781;
-            --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --bg-light: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --white: #ffffff;
+            --border-color: #e2e8f0;
         }
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Poppins', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
-
         body {
-            background-color: var(--light);
-            color: var(--dark);
-            padding-bottom: 70px;
+            background-color: var(--bg-light);
+            color: var(--text-main);
         }
-
-        /* Top Navigation Bar Styles */
         header {
-            background-color: #ffffff;
+            background-color: var(--white);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             position: sticky;
             top: 0;
-            z-index: 900;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            padding: 12px 16px;
+            z-index: 100;
+        }
+        .logo-area h1 {
+            font-size: 22px;
+            color: var(--primary);
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        .header-actions {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            gap: 15px;
         }
-
-        .brand-logo-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--accent);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .nav-actions-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .user-profile-badge {
-            background: #e3f7f2;
-            color: var(--accent);
-            padding: 6px 12px;
+        .user-badge-btn {
+            background: #f1f5f9;
+            padding: 8px 14px;
             border-radius: 20px;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             display: none;
-            transition: all 0.2s ease;
         }
-
-        .user-profile-badge:hover {
-            background: var(--accent);
-            color: white;
-        }
-
-        .action-icon-btn {
+        .nav-icon-btn {
             background: none;
             border: none;
             font-size: 20px;
-            color: var(--dark);
+            color: var(--text-main);
             cursor: pointer;
             position: relative;
-            padding: 4px;
         }
-
-        .counter-badge {
+        .cart-counter-badge {
             position: absolute;
-            top: -2px;
-            right: -2px;
-            background: #ff3b30;
-            color: #fff;
-            font-size: 10px;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            font-size: 11px;
             font-weight: bold;
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
-        .nav-menu-btn {
+        .btn-logout, .btn-edit-profile {
+            font-size: 13px;
             background: none;
             border: none;
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--gray-text);
             cursor: pointer;
             display: none;
         }
+        .btn-edit-profile { color: var(--primary); font-weight: 600; }
+        .btn-logout { color: #ef4444; font-weight: 600; }
 
-        /* Banner Hero Slider */
-        .promo-banner-hero {
-            background: linear-gradient(135deg, #00a884 0%, #25d366 100%);
-            color: white;
-            padding: 30px 20px;
+        .promo-banner-billboard {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: var(--white);
+            padding: 40px 5%;
             text-align: center;
-            margin-bottom: 20px;
         }
+        .promo-banner-billboard h2 { font-size: 28px; margin-bottom: 10px; }
 
-        .promo-banner-hero h1 {
-            font-size: 24px;
-            margin-bottom: 8px;
+        .section-container {
+            padding: 30px 5%;
         }
-
-        .promo-banner-hero p {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        /* Horizontal Top Sellers Row */
-        .section-headline {
-            padding: 0 16px;
-            font-size: 16px;
+        .section-title {
+            font-size: 20px;
             font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--dark);
-        }
-
-        .top-sellers-horizontal-container {
+            margin-bottom: 15px;
             display: flex;
-            overflow-x: auto;
-            gap: 12px;
-            padding: 4px 16px 20px 16px;
-            scroll-snap-type: x mandatory;
+            align-items: center;
+            gap: 10px;
         }
-
-        .top-sellers-horizontal-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        /* Category Filter Tabs Bar */
-        .category-scroll-bar {
+        .horizontal-scroll-row {
             display: flex;
-            gap: 8px;
+            gap: 15px;
             overflow-x: auto;
-            padding: 12px 16px;
-            background: #fff;
-            margin-bottom: 16px;
+            padding-bottom: 10px;
         }
+        .horizontal-scroll-row::-webkit-scrollbar { height: 6px; }
+        .horizontal-scroll-row::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 
-        .category-scroll-bar::-webkit-scrollbar {
-            display: none;
+        .tabs-container {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            margin-bottom: 25px;
+            padding-bottom: 5px;
         }
-
         .cat-btn {
-            background: var(--light);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 13px;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 14px;
             font-weight: 600;
+            cursor: pointer;
             white-space: nowrap;
-            cursor: pointer;
-            color: var(--gray-text);
+            transition: all 0.2s;
+        }
+        .cat-btn.active, .cat-btn:hover {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
         }
 
-        .cat-btn.active {
-            background: var(--accent);
-            color: white;
-        }
-
-        /* Responsive Catalog Grid System */
-        .catalog-main-grid-layout {
+        .products-grid-layout {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            padding: 0 16px 30px 16px;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
         }
-
-        @media (min-width: 768px) {
-            .catalog-main-grid-layout {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
         .grid-product-card {
-            background: #ffffff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: var(--card-shadow);
-            position: relative;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
             cursor: pointer;
+            position: relative;
+            transition: transform 0.2s, box-shadow 0.2s;
             display: flex;
             flex-direction: column;
-            padding: 10px;
         }
-
-        .discount-badge {
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            background: #ff3b30;
-            color: white;
-            font-size: 10px;
-            font-weight: bold;
-            padding: 3px 6px;
-            border-radius: 4px;
-            z-index: 10;
+        .grid-product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
         }
-
         .grid-product-card img {
             width: 100%;
-            height: 140px;
+            height: 130px;
             object-fit: contain;
-            background: #fdfdfd;
-            margin-bottom: 8px;
-            border-radius: 8px;
+            margin-bottom: 10px;
+            border-radius: 6px;
         }
-
         .product-title {
             font-size: 13px;
             font-weight: 600;
-            color: var(--dark);
-            margin-bottom: 4px;
+            color: #334155;
+            margin-bottom: 6px;
+            line-height: 1.3;
+            height: 34px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            height: 38px;
         }
-
         .product-price {
             font-size: 15px;
             font-weight: 700;
-            color: var(--accent);
+            color: var(--text-main);
+        }
+        .discount-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: #fef2f2;
+            color: #ef4444;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
         }
 
-        /* Generic Modal System Styles */
+        /* Modal Overlay Structural Sheets */
         .modal-overlay-sheet {
-            display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 2000;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
             overflow-y: auto;
         }
-
-        .modal-wrapper-box {
-            background: white;
-            width: 100%;
+        .modal-body-wrapper {
+            background: var(--white);
+            width: 90%;
             max-width: 500px;
-            margin: 0 auto;
-            min-height: 100%;
+            margin: 50px auto;
+            border-radius: 16px;
+            padding: 25px;
             position: relative;
-            display: flex;
-            flex-direction: column;
         }
-
-        @media (min-width: 501px) {
-            .modal-wrapper-box {
-                min-height: auto;
-                margin: 40px auto;
-                border-radius: 16px;
-                box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            }
+        .modal-close-trigger {
+            position: absolute;
+            top: 15px; right: 15px;
+            background: #f1f5f9; border: none;
+            width: 30px; height: 30px; border-radius: 50%;
+            cursor: pointer; font-weight: bold;
         }
-
-        .modal-header-nav {
-            padding: 16px;
-            border-bottom: 1px solid #eee;
+        .modal-main-img {
+            width: 100%;
+            height: 220px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: #f8fafc;
+        }
+        .price-row-wrapper {
+            margin: 15px 0;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            background: #fff;
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            gap: 12px;
         }
-
-        .modal-header-nav h3 {
-            font-size: 16px;
-            font-weight: 700;
-        }
-
-        .close-action-btn {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: var(--dark);
-        }
-
-        .modal-scrollable-body {
-            padding: 16px;
-            flex: 1;
-        }
-
-        /* Custom Form Input Fields Layout */
-        .form-input-container {
-            margin-bottom: 16px;
-        }
-
-        .form-input-container label {
-            display: block;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--gray-text);
-            margin-bottom: 6px;
-        }
-
-        .form-input-container input, .form-input-container select, .form-input-container textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 14px;
-            outline: none;
-            background: #fff;
-        }
-
-        .form-input-container input:focus, .form-input-container select:focus, .form-input-container textarea:focus {
-            border-color: var(--accent);
-        }
-
-        /* Primary Action Buttons */
-        .action-primary-btn {
-            background: var(--accent);
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 14px;
-            font-size: 14px;
-            font-weight: 700;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            display: block;
-            box-shadow: 0 4px 10px rgba(0,168,132,0.2);
-        }
-
-        /* Gate Modal Specific styling */
-        #gateModal {
-            z-index: 5000 !important;
-        }
-
-        /* Product details UI */
-        .detail-img-frame {
-            width: 100%;
-            max-height: 280px;
-            object-fit: contain;
-            background: #fff;
-            border-radius: 12px;
-            margin-bottom: 16px;
-        }
-
-        .price-row {
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .old-crossed-price {
+        .modal-slashed-old-price {
             text-decoration: line-through;
-            color: #999;
+            color: var(--text-muted);
             font-size: 14px;
         }
-
-        .detail-desc-block {
-            font-size: 13px;
-            color: var(--gray-text);
-            line-height: 1.6;
-            margin-bottom: 20px;
-            background: var(--light);
+        .modal-action-buttons-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-action-primary {
+            width: 100%;
             padding: 12px;
             border-radius: 8px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
         }
+        .btn-whatsapp { background-color: #25d366; color: white; }
+        .btn-buy { background-color: var(--primary); color: white; }
+        .btn-cart { background-color: #f1f5f9; color: var(--text-main); }
 
-        /* Cart layout row rules */
+        /* Cart Rows styling */
         .cart-item-row {
             display: flex;
             gap: 12px;
             padding: 12px 0;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid var(--border-color);
         }
+        .cart-item-row img { width: 60px; height: 60px; object-fit: contain; border-radius: 6px; }
+        .cart-item-details { flex: 1; }
+        .cart-item-title { font-size: 13px; font-weight: 600; }
+        .cart-item-price { font-size: 14px; font-weight: 700; color: var(--primary); margin: 4px 0; }
+        .btn-remove { background: none; border: none; color: #ef4444; font-size: 12px; cursor: pointer; font-weight: 500; }
 
-        .cart-item-row img {
-            width: 60px;
-            height: 60px;
-            object-fit: contain;
-            background: #fafafa;
-            border-radius: 6px;
-        }
-
-        .cart-item-details {
-            flex: 1;
-        }
-
-        .cart-item-title {
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .cart-item-price {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 6px;
-        }
-
-        .btn-remove {
-            background: none;
-            border: none;
-            color: #ff3b30;
-            font-size: 11px;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        /* Sticky bottom action panel inside modals */
-        .modal-action-footer {
-            padding: 16px;
-            border-top: 1px solid #eee;
-            background: #fff;
-            position: sticky;
-            bottom: 0;
-        }
-
-        /* Footer policy links alignment */
-        .store-footer {
-            background: #fff;
-            padding: 30px 16px;
+        footer {
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 40px 5%;
             text-align: center;
-            border-top: 1px solid #eee;
-            margin-top: 40px;
+            border-top: 1px solid #1e293b;
+            font-size: 14px;
         }
-
-        .store-footer p {
-            font-size: 12px;
-            color: var(--gray-text);
-            margin-bottom: 12px;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-        }
-
-        .footer-links a {
-            font-size: 12px;
-            color: var(--accent);
-            text-decoration: none;
-            cursor: pointer;
-            font-weight: 600;
-        }
+        .footer-links { display: flex; justify-content: center; gap: 20px; margin-top: 15px; }
+        .footer-links a { color: #cbd5e1; text-decoration: none; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <!-- Top Navigation Bar Header -->
+    <!-- Header Navigation Bar -->
     <header>
-        <a href="#" class="brand-logo-title">
-            <i class="fas fa-shopping-bag"></i> Holuwafemi Mega Store
-        </a>
-        <div class="nav-actions-wrapper">
-            <span id="headerUserBadge" class="user-profile-badge">👤 Account</span>
-            <button id="headerEditProfileBtn" class="nav-menu-btn" style="color:var(--accent);"><i class="fas fa-user-cog"></i> Edit</button>
-            <button id="headerLogoutBtn" class="nav-menu-btn"><i class="fas fa-sign-out-alt"></i> Out</button>
-            <button id="openCartIconBtn" class="action-icon-btn">
+        <div class="logo-area">
+            <h1>Holuwafemi Mega Store</h1>
+        </div>
+        <div class="header-actions">
+            <span id="headerUserBadge" class="user-badge-btn">👤 Profile</span>
+            <button id="headerEditProfileBtn" class="btn-edit-profile" title="Edit Profile"><i class="fas fa-user-edit"></i></button>
+            <button id="headerLogoutBtn" class="btn-logout" title="Logout Switch"><i class="fas fa-sign-out-alt"></i></button>
+            <button id="openCartIconBtn" class="nav-icon-btn">
                 <i class="fas fa-shopping-cart"></i>
-                <span id="cartCounter" class="counter-badge">0</span>
+                <span id="cartCounter" class="cart-counter-badge">0</span>
             </button>
         </div>
     </header>
 
-    <!-- Hero Promotional Banner Panel -->
-    <div class="promo-banner-hero">
-        <h1>Welcome to Our Store</h1>
-        <p>Premium Gadgets, Accessories & Solar Gear Delivered Securely to Your Doorstep.</p>
+    <!-- Promotional Billboard Banner -->
+    <div class="promo-banner-billboard">
+        <h2>Premium Quality, Unbeatable Deals</h2>
+        <p>Explore original phones, solar gear, appliances, and luxury electronics with secure instant checkout payment processing pipelines.</p>
     </div>
 
-    <!-- Horizontal Showcase Block for Top Selling Items -->
-    <div class="section-headline"><i class="fas fa-fire" style="color:#ff9500;"></i> Top Dynamic Products</div>
-    <div id="topSellersScrollBox" class="top-sellers-horizontal-container">
-        <!-- Managed dynamically by javascript map array renderer -->
+    <!-- Top Selling Highlights Section -->
+    <div class="section-container" id="topSellersSection">
+        <div class="section-title"><i class="fas fa-fire" style="color:#f97316;"></i> Trending Highlights</div>
+        <div class="horizontal-scroll-row" id="topSellersScrollBox">
+            <!-- Populated dynamically via Firebase -->
+        </div>
     </div>
 
-    <!-- Category Switch Tab Bar Menu -->
-     <div id="categoryTabsBar" class="category-scroll-bar">
-        <button class="cat-btn active" data-cat="all">All Products</button>
-        <button class="cat-btn" data-cat="electronics">Eletronics</button>
-        <button class="cat-btn" data-cat="phones">Phones</button>
-        <button class="cat-btn" data-cat="appliances">Appliances</button>
-        <button class="cat-btn" data-cat="solar">Solar Equipment</button>
-        <button class="cat-btn" data-cat="computers">Computers</button>
-        <button class="cat-btn" data-cat="fashion">Fashion</button>
-    </div>
+    <!-- Main Dynamic Shopping Catalog -->
+    <div class="section-container">
+        <div class="section-title"><i class="fas fa-store" style="color:var(--primary)"></i> Explore Catalog Inventory</div>
+        
+        <!-- Category Switching Scroll Tabs -->
+        <div class="tabs-container" id="categoryTabsBar">
+            <button class="cat-btn active" data-cat="all">All Items</button>
+            <button class="cat-btn" data-cat="electronics">Electronics</button>
+            <button class="cat-btn" data-cat="solar">Solar</button>
+            <button class="cat-btn" data-cat="appliances">Appliances</button>
+            <button class="cat-btn" data-cat="computers">Computers</button>
+            <button class="cat-btn" data-cat="phones">Phones</button>
+            <button class="cat-btn" data-cat="fashion">Fashion</button>
+        </div>
 
-    <!-- Main Catalog Product Grid Layout -->
-    <div id="mainCatalogGrid" class="catalog-main-grid-layout">
-        <!-- Rendered from Firestore snapshot event listener -->
+        <!-- Master Product Showcase Grid -->
+        <div class="products-grid-layout" id="mainCatalogGrid">
+            <!-- Rendered in real-time -->
+        </div>
     </div>
 
-    <!-- EXCLUSIVE VISITOR ACCOUNT ENTRY GATE MODAL (Locks Interface until address profile data matches logic) -->
-    <div id="gateModal" class="modal-overlay-sheet" style="display: block;">
-        <div class="modal-wrapper-box">
-            <div class="modal-header-nav">
-                <h3 id="gateTitle">Customer Registration</h3>
-                <button id="closeGateBtn" class="close-action-btn" style="display: none;">&times;</button>
+    <!-- REGISTER AND GATEWAY SECURITY OVERLAY MODAL -->
+    <div class="modal-overlay-sheet" id="gateModal" style="display: block;">
+        <div class="modal-body-wrapper" style="margin-top: 80px;">
+            <button type="button" class="modal-close-trigger" id="closeGateBtn" style="display:none;">×</button>
+            <h3 id="gateTitle" style="font-size:20px; margin-bottom:6px;">Customer Registration</h3>
+            <p id="gateSubtitle" style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Please enter your delivery details to open your account instantly.</p>
+            
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <input type="text" id="gateName" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text;" placeholder="Full Name">
+                <input type="email" id="gateEmail" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text;" placeholder="Email Address">
+                <input type="tel" id="gatePhone" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text;" placeholder="Phone Number (e.g., 08012345678)">
+                <select id="gateState" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; height:42px; padding:0 15px;"></select>
+                <input type="text" id="gateAddress" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text;" placeholder="Street Address, Town/City Details">
             </div>
-            <div class="modal-scrollable-body">
-                <p id="gateSubtitle" style="font-size:13px; color:var(--gray-text); margin-bottom:20px;">Please enter your delivery details to open your account instantly.</p>
-                
-                <div class="form-input-container">
-                    <label>YOUR FULL NAME</label>
-                    <input type="text" id="gateName" placeholder="e.g. John Doe">
-                </div>
-                <div class="form-input-container">
-                    <label>EMAIL ADDRESS</label>
-                    <input type="email" id="gateEmail" placeholder="name@example.com">
-                </div>
-                <div class="form-input-container">
-                    <label>PHONE NUMBER (WHATSAPP ACTIVE)</label>
-                    <input type="tel" id="gatePhone" placeholder="e.g. 09061989529">
-                </div>
-                <div class="form-input-container">
-                    <label>DELIVERY DESTINATION STATE</label>
-                    <select id="gateState">
-                        <!-- Loaded dynamically from array -->
-                    </select>
-                </div>
-                <div class="form-input-container">
-                    <label>DETAILED HOME / RESIDENTIAL ADDRESS</label>
-                    <textarea id="gateAddress" rows="3" placeholder="Street Number, Building Name, Area..."></textarea>
-                </div>
+            
+            <p id="gateNote" style="font-size: 11px; color: var(--text-muted); margin-top:12px; line-height:1.4;">
+                <i class="fas fa-shield-alt"></i> Secure registration framework verified. These delivery profiles link directly into active automated processing tracking receipts.
+            </p>
+            <button type="button" id="gateSubmitBtn" class="btn-action-primary btn-buy" style="margin-top:20px;">CREATE ACCOUNT & ENTER STORE</button>
+        </div>
+    </div>
 
-                <p id="gateNote" style="font-size:11px; color:#ff3b30; line-height:1.4; margin-bottom:15px;">
-                    ⚠️ Accurate delivery coordinates match instant automation. Ensure details are correct before checkout.
-                </p>
+    <!-- JUMIA-STYLE MULTI-IMAGE PRODUCT SPECIFICATIONS MODAL SHEET -->
+    <div class="modal-overlay-sheet" id="productModal">
+        <div class="modal-body-wrapper">
+            <button class="modal-close-trigger" id="closeDetailsBtn">×</button>
+            <img src="" id="mImg" class="modal-main-img" alt="Main View">
+            
+            <!-- Hidden inputs to feed automated order metadata systems -->
+            <input type="hidden" id="custName"><input type="hidden" id="custEmail">
+            <input type="hidden" id="custPhone"><input type="hidden" id="custAddress">
 
-                <button id="gateSubmitBtn" class="action-primary-btn">CREATE ACCOUNT & ENTER STORE</button>
+            <h3 id="mName" style="margin-top:15px; font-size:18px;">Product Title Here</h3>
+            <div class="price-row-wrapper">
+                <span id="mPrice" class="product-price" style="font-size:22px; color:var(--primary);">₦0</span>
+                <span id="mOld" class="modal-slashed-old-price">₦0</span>
+            </div>
+            
+            <p id="mDesc" style="font-size:14px; color:#475569; line-height:1.5; margin-bottom:20px; max-height:120px; overflow-y:auto;"></p>
+            
+            <div class="modal-action-buttons-group">
+                <a href="#" target="_blank" id="whatsappProductChatBtn" class="btn-action-primary btn-whatsapp"><i class="fab fa-whatsapp"></i> Chat Availability on WhatsApp</a>
+                <button id="directBuyBtn" class="btn-action-primary btn-buy"><i class="fas fa-bolt"></i> INSTANT SECURE BUY NOW</button>
+                <button id="addToCartBtn" class="btn-action-primary btn-cart"><i class="fas fa-cart-plus"></i> ADD ITEM TO CART</button>
             </div>
         </div>
     </div>
 
-    <!-- PRODUCT DETAIL PRESENTATION DIALOG MODAL SHEET -->
-    <div id="productModal" class="modal-overlay-sheet">
-        <div class="modal-wrapper-box">
-            <div class="modal-header-nav">
-                <h3 id="mName">Product Details</h3>
-                <button id="closeDetailsBtn" class="close-action-btn">&times;</button>
+    <!-- SHOPPING CART PORTFOLIO DRAWER MODAL SHEET -->
+    <div class="modal-overlay-sheet" id="cartModal">
+        <div class="modal-body-wrapper">
+            <button class="modal-close-trigger" id="closeCartBtn">×</button>
+            <h3 style="font-size:18px; margin-bottom:15px;"><i class="fas fa-shopping-basket"></i> Your Shopping Basket</h3>
+            <div id="cartItemsListContainer" style="max-height:240px; overflow-y:auto; margin-bottom:15px;"></div>
+            
+            <div id="cartTotalSummaryCard" style="background:#f8fafc; padding:15px; border-radius:8px; display:none;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:14px; color:var(--text-muted);">
+                    <span>Items Subtotal:</span><span id="cartSubtotalAmount">₦0</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-weight:700; font-size:16px; border-top:1px dashed #cbd5e1; padding-top:6px;">
+                    <span>Total Amount:</span><span id="cartTotalAmount" style="color:var(--primary);">₦0</span>
+                </div>
             </div>
-            <div class="modal-scrollable-body">
-                <img id="mImg" class="detail-img-frame" src="">
-                <div class="price-row">
-                    <span id="mPrice" class="product-price" style="font-size:22px;">₦0</span>
-                    <span id="mOld" class="old-crossed-price">₦0</span>
-                </div>
-                <div id="mDesc" class="detail-desc-block"></div>
-
-                <div style="display:flex; flex-direction:column; gap:10px;">
-                    <button id="addToCartBtn" class="action-primary-btn" style="background:#007aff; box-shadow:0 4px 10px rgba(0,122,255,0.2);">
-                        <i class="fas fa-cart-plus"></i> ADD TO BASKET CART
-                    </button>
-                    <button id="directBuyBtn" class="action-primary-btn">
-                        <i class="fas fa-bolt"></i> PROCEED TO ORDER NOW
-                    </button>
-                    <a id="whatsappProductChatBtn" target="_blank" class="action-primary-btn" style="background:#25d366; box-shadow:0 4px 10px rgba(37,211,102,0.2);">
-                        <i class="fab fa-whatsapp"></i> CHAT WITH SELLER
-                    </a>
-                </div>
+            <div class="modal-action-buttons-group" id="cartActionBar" style="display:none; margin-top:15px;">
+                <button id="cartCheckoutBtn" class="btn-action-primary btn-buy"><i class="fas fa-credit-card"></i> SECURE CHECKOUT PORTFOLIO</button>
             </div>
         </div>
     </div>
 
-    <!-- SHOPPING CART ITEMS CONTAINER OVERLAY MODAL -->
-    <div id="cartModal" class="modal-overlay-sheet">
-        <div class="modal-wrapper-box">
-            <div class="modal-header-nav">
-                <h3><i class="fas fa-shopping-cart"></i> Your Active Cart</h3>
-                <button id="closeCartBtn" class="close-action-btn">&times;</button>
+    <!-- LIVE SECURE CHECKOUT PORTAL TRANSACTION WINDOW -->
+    <div class="modal-overlay-sheet" id="checkoutModal">
+        <div class="modal-body-wrapper" style="text-align:center; padding:30px;">
+            <button class="modal-close-trigger" id="closeCheckoutBtn">×</button>
+            <i class="fas fa-lock" style="font-size:36px; color:var(--secondary); margin-bottom:12px;"></i>
+            <h3>Secure Gateway Gateway</h3>
+            <p style="font-size:14px; color:var(--text-muted); margin:8px 0 20px 0;">Your order tracking sequence parameters are locked. Process instant settlement using secure channels.</p>
+            
+            <div style="background:#f1f5f9; padding:20px; border-radius:10px; margin-bottom:25px;">
+                <span style="font-size:13px; text-transform:uppercase; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Total Payable Net</span>
+                <span id="checkoutPayableAmount" style="font-size:28px; font-weight:800; color:var(--text-main);">₦0</span>
             </div>
-            <div class="modal-scrollable-body" id="cartItemsListContainer">
-                <!-- Managed in javascript loop parsing localstorage contents arrays -->
-            </div>
-            <div class="modal-action-footer" id="cartTotalSummaryCard" style="display: none;">
-                <div style="display:flex; justify-content:between; font-weight:700; margin-bottom:12px; font-size:15px;">
-                    <span style="flex:1;">Estimated Total Bill:</span>
-                    <span id="cartTotalAmount" style="color:var(--accent);">₦0</span>
-                </div>
-                <div style="display:flex; justify-content:between; font-size:12px; color:var(--gray-text); margin-bottom:15px;">
-                    <span style="flex:1;">Subtotal Base:</span>
-                    <span id="cartSubtotalAmount">₦0</span>
-                </div>
-                <div id="cartActionBar" style="display:none;">
-                    <button id="cartCheckoutBtn" class="action-primary-btn">SECURE PAYSTACK CHECKOUT</button>
-                </div>
-            </div>
+            <button id="paystackTriggerBtn" class="btn-action-primary btn-buy" style="background:#34d399;"><i class="fas fa-shield-alt"></i> AUTHORIZE PAYMENT VIA PAYSTACK</button>
         </div>
     </div>
 
-    <!-- TRANSACTION INTEGRATED CHECKOUT GATEWAY DETAILS PREVIEW MODAL -->
-    <div id="checkoutModal" class="modal-overlay-sheet">
-        <div class="modal-wrapper-box">
-            <div class="modal-header-nav">
-                <h3>Confirm Order Routing</h3>
-                <button id="closeCheckoutBtn" class="close-action-btn">&times;</button>
-            </div>
-            <div class="modal-scrollable-body">
-                <div style="background:var(--light); padding:16px; border-radius:10px; margin-bottom:20px; text-align:center;">
-                    <p style="font-size:12px; color:var(--gray-text); text-transform:uppercase; font-weight:600;">Total Net Payable Amount</p>
-                    <h2 id="checkoutPayableAmount" style="color:var(--accent); font-size:28px; font-weight:700; margin-top:4px;">₦0</h2>
-                </div>
+    <!-- TERMS AND CORPORATE COMPLIANCE SHEETS -->
+    <div class="modal-overlay-sheet" id="privacyModal"><div class="modal-body-wrapper"><button class="modal-close-trigger close-policy-btn">×</button><h3>Privacy Policy Statement</h3><p style="font-size:14px; margin-top:10px; line-height:1.5;">Holuwafemi Mega Store secures customer delivery records strictly for automated payload tracking execution routines. Profile data configurations stay safely localized on sandbox caching contexts.</p></div></div>
+    <div class="modal-overlay-sheet" id="termsModal"><div class="modal-body-wrapper"><button class="modal-close-trigger close-policy-btn">×</button><h3>Terms & Service Guidelines</h3><p style="font-size:14px; margin-top:10px; line-height:1.5;">All electronic merchandise listings, monocrystalline solar configurations, and dynamic appliance distribution portfolios carry structural merchant warranties verified at settlement checkpoints.</p></div></div>
 
-                <div style="border:1px solid #eee; padding:14px; border-radius:8px; margin-bottom:20px;">
-                    <p style="font-size:13px; font-weight:700; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:4px;">Delivery Destination Details</p>
-                    <!-- Read-only inputs bound structurally back to verified credentials session profile -->
-                    <div class="form-input-container">
-                        <label>RECIPIENT NAME</label>
-                        <input type="text" id="custName" readonly style="background:#eee; font-weight:600;">
-                    </div>
-                    <div class="form-input-container">
-                        <label>EMAIL TRACKING ADDRESS</label>
-                        <input type="email" id="custEmail" readonly style="background:#eee;">
-                    </div>
-                    <div class="form-input-container">
-                        <label>MOBILE CONTACT PHONE</label>
-                        <input type="tel" id="custPhone" readonly style="background:#eee;">
-                    </div>
-                    <div class="form-input-container">
-                        <label>DELIVERY DESTINATION ADDRESS</label>
-                        <input type="text" id="custAddress" readonly style="background:#eee;">
-                    </div>
-                </div>
-
-                <button id="paystackTriggerBtn" class="action-primary-btn" style="background:#00a884;">CONFIRM & PAY NOW</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- POLICY COMPLIANCE FOOTER LINK SYSTEM -->
-    <footer class="store-footer">
+    <!-- Footer Information block -->
+    <footer>
         <p>&copy; 2026 Holuwafemi Mega Store. All Rights Reserved.</p>
+        <p style="font-size:11px; margin-top:4px; color:#64748b;">Premium Electronics, Appliances & High-Efficiency Solar Ecosystem Installations.</p>
         <div class="footer-links">
-            <a data-policy="termsModal">Terms of Service</a>
-            <a data-policy="privacyModal">Privacy Policy</a>
-            <a data-policy="refundModal">Refund Policy</a>
+            <a data-policy="privacyModal">Privacy Shield</a>
+            <a data-policy="termsModal">Terms Matrix</a>
         </div>
     </footer>
 
-    <!-- POLICY INNER MODALS CONTENT BLOCKS -->
-    <div id="termsModal" class="modal-overlay-sheet">
-        <div class="modal-wrapper-box" style="min-height:auto; margin:50px auto; max-width:400px; border-radius:12px;">
-            <div class="modal-header-nav"><h3>Terms of Service</h3><button class="close-policy-btn close-action-btn">&times;</button></div>
-            <div class="modal-scrollable-body" style="font-size:12px; color:var(--gray-text); line-height:1.5;">
-                By using Holuwafemi Mega Store, you agree that all orders placed are subject to product availability. Payments processed via Paystack are encrypted securely. We reserve the right to review structural transaction records to mitigate payment anomalies.
-            </div>
-        </div>
-    </div>
-    <div id="privacyModal" class="modal-overlay-sheet">
-        <div class="modal-wrapper-box" style="min-height:auto; margin:50px auto; max-width:400px; border-radius:12px;">
-            <div class="modal-header-nav"><h3>Privacy Policy</h3><button class="close-policy-btn close-action-btn">&times;</button></div>
-            <div class="modal-scrollable-body" style="font-size:12px; color:var(--gray-text); line-height:1.5;">
-                We respect your personal identity data. Your contact details, phone records, and home delivery coordinates are cached locally inside your browser cache and strictly parsed to Firestore when processing secure checkout pipelines. We do not distribute or trade client tracking details.
-            </div>
-        </div>
-    </div>
-    <div id="refundModal" class="modal-overlay-sheet">
-        <div class="modal-wrapper-box" style="min-height:auto; margin:50px auto; max-width:400px; border-radius:12px;">
-            <div class="modal-header-nav"><h3>Refund & Returns</h3><button class="close-policy-btn close-action-btn">&times;</button></div>
-            <div class="modal-scrollable-body" style="font-size:12px; color:var(--gray-text); line-height:1.5;">
-                Defective hardware items, accessories, or inaccurate solar setup components must be reported within 48 hours of transit package collection. Returned products must maintain clean original packaging parameters to validate operational refund payouts.
-            </div>
-        </div>
-    </div>
-
-    <!-- MAIN APP SCRIPT LOGIC (Firebase modular architecture) -->
+    <!-- MAIN APP SCRIPT LOGIC (Firebase configuration with Multi-Image Support) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-        // Your specific store database parameters configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
             authDomain: "holuwafemi-mega-store.firebaseapp.com",
@@ -732,7 +477,9 @@
         ];
 
         const stateSelector = document.getElementById("gateState");
-        stateSelector.innerHTML = nigeriaStates.map(state => `<option value="${state === 'Select State' ? '' : state}">${state}</option>`).join("");
+        if (stateSelector) {
+            stateSelector.innerHTML = nigeriaStates.map(state => `<option value="${state === 'Select State' ? '' : state}">${state}</option>`).join("");
+        }
 
         function safeFormatPrice(val) {
             if (val === undefined || val === null || val === "") return "0";
@@ -740,7 +487,6 @@
             return isNaN(num) ? "0" : num.toLocaleString();
         }
 
-        // Opens the registration profile gate in restricted "Edit Profile" configuration mode
         function openProfileForEditing() {
             document.getElementById("gateName").value = localStorage.getItem("storeCustomerName") || "";
             document.getElementById("gateEmail").value = localStorage.getItem("storeCustomerEmail") || "";
@@ -748,11 +494,8 @@
             document.getElementById("gateState").value = localStorage.getItem("storeCustomerState") || "";
             document.getElementById("gateAddress").value = localStorage.getItem("storeCustomerAddress") || "";
             
-            // STRICTLY OVERRIDE: Lock Name and Email fields using native HTML inputs parameters
             document.getElementById("gateName").setAttribute("readonly", "true");
             document.getElementById("gateEmail").setAttribute("readonly", "true");
-            
-            // Apply visual muted style signifier indicators
             document.getElementById("gateName").style.background = "#eeeeee";
             document.getElementById("gateEmail").style.background = "#eeeeee";
 
@@ -780,28 +523,28 @@
             const closeGateBtn = document.getElementById("closeGateBtn");
 
             if (savedName && savedEmail) {
-                gate.style.setProperty("display", "none", "important");
+                if (gate) gate.style.setProperty("display", "none", "important");
                 document.body.style.overflow = "auto";
-                badge.innerText = "👤 " + savedName.split(" ")[0];
-                badge.style.display = "block";
-                logoutBtn.style.display = "block";
-                editProfileBtn.style.display = "block";
-                closeGateBtn.style.display = "none";
+                if (badge) {
+                    badge.innerText = "👤 " + savedName.split(" ")[0];
+                    badge.style.display = "block";
+                }
+                if (logoutBtn) logoutBtn.style.display = "block";
+                if (editProfileBtn) editProfileBtn.style.display = "block";
+                if (closeGateBtn) closeGateBtn.style.display = "none";
                 
-                // Inject credentials right down into structural checkout inputs
                 document.getElementById("custName").value = savedName;
                 document.getElementById("custEmail").value = savedEmail;
                 document.getElementById("custPhone").value = savedPhone || "";
                 document.getElementById("custAddress").value = `${savedAddress || ""}, ${savedState || ""}`;
             } else {
-                gate.style.setProperty("display", "block", "important");
+                if (gate) gate.style.setProperty("display", "block", "important");
                 document.body.style.overflow = "hidden";
-                badge.style.display = "none";
-                logoutBtn.style.display = "none";
-                editProfileBtn.style.display = "none";
-                closeGateBtn.style.display = "none";
+                if (badge) badge.style.display = "none";
+                if (logoutBtn) logoutBtn.style.display = "none";
+                if (editProfileBtn) editProfileBtn.style.display = "none";
+                if (closeGateBtn) closeGateBtn.style.display = "none";
                 
-                // Remove all read-only blocks for first-time onboarding visitors registration
                 document.getElementById("gateName").removeAttribute("readonly");
                 document.getElementById("gateEmail").removeAttribute("readonly");
                 document.getElementById("gateName").style.background = "#ffffff";
@@ -814,11 +557,15 @@
             }
         }
 
-        // Attach event triggers back to badge profile interactive modules
-        document.getElementById("headerUserBadge").addEventListener("click", openProfileForEditing);
-        document.getElementById("headerEditProfileBtn").addEventListener("click", openProfileForEditing);
+        document.getElementById("headerUserBadge")?.addEventListener("click", openProfileForEditing);
+        document.getElementById("headerEditProfileBtn")?.addEventListener("click", openProfileForEditing);
 
-        document.getElementById("gateSubmitBtn").addEventListener("click", () => {
+        document.getElementById("closeGateBtn")?.addEventListener("click", () => {
+            document.getElementById("gateModal").style.display = "none";
+            document.body.style.overflow = "auto";
+        });
+
+        document.getElementById("gateSubmitBtn")?.addEventListener("click", () => {
             const name = document.getElementById("gateName").value.trim();
             const email = document.getElementById("gateEmail").value.trim();
             const phone = document.getElementById("gatePhone").value.trim();
@@ -826,311 +573,354 @@
             const address = document.getElementById("gateAddress").value.trim();
 
             if (!name || !email || !phone || !state || !address) {
-                return alert("⚠️ Please fill out all fields completely.");
+                alert("Please fill in all delivery details perfectly.");
+                return;
             }
-            if (!email.includes("@")) return alert("Please enter a valid email address.");
 
             localStorage.setItem("storeCustomerName", name);
             localStorage.setItem("storeCustomerEmail", email);
             localStorage.setItem("storeCustomerPhone", phone);
             localStorage.setItem("storeCustomerState", state);
             localStorage.setItem("storeCustomerAddress", address);
-            
-            alert("✅ Details saved successfully!");
+
+            alert("Profile successfully configured!");
             checkVisitorSession();
         });
 
-        document.getElementById("closeGateBtn").addEventListener("click", () => {
-            document.getElementById("gateModal").style.setProperty("display", "none", "important");
-            document.body.style.overflow = "auto";
-        });
-
-        document.getElementById("headerLogoutBtn").addEventListener("click", () => {
-            if(confirm("Are you sure you want to log out?")) {
+        document.getElementById("headerLogoutBtn")?.addEventListener("click", () => {
+            if (confirm("Are you sure you want to change accounts?")) {
                 localStorage.removeItem("storeCustomerName");
                 localStorage.removeItem("storeCustomerEmail");
                 localStorage.removeItem("storeCustomerPhone");
                 localStorage.removeItem("storeCustomerState");
                 localStorage.removeItem("storeCustomerAddress");
-                localStorage.removeItem("megaStoreCart");
-                
-                cart = [];
-                updateCartBadge();
-                
-                document.getElementById("gateName").value = "";
-                document.getElementById("gateEmail").value = "";
-                document.getElementById("gatePhone").value = "";
-                document.getElementById("gateState").value = "";
-                document.getElementById("gateAddress").value = "";
-                
                 checkVisitorSession();
             }
         });
 
-        checkVisitorSession();
+        // FETCH PRODUCTS IN REAL-TIME
+        const productsCollection = collection(db, "products");
+        const productsQuery = query(productsCollection, orderBy("timestamp", "desc"));
 
-        // Sync items realtime matching from Firestore database metrics
-        const q = query(collection(db, "products"), orderBy("timestamp", "desc"));
-        onSnapshot(q, (snapshot) => {
+        onSnapshot(productsQuery, (snapshot) => {
             allProducts = [];
             snapshot.forEach((doc) => {
                 allProducts.push({ id: doc.id, ...doc.data() });
             });
-            renderProducts(allProducts);
-            updateCartBadge(); 
+            renderStoreProducts("all");
+            renderTopSellers();
         }, (error) => {
-            console.error("Firebase Sync Error: ", error);
+            console.error("Firestore read failure: ", error);
         });
 
-        function renderProducts(productsList) {
-            const grid = document.getElementById("mainCatalogGrid");
-            const top = document.getElementById("topSellersScrollBox");
+        function renderStoreProducts(categoryFilter) {
+            const gridContainer = document.getElementById("mainCatalogGrid");
+            if (!gridContainer) return;
+            gridContainer.innerHTML = "";
 
-            if (productsList.length === 0) {
-                grid.innerHTML = `<p style='grid-column: span 2; padding:40px; text-align:center; color:#999; font-size:13px;'>Your store inventory is empty. Open admin.html to publish items!</p>`;
-                top.innerHTML = "";
+            const filtered = categoryFilter === "all" 
+                ? allProducts 
+                : allProducts.filter(p => p.category === categoryFilter);
+
+            if (filtered.length === 0) {
+                gridContainer.innerHTML = `<p style="grid-column: span 4; text-align:center; padding: 40px; color: var(--text-muted);">No products available in this section yet.</p>`;
                 return;
             }
 
-            top.innerHTML = productsList.slice(0, 5).map(p => `
-                <div class="grid-product-card product-clickable" data-id="${p.id}" style="min-width: 140px; max-width: 140px;">
-                    <img src="${p.img || 'https://via.placeholder.com/140'}">
-                    <div class="product-title">${p.name || 'Product'}</div>
-                    <div class="product-price">₦${safeFormatPrice(p.price)}</div>
-                </div>
-            `).join("");
+            filtered.forEach(product => {
+                const discountAmount = product.oldPrice ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) : 0;
+                const discountTag = discountAmount > 0 ? `<span class="discount-badge">-${discountAmount}%</span>` : "";
 
-            grid.innerHTML = productsList.map(p => `
-                <div class="grid-product-card product-clickable" data-id="${p.id}">
-                    <div class="discount-badge">-${p.pct || 0}%</div>
-                    <img src="${p.img || 'https://via.placeholder.com/140'}">
-                    <div>
-                        <div class="product-title">${p.name || 'Product'}</div>
-                        <div class="product-price">₦${safeFormatPrice(p.price)}</div>
-                    </div>
-                </div>
-            `).join("");
-
-            document.querySelectorAll(".product-clickable").forEach(card => {
-                card.addEventListener("click", () => openDetails(card.getAttribute("data-id")));
+                const card = document.createElement("div");
+                card.className = "grid-product-card";
+                card.innerHTML = `
+                    ${discountTag}
+                    <img src="${product.imageUrl || 'https://via.placeholder.com/150'}" alt="${product.name}">
+                    <div class="product-title">${product.name}</div>
+                    <div class="product-price">₦${safeFormatPrice(product.price)}</div>
+                `;
+                card.addEventListener("click", () => openProductDetailsModal(product));
+                gridContainer.appendChild(card);
             });
         }
 
-        function openDetails(id) {
-            const p = allProducts.find(item => item.id === id);
-            if(!p) return;
-            selectedProduct = p; 
-            document.getElementById("mImg").src = p.img || 'https://via.placeholder.com/140';
-            document.getElementById("mName").innerText = p.name || 'Product';
-            document.getElementById("mPrice").innerText = "₦" + safeFormatPrice(p.price);
-            document.getElementById("mOld").innerText = p.old ? "₦" + safeFormatPrice(p.old) : "";
-            document.getElementById("mDesc").innerText = p.desc || "No specific details provided.";
+        function renderTopSellers() {
+            const scrollBox = document.getElementById("topSellersScrollBox");
+            if (!scrollBox) return;
+            scrollBox.innerHTML = "";
 
-            const encodedMsg = encodeURIComponent(`Hello, I am looking at "${p.name}" priced at ₦${safeFormatPrice(p.price)} on your store.`);
-            document.getElementById("whatsappProductChatBtn").href = `https://wa.me/2349061989529?text=${encodedMsg}`;
+            const topProducts = allProducts.filter(p => p.topSeller === true || p.featured === true).slice(0, 6);
+            const displayList = topProducts.length > 0 ? topProducts : allProducts.slice(0, 6);
 
-            document.getElementById("productModal").style.display = "block";
-            document.body.style.overflow = "hidden"; 
-        }
-
-        function closeDetails() {
-            document.getElementById("productModal").style.display = "none";
-            if (localStorage.getItem("storeCustomerEmail")) {
-                document.body.style.overflow = "auto";
+            if (displayList.length === 0) {
+                document.getElementById("topSellersSection").style.display = "none";
+                return;
+            } else {
+                document.getElementById("topSellersSection").style.display = "block";
             }
-            selectedProduct = null;
+
+            displayList.forEach(product => {
+                const card = document.createElement("div");
+                card.className = "grid-product-card";
+                card.style.minWidth = "150px";
+                card.style.maxWidth = "150px";
+                card.innerHTML = `
+                    <img src="${product.imageUrl || 'https://via.placeholder.com/150'}" style="height:100px;" alt="${product.name}">
+                    <div class="product-title" style="height:32px; font-size:12px;">${product.name}</div>
+                    <div class="product-price" style="font-size:13px;">₦${safeFormatPrice(product.price)}</div>
+                `;
+                card.addEventListener("click", () => openProductDetailsModal(product));
+                scrollBox.appendChild(card);
+            });
         }
 
         document.querySelectorAll("#categoryTabsBar .cat-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 document.querySelectorAll("#categoryTabsBar .cat-btn").forEach(b => b.classList.remove("active"));
-                btn.classList.add("active");
-                
-                const category = btn.getAttribute("data-cat");
-                const filtered = category === 'all' ? allProducts : allProducts.filter(p => {
-                    return p.cat && String(p.cat).toLowerCase().trim() === String(category).toLowerCase().trim();
-                });
-                renderProducts(filtered);
+                e.target.classList.add("active");
+                renderStoreProducts(e.target.getAttribute("data-cat"));
             });
         });
 
-        document.getElementById("openCartIconBtn").addEventListener("click", openCartView);
-        document.getElementById("closeDetailsBtn").addEventListener("click", closeDetails);
-        document.getElementById("closeCartBtn").addEventListener("click", () => {
+        // --- DYNAMIC SWITCHER PREVIEW SYSTEM FOR MULTI-IMAGES ---
+        function openProductDetailsModal(product) {
+            selectedProduct = product;
+            document.getElementById("mName").innerText = product.name;
+            document.getElementById("mPrice").innerText = `₦${safeFormatPrice(product.price)}`;
+            
+            if (product.oldPrice && Number(product.oldPrice) > Number(product.price)) {
+                document.getElementById("mOld").innerText = `₦${safeFormatPrice(product.oldPrice)}`;
+                document.getElementById("mOld").style.display = "inline";
+            } else {
+                document.getElementById("mOld").style.display = "none";
+            }
+            
+            document.getElementById("mDesc").innerText = product.description || "Premium high-quality guaranteed product specifications details.";
+            
+            let thumbnailContainer = document.getElementById("modalImageThumbnailsBar");
+            if (!thumbnailContainer) {
+                thumbnailContainer = document.createElement("div");
+                thumbnailContainer.id = "modalImageThumbnailsBar";
+                thumbnailContainer.style.cssText = "display: flex; gap: 10px; margin-top: 10px; overflow-x: auto; padding: 5px 0; justify-content: center;";
+                document.getElementById("mImg").parentNode.insertBefore(thumbnailContainer, document.getElementById("mImg").nextSibling);
+            }
+            thumbnailContainer.innerHTML = "";
+
+            const mainImgElement = document.getElementById("mImg");
+            mainImgElement.src = product.imageUrl || 'https://via.placeholder.com/150';
+
+            // Extract string cluster cleanly without string format crashes
+            const productImages = product.images && product.images.length > 0 ? product.images : [product.imageUrl];
+
+            if (productImages.length > 1) {
+                productImages.forEach((imgUrl) => {
+                    const thumb = document.createElement("img");
+                    thumb.src = imgUrl;
+                    thumb.style.cssText = "width: 50px; height: 50px; object-fit: contain; background: #f8fafc; border-radius: 6px; border: 2px solid #e2e8f0; cursor: pointer; transition: 0.2s; flex-shrink: 0;";
+                    
+                    if (imgUrl === mainImgElement.src) thumb.style.borderColor = "var(--primary)";
+
+                    thumb.addEventListener("click", () => {
+                        mainImgElement.src = imgUrl;
+                        thumbnailContainer.querySelectorAll("img").forEach(i => i.style.borderColor = "#e2e8f0");
+                        thumb.style.borderColor = "var(--primary)";
+                    });
+                    thumbnailContainer.appendChild(thumb);
+                });
+                thumbnailContainer.style.display = "flex";
+            } else {
+                thumbnailContainer.style.display = "none";
+            }
+
+            const whatsappText = encodeURIComponent(`Hello Holuwafemi Mega Store, I'm interested in buying: ${product.name} (₦${safeFormatPrice(product.price)}). Is it available?`);
+            document.getElementById("whatsappProductChatBtn").href = `https://wa.me/2349061989529?text=${whatsappText}`;
+
+            document.getElementById("productModal").style.display = "block";
+            document.body.style.overflow = "hidden";
+        }
+
+        document.getElementById("closeDetailsBtn")?.addEventListener("click", () => {
+            document.getElementById("productModal").style.display = "none";
+            document.body.style.overflow = "auto";
+        });
+
+        // CART AND SETTLEMENT WORKFLOW LOGIC
+        function updateCartUI() {
+            const counter = document.getElementById("cartCounter");
+            if (counter) counter.innerText = cart.length;
+            localStorage.setItem("megaStoreCart", JSON.stringify(cart));
+            
+            const container = document.getElementById("cartItemsListContainer");
+            if (!container) return;
+            container.innerHTML = "";
+
+            if (cart.length === 0) {
+                container.innerHTML = `<p style="text-align:center; padding:30px; color:var(--text-muted);">Your cart shopping basket is empty.</p>`;
+                document.getElementById("cartTotalSummaryCard").style.display = "none";
+                document.getElementById("cartActionBar").style.display = "none";
+                return;
+            }
+
+            let total = 0;
+            cart.forEach((item, index) => {
+                total += Number(item.price);
+                const row = document.createElement("div");
+                row.className = "cart-item-row";
+                row.innerHTML = `
+                    <img src="${item.imageUrl || 'https://via.placeholder.com/150'}">
+                    <div class="cart-item-details">
+                        <div class="cart-item-title">${item.name}</div>
+                        <div class="cart-item-price">₦${safeFormatPrice(item.price)}</div>
+                        <button class="btn-remove" data-index="${index}"><i class="fas fa-trash"></i> Remove</button>
+                    </div>
+                `;
+                container.appendChild(row);
+            });
+
+            document.getElementById("cartTotalAmount").innerText = `₦${safeFormatPrice(total)}`;
+            document.getElementById("cartSubtotalAmount").innerText = `₦${safeFormatPrice(total)}`;
+            document.getElementById("cartTotalSummaryCard").style.display = "block";
+            document.getElementById("cartActionBar").style.display = "block";
+
+            container.querySelectorAll(".btn-remove").forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    const index = e.currentTarget.getAttribute("data-index");
+                    cart.splice(index, 1);
+                    updateCartUI();
+                });
+            });
+        }
+
+        document.getElementById("addToCartBtn")?.addEventListener("click", () => {
+            if (selectedProduct) {
+                cart.push(selectedProduct);
+                updateCartUI();
+                document.getElementById("productModal").style.display = "none";
+                document.getElementById("cartModal").style.display = "block";
+            }
+        });
+
+        document.getElementById("openCartIconBtn")?.addEventListener("click", () => {
+            updateCartUI();
+            document.getElementById("cartModal").style.display = "block";
+            document.body.style.overflow = "hidden";
+        });
+        document.getElementById("closeCartBtn")?.addEventListener("click", () => {
             document.getElementById("cartModal").style.display = "none";
             document.body.style.overflow = "auto";
         });
-        document.getElementById("closeCheckoutBtn").addEventListener("click", () => {
+
+        document.getElementById("directBuyBtn")?.addEventListener("click", () => {
+            if (selectedProduct) {
+                checkoutMode = "direct";
+                checkoutAmount = Number(selectedProduct.price);
+                checkoutItemsDescription = `Direct Purchase: ${selectedProduct.name}`;
+                
+                document.getElementById("productModal").style.display = "none";
+                openCheckoutModal();
+            }
+        });
+
+        document.getElementById("cartCheckoutBtn")?.addEventListener("click", () => {
+            if (cart.length === 0) return;
+            checkoutMode = "cart";
+            checkoutAmount = cart.reduce((sum, item) => sum + Number(item.price), 0);
+            checkoutItemsDescription = `Cart Portfolio: ` + cart.map(item => item.name).join(", ");
+            
+            document.getElementById("cartModal").style.display = "none";
+            openCheckoutModal();
+        });
+
+        function openCheckoutModal() {
+            document.getElementById("checkoutPayableAmount").innerText = `₦${safeFormatPrice(checkoutAmount)}`;
+            document.getElementById("checkoutModal").style.display = "block";
+            document.body.style.overflow = "hidden";
+        }
+        document.getElementById("closeCheckoutBtn")?.addEventListener("click", () => {
             document.getElementById("checkoutModal").style.display = "none";
             document.body.style.overflow = "auto";
         });
 
-        document.getElementById("addToCartBtn").addEventListener("click", () => {
-            if (!selectedProduct) return;
-            cart.push(selectedProduct);
-            localStorage.setItem("megaStoreCart", JSON.stringify(cart));
-            updateCartBadge();
-            alert(`🛒 Added "${selectedProduct.name}" to cart!`);
-            closeDetails();
-        });
+        // INTEGRATE PAYSTACK TRANSACTION PROCESSING HOOKS
+        document.getElementById("paystackTriggerBtn")?.addEventListener("click", () => {
+            const email = localStorage.getItem("storeCustomerEmail");
+            const name = localStorage.getItem("storeCustomerName");
+            const phone = localStorage.getItem("storeCustomerPhone");
+            const address = localStorage.getItem("storeCustomerAddress");
+            const state = localStorage.getItem("storeCustomerState");
 
-        function updateCartBadge() {
-            document.getElementById("cartCounter").innerText = cart.length;
-        }
-
-        function openCartView() {
-            const listContainer = document.getElementById("cartItemsListContainer");
-            const totalSummary = document.getElementById("cartTotalSummaryCard");
-            const actionBtn = document.getElementById("cartActionBar");
-
-            if(cart.length === 0) {
-                listContainer.innerHTML = `
-                    <div style="text-align:center; padding:50px 20px; color:#666;">
-                        <i class="fas fa-shopping-basket" style="font-size:48px; color:#ccc; margin-bottom:15px;"></i>
-                        <p>Your shopping cart is empty!</p>
-                    </div>`;
-                totalSummary.style.display = "none";
-                actionBtn.style.display = "none";
-            } else {
-                let total = 0;
-                listContainer.innerHTML = cart.map((p, index) => {
-                    total += Number(p.price || 0);
-                    return `
-                        <div class="cart-item-row">
-                            <img src="${p.img || 'https://via.placeholder.com/140'}">
-                            <div class="cart-item-details">
-                                <div class="cart-item-title">${p.name || 'Product'}</div>
-                                <div class="cart-item-price">₦${safeFormatPrice(p.price)}</div>
-                                <button class="btn-remove remove-cart-item-btn" data-index="${index}"><i class="fas fa-trash-alt"></i> Remove</button>
-                            </div>
-                        </div>`;
-                }).join("");
-
-                document.querySelectorAll(".remove-cart-item-btn").forEach(btn => {
-                    btn.addEventListener("click", () => {
-                        const idx = btn.getAttribute("data-index");
-                        cart.splice(idx, 1);
-                        localStorage.setItem("megaStoreCart", JSON.stringify(cart));
-                        updateCartBadge();
-                        openCartView();
-                    });
-                });
-
-                document.getElementById("cartSubtotalAmount").innerText = "₦" + total.toLocaleString();
-                document.getElementById("cartTotalAmount").innerText = "₦" + total.toLocaleString();
-                totalSummary.style.display = "block";
-                actionBtn.style.display = "flex";
-            }
-
-            document.getElementById("cartModal").style.display = "block";
-            document.body.style.overflow = "hidden";
-        }
-
-        document.getElementById("directBuyBtn").addEventListener("click", () => {
-            if(!selectedProduct) return;
-            checkoutMode = "direct";
-            checkoutAmount = Number(selectedProduct.price || 0);
-            checkoutItemsDescription = selectedProduct.name || "Product";
-            document.getElementById("checkoutPayableAmount").innerText = "₦" + checkoutAmount.toLocaleString();
-            closeDetails();
-            document.getElementById("checkoutModal").style.display = "block";
-        });
-
-        document.getElementById("cartCheckoutBtn").addEventListener("click", () => {
-            if(cart.length === 0) return;
-            checkoutMode = "cart";
-            checkoutAmount = cart.reduce((sum, item) => sum + Number(item.price || 0), 0);
-            checkoutItemsDescription = cart.map(item => item.name || "Product").join(", ");
-            document.getElementById("checkoutPayableAmount").innerText = "₦" + checkoutAmount.toLocaleString();
-            document.getElementById("cartModal").style.display = "none";
-            document.getElementById("checkoutModal").style.display = "block";
-        });
-
-        document.getElementById("paystackTriggerBtn").addEventListener("click", () => {
-            const name = document.getElementById("custName").value.trim();
-            const email = document.getElementById("custEmail").value.trim();
-            const phone = document.getElementById("custPhone").value.trim();
-            const address = document.getElementById("custAddress").value.trim();
-            const payButton = document.getElementById("paystackTriggerBtn");
-
-            if(!name || !email || !phone || !address) {
-                alert("⚠️ Please complete all delivery fields before proceeding.");
+            if (!email || !name) {
+                alert("Session mismatch. Please update delivery profile inputs.");
                 return;
             }
 
-            payButton.innerText = "OPENING SECURE GATEWAY...";
-            payButton.disabled = true;
-
-            try {
-                let handler = PaystackPop.setup({
-                    key: 'pk_live_74b79dcbb6afc98ea13aa66c2c0f154e923643bc', 
-                    email: email,
-                    amount: Math.round(checkoutAmount * 100), 
-                    currency: "NGN",
-                    metadata: {
-                        custom_fields: [
-                            { display_name: "Customer Name", value: name },
-                            { display_name: "Phone Number", value: phone },
-                            { display_name: "Delivery Address", value: address },
-                            { display_name: "Items Ordered", value: checkoutItemsDescription }
-                        ]
-                    },
-                    callback: async function(response) {
-                        try {
-                            await addDoc(collection(db, "orders"), {
-                                customerName: name,
-                                customerEmail: email,
-                                customerPhone: phone,
-                                deliveryAddress: address,
-                                orderedItems: checkoutItemsDescription,
-                                totalPaid: checkoutAmount,
-                                paystackReference: response.reference,
-                                timestamp: serverTimestamp()
-                            });
-                            alert("✅ Payment Successful! Your order has been registered securely.");
-                        } catch (dbError) {
-                            alert("✅ Payment Received! Reference: " + response.reference);
-                        }
-                        if(checkoutMode === "cart") {
+            const handler = PaystackPop.setup({
+                key: 'pk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', // Paste your live/test Paystack Public key parameters here
+                email: email,
+                amount: checkoutAmount * 100, 
+                currency: 'NGN',
+                metadata: {
+                    custom_fields: [
+                        { display_name: "Customer Name", variable_name: "customer_name", value: name },
+                        { display_name: "Phone Number", variable_name: "phone_number", value: phone },
+                        { display_name: "Delivery Address", variable_name: "delivery_address", value: `${address}, ${state}` },
+                        { display_name: "Items Description", variable_name: "items_description", value: checkoutItemsDescription }
+                    ]
+                },
+                callback: async function(response) {
+                    alert(`Payment Successful! Reference: ${response.reference}`);
+                    
+                    try {
+                        await addDoc(collection(db, "orders"), {
+                            customerName: name,
+                            customerEmail: email,
+                            customerPhone: phone,
+                            deliveryAddress: `${address}, ${state}`,
+                            items: checkoutItemsDescription,
+                            amountPaid: checkoutAmount,
+                            paystackReference: response.reference,
+                            status: "Paid / Pending Delivery",
+                            timestamp: serverTimestamp()
+                        });
+                        
+                        if (checkoutMode === "cart") {
                             cart = [];
-                            localStorage.removeItem("megaStoreCart");
-                            updateCartBadge();
+                            updateCartUI();
                         }
-                        payButton.innerText = "CONFIRM & PAY NOW";
-                        payButton.disabled = false;
+                        
                         document.getElementById("checkoutModal").style.display = "none";
                         document.body.style.overflow = "auto";
-                    },
-                    onClose: function() {
-                        alert("Transaction cancelled.");
-                        payButton.innerText = "CONFIRM & PAY NOW";
-                        payButton.disabled = false;
+                    } catch (e) {
+                        console.error("Order tracking save exception: ", e);
                     }
-                });
-                handler.openIframe();
-            } catch (error) {
-                alert("⚠️ Error loading Paystack interface.");
-                payButton.innerText = "CONFIRM & PAY NOW";
-                payButton.disabled = false;
-            }
+                },
+                onClose: function() {
+                    alert('Transaction window closed safely.');
+                }
+            });
+            handler.openIframe();
         });
 
-        // Initialize policy click routing modules
+        // LEGAL NOTICE TERMS MODAL CLICKS
         document.querySelectorAll(".footer-links a").forEach(link => {
-            link.addEventListener("click", () => {
-                const modalId = link.getAttribute("data-policy");
-                document.getElementById(modalId).style.display = "block";
-                document.body.style.overflow = "hidden";
-            });
-        });
-        document.querySelectorAll(".close-policy-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                btn.closest(".modal-overlay-sheet").style.display = "none";
-                if (localStorage.getItem("storeCustomerEmail")) {
-                    document.body.style.overflow = "auto";
+            link.addEventListener("click", (e) => {
+                const targetModalId = e.currentTarget.getAttribute("data-policy");
+                const m = document.getElementById(targetModalId);
+                if (m) {
+                    m.style.display = "block";
+                    document.body.style.overflow = "hidden";
                 }
             });
         });
+
+        document.querySelectorAll(".close-policy-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.currentTarget.closest(".modal-overlay-sheet").style.display = "none";
+                document.body.style.overflow = "auto";
+            });
+        });
+
+        checkVisitorSession();
     </script>
 </body>
 </html>
