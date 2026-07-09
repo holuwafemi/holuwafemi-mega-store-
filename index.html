@@ -200,7 +200,6 @@
             border-radius: 4px;
         }
 
-        /* Modal Overlay Structural Sheets */
         .modal-overlay-sheet {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -234,7 +233,6 @@
             background: #f8fafc;
         }
 
-        /* Image Gallery Slider Layout */
         .gallery-thumbs-row {
             display: flex;
             gap: 8px;
@@ -256,7 +254,6 @@
             border-color: var(--secondary);
         }
 
-        /* Dynamic Delivery Block Panel */
         .delivery-fee-badge-container {
             background: #f0fdf4;
             border: 1px solid #bbf7d0;
@@ -312,7 +309,6 @@
         .btn-buy-primary { background-color: var(--primary); color: white; }
         .btn-cart { background-color: #f1f5f9; color: var(--text-main); }
 
-        /* Cart Rows styling */
         .cart-item-row {
             display: flex;
             gap: 12px;
@@ -339,7 +335,6 @@
 </head>
 <body>
 
-    <!-- Header Navigation Bar -->
     <header>
         <div class="logo-area">
             <h1>Holuwafemi Mega Store</h1>
@@ -355,25 +350,19 @@
         </div>
     </header>
 
-    <!-- Promotional Billboard Banner -->
     <div class="promo-banner-billboard">
         <h2>Premium Quality, Unbeatable Deals</h2>
         <p>Explore original phones, solar gear, appliances, and luxury electronics with secure instant checkout payment processing pipelines.</p>
     </div>
 
-    <!-- Top Selling Highlights Section -->
     <div class="section-container" id="topSellersSection">
         <div class="section-title"><i class="fas fa-fire" style="color:#f97316;"></i> Trending Highlights</div>
-        <div class="horizontal-scroll-row" id="topSellersScrollBox">
-            <!-- Populated dynamically via Firebase -->
-        </div>
+        <div class="horizontal-scroll-row" id="topSellersScrollBox"></div>
     </div>
 
-    <!-- Main Dynamic Shopping Catalog -->
     <div class="section-container">
         <div class="section-title"><i class="fas fa-store" style="color:var(--secondary)"></i> Explore Catalog Inventory</div>
         
-        <!-- Category Switching Scroll Tabs -->
         <div class="tabs-container" id="categoryTabsBar">
             <button class="cat-btn active" data-cat="all">All Items</button>
             <button class="cat-btn" data-cat="electronics">Electronics</button>
@@ -384,13 +373,10 @@
             <button class="cat-btn" data-cat="fashion">Fashion</button>
         </div>
 
-        <!-- Master Product Showcase Grid -->
-        <div class="products-grid-layout" id="mainCatalogGrid">
-            <!-- Rendered in real-time -->
-        </div>
+        <div class="products-grid-layout" id="mainCatalogGrid"></div>
     </div>
 
-    <!-- REGISTER AND GATEWAY SECURITY OVERLAY MODAL -->
+    <!-- REGISTRATION SHEET -->
     <div class="modal-overlay-sheet" id="gateModal" style="display: block;">
         <div class="modal-body-wrapper" style="margin-top: 80px;">
             <button type="button" class="modal-close-trigger" id="closeGateBtn" style="display:none;">×</button>
@@ -412,18 +398,13 @@
         </div>
     </div>
 
-    <!-- JUMIA-STYLE MULTI-IMAGE PRODUCT SPECIFICATIONS MODAL SHEET -->
+    <!-- MAIN PRODUCT MODAL -->
     <div class="modal-overlay-sheet" id="productModal">
         <div class="modal-body-wrapper">
             <button class="modal-close-trigger" id="closeDetailsBtn">×</button>
-            
-            <!-- Hero display image field -->
             <img src="" id="mImg" class="modal-main-img" alt="Main View">
-            
-            <!-- Dynamic Thumbnail Row Display Container -->
             <div class="gallery-thumbs-row" id="mThumbsRow"></div>
             
-            <!-- Hidden inputs to feed automated order metadata systems -->
             <input type="hidden" id="custName"><input type="hidden" id="custEmail">
             <input type="hidden" id="custPhone"><input type="hidden" id="custAddress">
 
@@ -434,7 +415,6 @@
                 <span id="mOld" class="modal-slashed-old-price">₦0</span>
             </div>
 
-            <!-- Contextual Delivery Fee Tracker Block -->
             <div class="delivery-fee-badge-container">
                 <span style="font-size:13.5px; font-weight:600; color:#1e293b;"><i class="fas fa-truck text-slate-500"></i> Delivery Fee</span>
                 <span id="mDeliveryFee" class="delivery-fee-amount-tag">₦0</span>
@@ -450,7 +430,7 @@
         </div>
     </div>
 
-    <!-- SHOPPING CART PORTFOLIO DRAWER MODAL SHEET -->
+    <!-- CART MODAL -->
     <div class="modal-overlay-sheet" id="cartModal">
         <div class="modal-body-wrapper">
             <button class="modal-close-trigger" id="closeCartBtn">×</button>
@@ -474,7 +454,7 @@
         </div>
     </div>
 
-    <!-- LIVE SECURE CHECKOUT PORTAL TRANSACTION WINDOW -->
+    <!-- CHECKOUT MODAL -->
     <div class="modal-overlay-sheet" id="checkoutModal">
         <div class="modal-body-wrapper" style="text-align:center; padding:30px;">
             <button class="modal-close-trigger" id="closeCheckoutBtn">×</button>
@@ -490,24 +470,36 @@
         </div>
     </div>
 
-    <!-- TERMS AND CORPORATE COMPLIANCE SHEETS -->
+    <!-- POLICIES -->
     <div class="modal-overlay-sheet" id="privacyModal"><div class="modal-body-wrapper"><button class="modal-close-trigger close-policy-btn">×</button><h3>Privacy Policy Statement</h3><p style="font-size:14px; margin-top:10px; line-height:1.5;">Holuwafemi Mega Store secures customer delivery records strictly for automated payload tracking execution routines. Profile data configurations stay safely localized on sandbox caching contexts.</p></div></div>
     <div class="modal-overlay-sheet" id="termsModal"><div class="modal-body-wrapper"><button class="modal-close-trigger close-policy-btn">×</button><h3>Terms & Service Guidelines</h3><p style="font-size:14px; margin-top:10px; line-height:1.5;">All electronic merchandise listings, monocrystalline solar configurations, and dynamic appliance distribution portfolios carry structural merchant warranties verified at settlement checkpoints.</p></div></div>
+    <div class="modal-overlay-sheet" id="refundModal">
+        <div class="modal-body-wrapper">
+            <button class="modal-close-trigger close-policy-btn">×</button>
+            <h3>Refund & Return Policy</h3>
+            <p style="font-size:14px; margin-top:10px; line-height:1.5; color:#475569;">At Holuwafemi Mega Store, we ensure all electronic merchandise, solar systems, and home appliances go through intensive quality checks before deployment.</p>
+            <ul style="font-size:13px; margin:12px 0; padding-left:20px; line-height:1.6; color:#475569;">
+                <li><b>Eligibility:</b> Requests for returns or refunds must be initiated within 7 days of delivery.</li>
+                <li><b>Condition:</b> Items must be in their original packaging, unused, with all accessories and warranty seals completely intact.</li>
+                <li><b>Non-Refundable Fees:</b> Standard delivery tracking fees charged at shipment checkpoints are non-refundable.</li>
+                <li><b>Processing Timeline:</b> Once returns pass structural damage validation checks, authorized payouts are processed securely back to your original source channel within 3–5 working days.</li>
+            </ul>
+        </div>
+    </div>
 
-    <!-- Footer Information block -->
     <footer>
         <p>&copy; 2026 Holuwafemi Mega Store. All Rights Reserved.</p>
         <p style="font-size:11px; margin-top:4px; color:#64748b;">Premium Electronics, Appliances & High-Efficiency Solar Ecosystem Installations.</p>
         <div class="footer-links">
             <a data-policy="privacyModal">Privacy Shield</a>
             <a data-policy="termsModal">Terms Matrix</a>
+            <a data-policy="refundModal">Refund Policy</a>
         </div>
     </footer>
 
-    <!-- MAIN APP SCRIPT LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
@@ -641,7 +633,6 @@
             }
         });
 
-        // FIRESTORE SYNC DATA PIPELINE
         const productsCollection = collection(db, "products");
         const productsQuery = query(productsCollection, orderBy("timestamp", "desc"));
 
@@ -716,7 +707,6 @@
             });
         }
 
-        // TABS CATEGORY INTERACTION
         document.querySelectorAll("#categoryTabsBar .cat-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 document.querySelectorAll("#categoryTabsBar .cat-btn").forEach(b => b.classList.remove("active"));
@@ -725,7 +715,6 @@
             });
         });
 
-        // JUMIA MODAL AND MULTI-IMAGE MANAGEMENT PIPELINE
         function openProductDetailsModal(product) {
             selectedProduct = product;
             document.getElementById("mName").innerText = product.name;
@@ -773,7 +762,6 @@
             document.body.style.overflow = "hidden";
         }
 
-        // CLOSE MODALS UTILITIES
         function setupModalCloseTriggers(triggerId, modalId) {
             document.getElementById(triggerId)?.addEventListener("click", () => {
                 document.getElementById(modalId).style.display = "none";
@@ -786,7 +774,6 @@
         setupModalCloseTriggers("closeCartBtn", "cartModal");
         setupModalCloseTriggers("closeCheckoutBtn", "checkoutModal");
 
-        // SHOPPING BASKET INVENTORY MANAGEMENT 
         function updateCartUI() {
             document.getElementById("cartCounter").innerText = cart.length;
             localStorage.setItem("megaStoreCart", JSON.stringify(cart));
@@ -863,7 +850,6 @@
             updateCartUI();
         });
 
-        // PAYMENT AND SETTLEMENT GATEWAY INTERACTION
         function triggerCheckoutWindow(mode, amount) {
             checkoutMode = mode;
             checkoutAmount = amount;
@@ -894,6 +880,8 @@
         document.getElementById("paystackTriggerBtn")?.addEventListener("click", () => {
             const customerEmail = localStorage.getItem("storeCustomerEmail");
             const customerName = localStorage.getItem("storeCustomerName");
+            const customerPhone = localStorage.getItem("storeCustomerPhone") || "";
+            const deliveryAddress = localStorage.getItem("storeCustomerAddress") || "";
 
             if (!customerEmail || !customerName) {
                 alert("Session context trace error. Refreshing gateway logs.");
@@ -902,19 +890,35 @@
             }
 
             const handler = PaystackPop.setup({
-                key: 'pk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', // Put your live paystack key inside this placeholder
+                key: 'pk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', // Put your live public key here
                 email: customerEmail,
-                amount: checkoutAmount * 100, // Conversion into kobo base values
+                amount: checkoutAmount * 100, 
                 currency: "NGN",
                 metadata: {
                     custom_fields: [
                         { display_name: "Customer Name", variable_name: "customer_name", value: customerName },
                         { display_name: "Checkout Type", variable_name: "checkout_type", value: checkoutMode },
-                        { display_name: "Delivery Details", variable_name: "delivery_details", value: localStorage.getItem("storeCustomerAddress") }
+                        { display_name: "Delivery Details", variable_name: "delivery_details", value: deliveryAddress }
                     ]
                 },
-                callback: function(response) {
+                callback: async function(response) {
                     alert("Settlement authorized securely! Transaction Reference ID: " + response.reference);
+                    
+                    try {
+                        await addDoc(collection(db, "orders"), {
+                            customerName,
+                            customerEmail,
+                            customerPhone,
+                            deliveryAddress,
+                            amountPaid: checkoutAmount,
+                            paystackReference: response.reference,
+                            status: "Paid",
+                            timestamp: serverTimestamp()
+                        });
+                    } catch (dbErr) {
+                        console.error("Failed to archive transaction metadata: ", dbErr);
+                    }
+
                     if (checkoutMode === "cart") {
                         cart = [];
                         updateCartUI();
@@ -929,7 +933,6 @@
             handler.openIframe();
         });
 
-        // TERMS AND COMPLIANCE INFRASTRUCTURE TRIGGERS
         document.querySelectorAll(".footer-links a").forEach(link => {
             link.addEventListener("click", (e) => {
                 const targetModalId = e.target.getAttribute("data-policy");
@@ -947,7 +950,6 @@
             });
         });
 
-        // App System Initializer Run
         window.addEventListener("DOMContentLoaded", () => {
             checkVisitorSession();
             updateCartUI();
