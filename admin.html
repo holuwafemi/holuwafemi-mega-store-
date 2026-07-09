@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -29,7 +28,7 @@
             padding: 20px;
         }
         .admin-container {
-            max-width: 800px;
+            max-width: 850px;
             margin: 40px auto;
             background: var(--card-bg);
             padding: 30px;
@@ -249,6 +248,11 @@
                 <label for="prodOldPrice">Slash Price / Old Price (₦ - Optional)</label>
                 <input type="number" id="prodOldPrice" class="form-control" placeholder="e.g., 1400000">
             </div>
+            <div class="form-group">
+                <label for="prodDelivery">Delivery Fee (₦)</label>
+                <input type="number" id="prodDelivery" class="form-control" placeholder="e.g., 3500" value="0">
+                <p style="font-size: 11px; color: #64748b; margin-top: 2px;">Enter 0 for Free Delivery</p>
+            </div>
         </div>
 
         <!-- Product Image Links Box (Supports Multiple Images) -->
@@ -299,12 +303,13 @@
                             <th>Item Details</th>
                             <th>Category</th>
                             <th>Pricing Structure</th>
+                            <th>Delivery Cost</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody id="inventoryGridBox">
                         <tr>
-                            <td colspan="5" style="text-align: center; padding: 20px; color: #64748b;">Loading running store data...</td>
+                            <td colspan="6" style="text-align: center; padding: 20px; color: #64748b;">Loading running store data...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -365,6 +370,7 @@
             const name = document.getElementById("prodName").value.trim();
             const price = Number(document.getElementById("prodPrice").value);
             const oldPrice = document.getElementById("prodOldPrice").value ? Number(document.getElementById("prodOldPrice").value) : null;
+            const deliveryFee = document.getElementById("prodDelivery").value ? Number(document.getElementById("prodDelivery").value) : 0;
             const category = document.getElementById("prodCategory").value;
             const description = document.getElementById("prodDesc").value.trim();
             const imagesRawInput = document.getElementById("prodImageUrl").value.trim();
@@ -391,6 +397,7 @@
                     name: name,
                     price: price,
                     oldPrice: oldPrice,
+                    deliveryFee: deliveryFee,
                     category: category,
                     description: description || "Premium high-quality guaranteed product specifications details.",
                     imageUrl: imagesArray[0],
@@ -406,6 +413,7 @@
                 document.getElementById("prodName").value = "";
                 document.getElementById("prodPrice").value = "";
                 document.getElementById("prodOldPrice").value = "";
+                document.getElementById("prodDelivery").value = "0";
                 document.getElementById("prodDesc").value = "";
                 document.getElementById("prodImageUrl").value = "";
                 document.getElementById("prodTopSeller").checked = false;
@@ -429,17 +437,19 @@
             inventoryGridBox.innerHTML = "";
             
             if (snapshot.empty) {
-                inventoryGridBox.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px; color: #64748b;">No items registered in the database portfolio yet.</td></tr>`;
+                inventoryGridBox.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 20px; color: #64748b;">No items registered in the database portfolio yet.</td></tr>`;
                 return;
             }
 
             snapshot.forEach((productDoc) => {
                 const item = productDoc.data();
                 const itemId = productDoc.id;
+                
+                // Safely read delivery fee (fallback to 0 if older data entries don't have it)
+                const shippingCost = item.deliveryFee !== undefined ? item.deliveryFee : 0;
 
                 const tr = document.createElement("tr");
                 
-                // The onerror layout triggers automatically if the URL link is invalid or broken
                 tr.innerHTML = `
                     <td>
                         <img src="${item.imageUrl || 'https://via.placeholder.com/150'}" 
@@ -455,6 +465,11 @@
                     <td>
                         <div style="font-weight:700; color:var(--primary)">₦${Number(item.price).toLocaleString()}</div>
                         ${item.oldPrice ? `<div style="text-decoration:line-through; font-size:12px; color:#94a3b8">₦${Number(item.oldPrice).toLocaleString()}</div>` : ''}
+                    </td>
+                    <td>
+                        <div style="font-weight: 600; color: ${shippingCost === 0 ? '#10b981' : '#475569'};">
+                            ${shippingCost === 0 ? 'Free Delivery' : `₦${Number(shippingCost).toLocaleString()}`}
+                        </div>
                     </td>
                     <td>
                         <button type="button" class="btn-delete-item" data-id="${itemId}">
