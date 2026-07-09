@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Holuwafemi Mega Store - Admin Panel & Inventory</title>
+    <title>Holuwafemi Mega Store | Online Retail Storefront</title>
+    <!-- FontAwesome for standard UI Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
+            --primary: #f97316; /* Jumia Style Vibrant Orange */
+            --primary-dark: #ea580c;
             --bg: #f8fafc;
-            --card-bg: #ffffff;
             --text: #1e293b;
+            --text-muted: #64748b;
             --border: #e2e8f0;
-            --danger: #ef4444;
-            --danger-dark: #dc2626;
+            --green: #10b981;
         }
         * {
             box-sizing: border-box;
@@ -25,305 +25,393 @@
         body {
             background-color: var(--bg);
             color: var(--text);
-            padding: 20px;
         }
-        .admin-container {
-            max-width: 850px;
-            margin: 40px auto;
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+
+        /* Top Navigation Header */
+        header {
+            background: #ffffff;
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        h2 {
-            margin-bottom: 8px;
+        .logo {
+            font-size: 22px;
+            font-weight: 800;
             color: var(--text);
+            text-transform: uppercase;
+        }
+        .logo span {
+            color: var(--primary);
+        }
+        .cart-icon-btn {
+            background: #f1f5f9;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .cart-count-badge {
+            background: var(--primary);
+            color: white;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 50px;
+        }
+
+        /* Product Catalog Matrix Grid */
+        .catalog-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .section-title {
+            margin-bottom: 25px;
+            font-size: 24px;
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        p.subtitle {
-            color: #64748b;
-            font-size: 14px;
-            margin-bottom: 24px;
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 20px;
         }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-row {
+
+        /* Product Card Styles */
+        .product-card {
+            background: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
             display: flex;
-            gap: 15px;
-        }
-        .form-row .form-group {
-            flex: 1;
-        }
-        label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        .form-control {
-            width: 100%;
-            padding: 10px 14px;
+            flex-direction: column;
             border: 1px solid var(--border);
-            border-radius: 6px;
-            font-size: 15px;
-            outline: none;
-            transition: border-color 0.2s;
-            background: #fff;
+            position: relative;
         }
-        .form-control:focus {
-            border-color: var(--primary);
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
-        textarea.form-control {
-            resize: vertical;
-            min-height: 80px;
-        }
-        .info-tip {
-            font-size: 12px;
-            color: #2563eb;
-            margin-top: 4px;
-            font-weight: 500;
-        }
-        .ai-btn-wrapper {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 6px;
-        }
-        .ai-btn {
-            background: #10b981;
+        .badge-tag {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--primary);
             color: white;
-            border: none;
-            padding: 6px 12px;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 8px;
             border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
+            text-transform: uppercase;
+            z-index: 2;
+        }
+        .img-wrapper {
+            width: 100%;
+            height: 200px;
+            background: #f8fafc;
             display: flex;
             align-items: center;
-            gap: 6px;
-            transition: background 0.2s;
-        }
-        .ai-btn:hover {
-            background: #059669;
-        }
-        .checkbox-group {
-            display: flex;
-            gap: 20px;
-            margin: 15px 0 25px 0;
+            justify-content: center;
             padding: 10px;
-            background: #f1f5f9;
-            border-radius: 6px;
         }
-        .checkbox-label {
+        .product-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .product-info {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .product-name {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text);
+            line-height: 1.4;
+            height: 42px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        .pricing-box {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            font-size: 14px;
+            margin-bottom: 6px;
         }
-        .checkbox-label input {
-            width: 16px;
-            height: 16px;
-            cursor: pointer;
+        .live-price {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text);
         }
-        .submit-btn {
+        .slash-price {
+            font-size: 13px;
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+        .delivery-tag {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .delivery-tag.free {
+            color: var(--green);
+        }
+        .add-to-cart-btn {
             width: 100%;
             background: var(--primary);
             color: white;
             border: none;
-            padding: 14px;
-            font-size: 16px;
-            font-weight: 600;
+            padding: 10px;
+            font-weight: 700;
             border-radius: 6px;
             cursor: pointer;
+            margin-top: auto;
             transition: background 0.2s;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            font-size: 13px;
         }
-        .submit-btn:hover {
+        .add-to-cart-btn:hover {
             background: var(--primary-dark);
         }
-        .submit-btn:disabled {
-            background: #94a3b8;
-            cursor: not-allowed;
-        }
 
-        /* Inventory Management Styles */
-        .inventory-section {
-            margin-top: 40px;
-            border-top: 2px dashed var(--border);
-            padding-top: 30px;
+        /* Slide-out Sidebar Shopping Cart Layout */
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100%;
+            background: #ffffff;
+            box-shadow: -5px 0 25px rgba(0,0,0,0.15);
+            z-index: 200;
+            transition: right 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
         }
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-            margin-top: 15px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
+        .cart-sidebar.open {
+            right: 0;
         }
-        .inventory-table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            text-align: left;
-            font-size: 14px;
-        }
-        .inventory-table th {
-            background: #f1f5f9;
-            padding: 12px;
-            font-weight: 700;
-            color: #475569;
+        .cart-header {
+            padding: 20px;
             border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .inventory-table td {
-            padding: 12px;
-            border-bottom: 1px solid var(--border);
-            vertical-align: middle;
+        .close-cart-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-muted);
         }
-        .inventory-thumb {
+        .cart-items-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .cart-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed var(--border);
+            align-items: center;
+        }
+        .cart-item-img {
             width: 50px;
             height: 50px;
             object-fit: contain;
-            border-radius: 6px;
-            background: #f8fafc;
             border: 1px solid var(--border);
+            border-radius: 4px;
         }
-        .btn-delete-item {
-            background: var(--danger);
+        .cart-item-details {
+            flex-grow: 1;
+        }
+        .cart-item-name {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .cart-item-price {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .cart-item-shipping {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .remove-item-btn {
+            background: none;
+            border: none;
+            color: #ef4444;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* Cart Receipt Summary Blocks */
+        .cart-summary {
+            padding: 20px;
+            background: #f8fafc;
+            border-top: 1px solid var(--border);
+        }
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        .summary-row.grand-total {
+            border-top: 1px solid var(--border);
+            padding-top: 10px;
+            margin-top: 10px;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text);
+        }
+        .checkout-email-input {
+            width: 100%;
+            padding: 10px;
+            margin: 15px 0 10px 0;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            outline: none;
+            font-size: 14px;
+        }
+        .pay-btn {
+            width: 100%;
+            background: var(--green);
             color: white;
             border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-weight: 600;
-            font-size: 12px;
+            padding: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            border-radius: 6px;
             cursor: pointer;
             display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 4px;
-            transition: background 0.2s;
+            gap: 8px;
         }
-        .btn-delete-item:hover {
-            background: var(--danger-dark);
+        .pay-btn:hover {
+            background: #059669;
+        }
+        
+        /* Dark overlay background for open cart */
+        .cart-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 150;
+            display: none;
+        }
+        .cart-overlay.open {
+            display: block;
+        }
+        
+        @media (max-width: 450px) {
+            .cart-sidebar { width: 100%; right: -100%; }
         }
     </style>
 </head>
 <body>
 
-    <div class="admin-container">
-        <h2><i class="fas fa-box-open" style="color: var(--primary);"></i> Stock Inventory Control</h2>
-        <p class="subtitle">Upload items with single or multiple gallery images directly to your store database</p>
-
-        <!-- Product Title -->
-        <div class="form-group">
-            <label for="prodName">Product Title</label>
-            <input type="text" id="prodName" class="form-control" placeholder="e.g., iPhone 15 Pro Max 256GB">
-        </div>
-
-        <!-- Category & Prices Row -->
-        <div class="form-row">
-            <div class="form-group">
-                <label for="prodCategory">Product Category</label>
-                <select id="prodCategory" class="form-control">
-                    <option value="electronics">Electronics</option>
-                    <option value="solar">Solar</option>
-                    <option value="appliances">Appliances</option>
-                    <option value="computers">Computers</option>
-                    <option value="phones">Phones</option>
-                    <option value="fashion">Fashion</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-row">
-            <div class="form-group">
-                <label for="prodPrice">Selling Price (₦)</label>
-                <input type="number" id="prodPrice" class="form-control" placeholder="e.g., 1250000">
-            </div>
-            <!-- FIXED ID HERE: Set strictly to prodOldPrice to match script calls -->
-            <div class="form-group">
-                <label for="prodOldPrice">Slash Price / Old Price (₦ - Optional)</label>
-                <input type="number" id="prodOldPrice" class="form-control" placeholder="e.g., 1400000">
-            </div>
-            <div class="form-group">
-                <label for="prodDelivery">Delivery Fee (₦)</label>
-                <input type="number" id="prodDelivery" class="form-control" placeholder="e.g., 3500" value="0">
-                <p style="font-size: 11px; color: #64748b; margin-top: 2px;">Enter 0 for Free Delivery</p>
-            </div>
-        </div>
-
-        <!-- Product Image Links Box -->
-        <div class="form-group">
-            <label for="prodImageUrl">Product Image Link URLs (Gallery Support)</label>
-            <textarea id="prodImageUrl" class="form-control" placeholder="https://image1.com/pic.jpg&#10;https://image2.com/back.jpg"></textarea>
-            <p class="info-tip"><i class="fas fa-info-circle"></i> Jumia Style: Paste each image link on a **new line** or separate them with commas to show multiple pictures!</p>
-        </div>
-
-        <!-- Product Description & Local AI Generator -->
-        <div class="form-group">
-            <label for="prodDesc">Product Specifications / Description</label>
-            <textarea id="prodDesc" class="form-control" placeholder="Type specific details or use the local AI system generation helper..."></textarea>
-            <div class="ai-btn-wrapper">
-                <button type="button" id="activateAiBtn" class="ai-btn">
-                    <i class="fas fa-robot"></i> Activate AI System
-                </button>
-            </div>
-        </div>
-
-        <!-- Badges Settings -->
-        <div class="checkbox-group">
-            <label class="checkbox-label">
-                <input type="checkbox" id="prodTopSeller">
-                Mark as Top Dynamic Seller
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox" id="prodFeatured">
-                Mark as Featured / Trending
-            </label>
-        </div>
-
-        <!-- Action Submission Trigger -->
-        <button type="button" id="submitProductBtn" class="submit-btn" style="margin-bottom: 10px;">
-            <i class="fas fa-cloud-upload-alt"></i> UPLOAD PRODUCT NOW
+    <!-- TOP HEADER BAR NAVIGATION -->
+    <header>
+        <div class="logo">Holuwafemi <span>Mega Store</span></div>
+        <button type="button" class="cart-icon-btn" id="openCartBtn">
+            <i class="fas fa-shopping-basket" style="color: var(--primary); font-size: 18px;"></i>
+            Cart Box
+            <span class="cart-count-badge" id="globalCartCounter">0</span>
         </button>
+    </header>
 
-        <!-- LIVE MANAGEMENT DASHBOARD ROW -->
-        <div class="inventory-section">
-            <h2><i class="fas fa-tasks" style="color: var(--danger);"></i> Active Inventory List</h2>
-            <p class="subtitle" style="margin-bottom: 15px;">Review running catalog assets or isolate and purge broken image profiles instantly</p>
-            
-            <div class="table-responsive">
-                <table class="inventory-table">
-                    <thead>
-                        <tr>
-                            <th>Preview</th>
-                            <th>Item Details</th>
-                            <th>Category</th>
-                            <th>Pricing Structure</th>
-                            <th>Delivery Cost</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="inventoryGridBox">
-                        <tr>
-                            <td colspan="6" style="text-align: center; padding: 20px; color: #64748b;">Loading running store data...</td>
-                        </tr>
-                    </tbody>
-                </table>
+    <!-- LIVE DYNAMIC CATALOG DISPLAY CONTAINER -->
+    <main class="catalog-container">
+        <h2 class="section-title"><i class="fas fa-bolt" style="color: #eab308;"></i> Live Store Offers</h2>
+        <div class="product-grid" id="productGridDisplayBox">
+            <!-- Products inject dynamically from Firestore -->
+            <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
+                <i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 10px;"></i>
+                <p>Loading live store deals...</p>
             </div>
         </div>
+    </main>
 
+    <!-- SLIDEOUT CART OVERLAY AND CONTAINER PANEL -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3><i class="fas fa-shopping-cart"></i> Ordered Items</h3>
+            <button type="button" class="close-cart-btn" id="closeCartBtn">&times;</button>
+        </div>
+        
+        <!-- Cart Items Scroller -->
+        <div class="cart-items-list" id="cartItemsContainer">
+            <p style="text-align: center; color: var(--text-muted); margin-top: 30px;">Your cart box is empty.</p>
+        </div>
+
+        <!-- Receipt Calculations Summary Block -->
+        <div class="cart-summary">
+            <div class="summary-row">
+                <span>Items Subtotal:</span>
+                <span id="txtSubtotal">₦0</span>
+            </div>
+            <div class="summary-row">
+                <span>Delivery Logistics Fee:</span>
+                <span id="txtDeliveryTotal" style="font-weight: 600;">₦0</span>
+            </div>
+            <div class="summary-row grand-total">
+                <span>Total Amount:</span>
+                <span id="txtGrandTotal">₦0</span>
+            </div>
+
+            <!-- Customer Validation & Paystack Form trigger -->
+            <input type="email" id="buyerEmail" class="checkout-email-input" placeholder="Enter delivery email address" required>
+            <button type="button" class="pay-btn" id="paystackTriggerBtn">
+                <i class="fas fa-shield-alt"></i> PAY WITH PAYSTACK NOW
+            </button>
+        </div>
     </div>
 
-    <!-- ADMIN PANEL CORE SCRIPT LOGIC -->
+    <!-- INJECT PAYSTACK POP INLINE INLINE FRAMEWORK RUNTIME -->
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+
+    <!-- CORE WEB APP SCRIPT HANDLER LOGIC MODULE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
+        // Firebase Configuration Context Credentials
         const firebaseConfig = {
             apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
             authDomain: "holuwafemi-mega-store.firebaseapp.com",
@@ -337,166 +425,231 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- LOCAL BUILT-IN AI GENERATOR TEMPLATES ---
-        const localAiTemplates = {
-            phones: "Original premium smartphone. High-capacity battery life, high-resolution crystal camera display, factory unlocked with complete accessories and valid store warranty included.",
-            electronics: "High-performance premium electronic device. Engineered for power efficiency, durable build quality, and seamless modern integration.",
-            appliances: "Home and office luxury appliance. Energy-saving technology certification, ergonomic layout, built to withstand local voltage fluctuations.",
-            solar: "High-efficiency monocrystalline solar equipment. Perfect for inverter backup setups, deep cycle stability, built for Nigerian weather conditions.",
-            computers: "High-speed professional computing system. Optimized for heavy multitasking, crisp graphics capabilities, processing power, and upgraded storage capacity.",
-            fashion: "Premium high-quality luxury fashion wear. Comfortable fit, exquisite texture details, tailored perfectly for corporate and casual elegant appearances."
-        };
+        // State Trackers
+        let globalCartItemsArray = [];
 
-        document.getElementById("activateAiBtn").addEventListener("click", () => {
-            const productName = document.getElementById("prodName").value.trim();
-            const category = document.getElementById("prodCategory").value;
-            const descField = document.getElementById("prodDesc");
+        // --- DOM ELEMENTS SELECTORS ---
+        const productGridDisplayBox = document.getElementById("productGridDisplayBox");
+        const cartSidebar = document.getElementById("cartSidebar");
+        const cartOverlay = document.getElementById("cartOverlay");
+        const openCartBtn = document.getElementById("openCartBtn");
+        const closeCartBtn = document.getElementById("closeCartBtn");
+        const cartItemsContainer = document.getElementById("cartItemsContainer");
+        
+        const txtSubtotal = document.getElementById("txtSubtotal");
+        const txtDeliveryTotal = document.getElementById("txtDeliveryTotal");
+        const txtGrandTotal = document.getElementById("txtGrandTotal");
+        const globalCartCounter = document.getElementById("globalCartCounter");
+        const buyerEmailField = document.getElementById("buyerEmail");
+        const paystackTriggerBtn = document.getElementById("paystackTriggerBtn");
 
-            if (!productName) {
-                alert("Please type a Product Title first so the system knows what to generate description details for!");
-                return;
-            }
+        // --- SIDEBAR CART ANIMATION TOGGLES ---
+        openCartBtn.addEventListener("click", () => { cartSidebar.classList.add("open"); cartOverlay.classList.add("open"); });
+        closeCartBtn.addEventListener("click", () => { cartSidebar.classList.remove("open"); cartOverlay.classList.remove("open"); });
+        cartOverlay.addEventListener("click", () => { cartSidebar.classList.remove("open"); cartOverlay.classList.remove("open"); });
 
-            const baseTemplate = localAiTemplates[category] || "Premium high-quality guaranteed product specifications details.";
-            descField.value = `Brand New ${productName}. ${baseTemplate}`;
-            descField.style.borderColor = "#10b981";
-            setTimeout(() => descField.style.borderColor = "#e2e8f0", 1500);
-        });
-
-        // --- FIRESTORE PRODUCT UPLOAD AND INVENTORY CREATION ---
-        document.getElementById("submitProductBtn").addEventListener("click", async () => {
-            const name = document.getElementById("prodName").value.trim();
-            const price = Number(document.getElementById("prodPrice").value);
-            
-            // FIXED SCRIPT SELECTION: Matching corrected input IDs
-            const oldPriceValue = document.getElementById("prodOldPrice").value;
-            const oldPrice = oldPriceValue ? Number(oldPriceValue) : null;
-            
-            const deliveryFee = document.getElementById("prodDelivery").value ? Number(document.getElementById("prodDelivery").value) : 0;
-            const category = document.getElementById("prodCategory").value;
-            const description = document.getElementById("prodDesc").value.trim();
-            const imagesRawInput = document.getElementById("prodImageUrl").value.trim();
-            const isTopSeller = document.getElementById("prodTopSeller").checked;
-            const isFeatured = document.getElementById("prodFeatured").checked;
-
-            if (!name || !price || !category || !imagesRawInput) {
-                alert("Please fill in the Product Title, Category, Price, and Image Link address!");
-                return;
-            }
-
-            const imagesArray = imagesRawInput.split(/[\n,]+/).map(url => url.trim()).filter(url => url !== "");
-
-            if (imagesArray.length === 0) {
-                alert("Please provide a valid image URL link layout!");
-                return;
-            }
-
-            try {
-                document.getElementById("submitProductBtn").innerText = "UPLOADING TO STORE...";
-                document.getElementById("submitProductBtn").disabled = true;
-
-                await addDoc(collection(db, "products"), {
-                    name: name,
-                    price: price,
-                    oldPrice: oldPrice,
-                    deliveryFee: deliveryFee,
-                    category: category,
-                    description: description || "Premium high-quality guaranteed product specifications details.",
-                    imageUrl: imagesArray[0],
-                    images: imagesArray,       
-                    topSeller: isTopSeller,
-                    featured: isFeatured,
-                    timestamp: serverTimestamp()
-                });
-
-                alert("Product listed successfully on Holuwafemi Mega Store!");
-                
-                // Reset Forms completely
-                document.getElementById("prodName").value = "";
-                document.getElementById("prodPrice").value = "";
-                document.getElementById("prodOldPrice").value = "";
-                document.getElementById("prodDelivery").value = "0";
-                document.getElementById("prodDesc").value = "";
-                document.getElementById("prodImageUrl").value = "";
-                document.getElementById("prodTopSeller").checked = false;
-                document.getElementById("prodFeatured").checked = false;
-
-            } catch (error) {
-                console.error("Database save failure: ", error);
-                alert("Database save failure. Please verify configuration parameters.");
-            } finally {
-                document.getElementById("submitProductBtn").innerText = "UPLOAD PRODUCT NOW";
-                document.getElementById("submitProductBtn").disabled = false;
-            }
-        });
-
-        // --- REAL-TIME INVENTORY LOADER WITH WORKAROUND FIX FOR JUMIA HOTLINKS ---
-        const inventoryGridBox = document.getElementById("inventoryGridBox");
-        const productsCollection = collection(db, "products");
-        const productsQuery = query(productsCollection, orderBy("timestamp", "desc"));
-
+        // --- FETCH REAL-TIME ASSETS OUT OF FIRESTORE ---
+        const productsQuery = query(collection(db, "products"), orderBy("timestamp", "desc"));
+        
         onSnapshot(productsQuery, (snapshot) => {
-            inventoryGridBox.innerHTML = "";
+            productGridDisplayBox.innerHTML = "";
             
             if (snapshot.empty) {
-                inventoryGridBox.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 20px; color: #64748b;">No items registered in the database portfolio yet.</td></tr>`;
+                productGridDisplayBox.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No products running inside the storefront catalog gallery yet.</div>`;
                 return;
             }
 
-            snapshot.forEach((productDoc) => {
-                const item = productDoc.data();
-                const itemId = productDoc.id;
-                const shippingCost = item.deliveryFee !== undefined ? item.deliveryFee : 0;
+            snapshot.forEach((doc) => {
+                const item = doc.data();
+                const itemId = doc.id;
 
-                const tr = document.createElement("tr");
+                // Safe parsing of metrics fallback defaults
+                const price = Number(item.price) || 0;
+                const oldPrice = item.oldPrice ? Number(item.oldPrice) : null;
+                const shippingCost = item.deliveryFee !== undefined ? Number(item.deliveryFee) : 0;
+
+                // Handle conditional indicator badges
+                let conditionBadgeText = "";
+                if (item.topSeller) conditionBadgeText = "Top Seller";
+                else if (item.featured) conditionBadgeText = "Featured";
+
+                const card = document.createElement("div");
+                card.className = "product-card";
                 
-                // ADDED: referrerpolicy="no-referrer" below allows direct Jumia image URLs to display without crashing or blocking!
-                tr.innerHTML = `
-                    <td>
-                        <img src="${item.imageUrl || 'https://via.placeholder.com/150'}" 
-                             class="inventory-thumb" 
-                             alt="Item view"
+                card.innerHTML = `
+                    ${conditionBadgeText ? `<div class="badge-tag">${conditionBadgeText}</div>` : ''}
+                    <div class="img-wrapper">
+                        <img src="${item.imageUrl || 'https://via.placeholder.com/200'}" 
+                             class="product-img" 
+                             alt="${item.name}"
                              referrerpolicy="no-referrer"
-                             onerror="this.src='https://images.placeholders.dev/?width=150&height=150&text=BROKEN+IMAGE&color=%23ef4444&bgColor=%23fef2f2'; this.style.border='2px solid #ef4444';">
-                    </td>
-                    <td>
-                        <div style="font-weight: 700; color: #1e293b;">${item.name}</div>
-                        <div style="font-size: 11px; color: #64748b; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">ID: ${itemId}</div>
-                    </td>
-                    <td><span style="text-transform: uppercase; font-size: 11px; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-weight:600;">${item.category}</span></td>
-                    <td>
-                        <div style="font-weight:700; color:var(--primary)">₦${Number(item.price).toLocaleString()}</div>
-                        ${item.oldPrice ? `<div style="text-decoration:line-through; font-size:12px; color:#94a3b8">₦${Number(item.oldPrice).toLocaleString()}</div>` : ''}
-                    </td>
-                    <td>
-                        <div style="font-weight: 600; color: ${shippingCost === 0 ? '#10b981' : '#475569'};">
-                            ${shippingCost === 0 ? 'Free Delivery' : `₦${Number(shippingCost).toLocaleString()}`}
+                             onerror="this.src='https://images.placeholders.dev/?width=200&height=200&text=IMAGE+ERROR&color=%23ef4444&bgColor=%23fef2f2';">
+                    </div>
+                    <div class="product-info">
+                        <div class="product-name">${item.name}</div>
+                        <div class="pricing-box">
+                            <span class="live-price">₦${price.toLocaleString()}</span>
+                            ${oldPrice ? `<span class="slash-price">₦${oldPrice.toLocaleString()}</span>` : ''}
                         </div>
-                    </td>
-                    <td>
-                        <button type="button" class="btn-delete-item" data-id="${itemId}">
-                            <i class="fas fa-trash-alt"></i> Delete
+                        <div class="delivery-tag ${shippingCost === 0 ? 'free' : ''}">
+                            <i class="fas ${shippingCost === 0 ? 'fa-gift' : 'fa-truck'}"></i>
+                            ${shippingCost === 0 ? 'Free Delivery' : `Delivery: ₦${shippingCost.toLocaleString()}`}
+                        </div>
+                        <button type="button" class="add-to-cart-btn" data-id="${itemId}">
+                            <i class="fas fa-cart-plus"></i> Add To Cart
                         </button>
-                    </td>
+                    </div>
                 `;
 
-                tr.querySelector(".btn-delete-item").addEventListener("click", async (e) => {
-                    const idToPurge = e.currentTarget.getAttribute("data-id");
-                    if (confirm(`Are you completely sure you want to permanently remove "${item.name}" from your store database?`)) {
-                        try {
-                            await deleteDoc(doc(db, "products", idToPurge));
-                            alert("Product purged successfully from live store environment!");
-                        } catch (err) {
-                            console.error("Purge failure execution context: ", err);
-                            alert("Failed to delete item.");
-                        }
-                    }
+                // Handle dynamic addition array operations trigger
+                card.querySelector(".add-to-cart-btn").addEventListener("click", () => {
+                    addItemToCartBox(itemId, item.name, price, shippingCost, item.imageUrl);
                 });
 
-                inventoryGridBox.appendChild(tr);
+                productGridDisplayBox.appendChild(card);
             });
-        }, (err) => {
-            console.error("Inventory tracking failed: ", err);
+        });
+
+        // --- ARRAY STORAGE CART ACTIONS ---
+        function addItemToCartBox(id, name, price, deliveryFee, imageUrl) {
+            // Check if item already exists to avoid stacking lines up
+            const targetIndex = globalCartItemsArray.findIndex(cartElement => cartElement.id === id);
+            
+            if (targetIndex > -1) {
+                globalCartItemsArray[targetIndex].quantity += 1;
+            } else {
+                globalCartItemsArray.push({
+                    id: id,
+                    name: name,
+                    price: Number(price),
+                    deliveryFee: Number(deliveryFee),
+                    imageUrl: imageUrl,
+                    quantity: 1
+                });
+            }
+            
+            renderCartSummaryView();
+            // Automatically snap open the shopping cart so they see the item was added
+            cartSidebar.classList.add("open");
+            cartOverlay.classList.add("open");
+        }
+
+        function removeElementFromCartBox(id) {
+            globalCartItemsArray = globalCartItemsArray.filter(element => element.id !== id);
+            renderCartSummaryView();
+        }
+
+        // --- MATH RE-CALCULATION & ELEMENT DISPLAY RENDERER ---
+        function renderCartSummaryView() {
+            cartItemsContainer.innerHTML = "";
+            
+            if (globalCartItemsArray.length === 0) {
+                cartItemsContainer.innerHTML = `<p style="text-align: center; color: var(--text-muted); margin-top: 30px;">Your cart box is empty.</p>`;
+                txtSubtotal.innerText = "₦0";
+                txtDeliveryTotal.innerText = "₦0";
+                txtGrandTotal.innerText = "₦0";
+                globalCartCounter.innerText = "0";
+                return;
+            }
+
+            let calculatedSubtotal = 0;
+            let calculatedDeliveryTotal = 0;
+            let runningItemsCount = 0;
+
+            globalCartItemsArray.forEach(item => {
+                const itemTotalCost = item.price * item.quantity;
+                calculatedSubtotal += itemTotalCost;
+                
+                // Add the specific item's delivery fee * once per item type * in the basket
+                calculatedDeliveryTotal += item.deliveryFee;
+                runningItemsCount += item.quantity;
+
+                const row = document.createElement("div");
+                row.className = "cart-item";
+                row.innerHTML = `
+                    <img src="${item.imageUrl}" class="cart-item-img" referrerpolicy="no-referrer" onerror="this.src='https://via.placeholder.com/50';">
+                    <div class="cart-item-details">
+                        <div class="cart-item-name">${item.name} (x${item.quantity})</div>
+                        <div class="cart-item-price">₦${itemTotalCost.toLocaleString()}</div>
+                        <div class="cart-item-shipping" style="color: ${item.deliveryFee === 0 ? 'var(--green)' : 'var(--text-muted)'}">
+                            ${item.deliveryFee === 0 ? 'Free Shipping' : `Shipping: ₦${item.deliveryFee.toLocaleString()}`}
+                        </div>
+                    </div>
+                    <button type="button" class="remove-item-btn" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>
+                `;
+
+                row.querySelector(".remove-item-btn").addEventListener("click", (e) => {
+                    removeElementFromCartBox(item.id);
+                });
+
+                cartItemsContainer.appendChild(row);
+            });
+
+            // FIXED TOTAL MATH LOGIC (Combines items cost + delivery fee accurately)
+            const finalGrandTotalAmount = calculatedSubtotal + calculatedDeliveryTotal;
+
+            // Render strings back into the interface view layers
+            globalCartCounter.innerText = runningItemsCount;
+            txtSubtotal.innerText = `₦${calculatedSubtotal.toLocaleString()}`;
+            txtDeliveryTotal.innerText = calculatedDeliveryTotal === 0 ? "Free" : `₦${calculatedDeliveryTotal.toLocaleString()}`;
+            txtGrandTotal.innerText = `₦${finalGrandTotalAmount.toLocaleString()}`;
+            
+            // Return numeric value out for programmatic bindings
+            return finalGrandTotalAmount;
+        }
+
+        // --- PAYSTACK CHECKOUT GATEWAY TRIGGER INTEGRATION ---
+        paystackTriggerBtn.addEventListener("click", () => {
+            if (globalCartItemsArray.length === 0) {
+                alert("Please add items to your cart box before checking out!");
+                return;
+            }
+
+            const email = buyerEmailField.value.trim();
+            if (!email || !email.includes("@")) {
+                alert("Please provide a valid delivery email address to process payment transaction securely!");
+                return;
+            }
+
+            // Lock final amount calculation score down
+            const totalPayableValueNGN = renderCartSummaryView();
+
+            paystackTriggerBtn.innerText = "OPENING SECURE CHECKOUT...";
+            paystackTriggerBtn.disabled = true;
+
+            // Fire up Paystack handler object configuration
+            const handler = PaystackPop.setup({
+                key: 'pk_live_your_actual_public_key_here', // Replace with your live or public test Paystack key
+                email: email,
+                amount: totalPayableValueNGN * 100, // Multiplied by 100 to convert NGN to Kobo values correctly
+                currency: 'NGN',
+                metadata: {
+                    custom_fields: [
+                        {
+                            display_name: "Cart Inventory Items",
+                            variable_name: "cart_items",
+                            value: globalCartItemsArray.map(i => `${i.name} (x${i.quantity})`).join(", ")
+                        }
+                    ]
+                },
+                callback: function(response) {
+                    alert(`Payment verified successfully! Reference ID: ${response.reference}. Thank you for choosing Holuwafemi Mega Store.`);
+                    
+                    // Clear state upon complete verification success loop
+                    globalCartItemsArray = [];
+                    renderCartSummaryView();
+                    buyerEmailField.value = "";
+                    cartSidebar.classList.remove("open");
+                    cartOverlay.classList.remove("open");
+                },
+                onClose: function() {
+                    alert("Payment operation transaction suspended by user.");
+                    paystackTriggerBtn.innerText = "PAY WITH PAYSTACK NOW";
+                    paystackTriggerBtn.disabled = false;
+                }
+            });
+
+            handler.openIframe();
         });
     </script>
 </body>
