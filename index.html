@@ -1,35 +1,36 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Holuwafemi Mega Store | Online Retail Storefront</title>
-    <!-- FontAwesome for standard UI Icons -->
+    <title>Holuwafemi Mega Store - Premium Marketplace</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://js.paystack.co/v1/inline.js"></script>
     <style>
         :root {
-            --primary: #f97316; /* Jumia Style Vibrant Orange */
-            --primary-dark: #ea580c;
-            --bg: #f8fafc;
-            --text: #1e293b;
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --bg-light: #f8fafc;
+            --text-main: #0f172a;
             --text-muted: #64748b;
-            --border: #e2e8f0;
-            --green: #10b981;
+            --white: #ffffff;
+            --border-color: #e2e8f0;
         }
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
         body {
-            background-color: var(--bg);
-            color: var(--text);
+            background-color: var(--bg-light);
+            color: var(--text-main);
         }
-
-        /* Top Navigation Header */
         header {
-            background: #ffffff;
+            background-color: var(--white);
+            border-bottom: 1px solid var(--border-color);
             padding: 15px 5%;
             display: flex;
             justify-content: space-between;
@@ -37,381 +38,428 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        .logo {
+        .logo-area h1 {
             font-size: 22px;
-            font-weight: 800;
-            color: var(--text);
-            text-transform: uppercase;
-        }
-        .logo span {
             color: var(--primary);
+            font-weight: 800;
+            letter-spacing: -0.5px;
         }
-        .cart-icon-btn {
-            background: #f1f5f9;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 50px;
-            font-weight: 700;
-            cursor: pointer;
-            position: relative;
+        .header-actions {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 15px;
         }
-        .cart-count-badge {
-            background: var(--primary);
+        .user-badge-btn {
+            background: #f1f5f9;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: none;
+        }
+        .nav-icon-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--text-main);
+            cursor: pointer;
+            position: relative;
+        }
+        .cart-counter-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
             color: white;
             font-size: 11px;
-            padding: 2px 6px;
-            border-radius: 50px;
+            font-weight: bold;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+        .btn-logout, .btn-edit-profile {
+            font-size: 13px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: none;
+        }
+        .btn-edit-profile { color: var(--primary); font-weight: 600; }
+        .btn-logout { color: #ef4444; font-weight: 600; }
 
-        /* Product Catalog Matrix Grid */
-        .catalog-container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
+        .promo-banner-billboard {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: var(--white);
+            padding: 40px 5%;
+            text-align: center;
+        }
+        .promo-banner-billboard h2 { font-size: 28px; margin-bottom: 10px; }
+
+        .section-container {
+            padding: 30px 5%;
         }
         .section-title {
-            margin-bottom: 25px;
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 700;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-            gap: 20px;
+        .horizontal-scroll-row {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+        .horizontal-scroll-row::-webkit-scrollbar { height: 6px; }
+        .horizontal-scroll-row::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+        .tabs-container {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            margin-bottom: 25px;
+            padding-bottom: 5px;
+        }
+        .cat-btn {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .cat-btn.active, .cat-btn:hover {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
         }
 
-        /* Product Card Styles */
-        .product-card {
-            background: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        .products-grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+        }
+        .grid-product-card {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            cursor: pointer;
+            position: relative;
             transition: transform 0.2s, box-shadow 0.2s;
             display: flex;
             flex-direction: column;
-            border: 1px solid var(--border);
-            position: relative;
         }
-        .product-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        .grid-product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
         }
-        .badge-tag {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: var(--primary);
-            color: white;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 4px 8px;
-            border-radius: 4px;
-            text-transform: uppercase;
-            z-index: 2;
-        }
-        .img-wrapper {
+        .grid-product-card img {
             width: 100%;
-            height: 200px;
-            background: #f8fafc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-        }
-        .product-img {
-            max-width: 100%;
-            max-height: 100%;
+            height: 130px;
             object-fit: contain;
+            margin-bottom: 10px;
+            border-radius: 6px;
         }
-        .product-info {
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-        .product-name {
-            font-size: 15px;
+        .product-title {
+            font-size: 13px;
             font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--text);
-            line-height: 1.4;
-            height: 42px;
-            overflow: hidden;
+            color: #334155;
+            margin-bottom: 6px;
+            line-height: 1.3;
+            height: 34px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
+            overflow: hidden;
         }
-        .pricing-box {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 6px;
-        }
-        .live-price {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--text);
-        }
-        .slash-price {
-            font-size: 13px;
-            text-decoration: line-through;
-            color: var(--text-muted);
-        }
-        .delivery-tag {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        .delivery-tag.free {
-            color: var(--green);
-        }
-        .add-to-cart-btn {
-            width: 100%;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px;
-            font-weight: 700;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: auto;
-            transition: background 0.2s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-        }
-        .add-to-cart-btn:hover {
-            background: var(--primary-dark);
-        }
-
-        /* Slide-out Sidebar Shopping Cart Layout */
-        .cart-sidebar {
-            position: fixed;
-            top: 0;
-            right: -400px;
-            width: 400px;
-            height: 100%;
-            background: #ffffff;
-            box-shadow: -5px 0 25px rgba(0,0,0,0.15);
-            z-index: 200;
-            transition: right 0.3s ease-in-out;
-            display: flex;
-            flex-direction: column;
-        }
-        .cart-sidebar.open {
-            right: 0;
-        }
-        .cart-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .close-cart-btn {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: var(--text-muted);
-        }
-        .cart-items-list {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 20px;
-        }
-        .cart-item {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px dashed var(--border);
-            align-items: center;
-        }
-        .cart-item-img {
-            width: 50px;
-            height: 50px;
-            object-fit: contain;
-            border: 1px solid var(--border);
-            border-radius: 4px;
-        }
-        .cart-item-details {
-            flex-grow: 1;
-        }
-        .cart-item-name {
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-        .cart-item-price {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--primary);
-        }
-        .cart-item-shipping {
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-        .remove-item-btn {
-            background: none;
-            border: none;
-            color: #ef4444;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        /* Cart Receipt Summary Blocks */
-        .cart-summary {
-            padding: 20px;
-            background: #f8fafc;
-            border-top: 1px solid var(--border);
-        }
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-        .summary-row.grand-total {
-            border-top: 1px solid var(--border);
-            padding-top: 10px;
-            margin-top: 10px;
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--text);
-        }
-        .checkout-email-input {
-            width: 100%;
-            padding: 10px;
-            margin: 15px 0 10px 0;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            outline: none;
-            font-size: 14px;
-        }
-        .pay-btn {
-            width: 100%;
-            background: var(--green);
-            color: white;
-            border: none;
-            padding: 14px;
+        .product-price {
             font-size: 15px;
             font-weight: 700;
-            border-radius: 6px;
+            color: var(--text-main);
+        }
+        .discount-badge {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: #fef2f2;
+            color: #ef4444;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* Modal Overlay Structural Sheets */
+        .modal-overlay-sheet {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+            overflow-y: auto;
+        }
+        .modal-body-wrapper {
+            background: var(--white);
+            width: 90%;
+            max-width: 500px;
+            margin: 50px auto;
+            border-radius: 16px;
+            padding: 25px;
+            position: relative;
+        }
+        .modal-close-trigger {
+            position: absolute;
+            top: 15px; right: 15px;
+            background: #f1f5f9; border: none;
+            width: 30px; height: 30px; border-radius: 50%;
+            cursor: pointer; font-weight: bold;
+        }
+        .modal-main-img {
+            width: 100%;
+            height: 220px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: #f8fafc;
+        }
+        .price-row-wrapper {
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .modal-slashed-old-price {
+            text-decoration: line-through;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        .modal-action-buttons-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-action-primary {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 8px;
+            text-decoration: none;
         }
-        .pay-btn:hover {
-            background: #059669;
+        .btn-whatsapp { background-color: #25d366; color: white; }
+        .btn-buy { background-color: var(--primary); color: white; }
+        .btn-cart { background-color: #f1f5f9; color: var(--text-main); }
+
+        /* Cart Rows styling */
+        .cart-item-row {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
         }
-        
-        /* Dark overlay background for open cart */
-        .cart-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.4);
-            z-index: 150;
-            display: none;
+        .cart-item-row img { width: 60px; height: 60px; object-fit: contain; border-radius: 6px; }
+        .cart-item-details { flex: 1; }
+        .cart-item-title { font-size: 13px; font-weight: 600; }
+        .cart-item-price { font-size: 14px; font-weight: 700; color: var(--primary); margin: 4px 0; }
+        .cart-item-shipping { font-size: 11px; color: var(--text-muted); }
+        .btn-remove { background: none; border: none; color: #ef4444; font-size: 12px; cursor: pointer; font-weight: 500; }
+
+        footer {
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 40px 5%;
+            text-align: center;
+            border-top: 1px solid #1e293b;
+            font-size: 14px;
         }
-        .cart-overlay.open {
-            display: block;
-        }
-        
-        @media (max-width: 450px) {
-            .cart-sidebar { width: 100%; right: -100%; }
-        }
+        .footer-links { display: flex; justify-content: center; gap: 20px; margin-top: 15px; }
+        .footer-links a { color: #cbd5e1; text-decoration: none; cursor: pointer; }
     </style>
 </head>
 <body>
 
-    <!-- TOP HEADER BAR NAVIGATION -->
+    <!-- Header Navigation Bar -->
     <header>
-        <div class="logo">Holuwafemi <span>Mega Store</span></div>
-        <button type="button" class="cart-icon-btn" id="openCartBtn">
-            <i class="fas fa-shopping-basket" style="color: var(--primary); font-size: 18px;"></i>
-            Cart Box
-            <span class="cart-count-badge" id="globalCartCounter">0</span>
-        </button>
+        <div class="logo-area">
+            <h1>Holuwafemi Mega Store</h1>
+        </div>
+        <div class="header-actions">
+            <span id="headerUserBadge" class="user-badge-btn">👤 Profile</span>
+            <button id="headerEditProfileBtn" class="btn-edit-profile" title="Edit Profile"><i class="fas fa-user-edit"></i></button>
+            <button id="headerLogoutBtn" class="btn-logout" title="Logout Switch"><i class="fas fa-sign-out-alt"></i></button>
+            <button id="openCartIconBtn" class="nav-icon-btn">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cartCounter" class="cart-counter-badge">0</span>
+            </button>
+        </div>
     </header>
 
-    <!-- LIVE DYNAMIC CATALOG DISPLAY CONTAINER -->
-    <main class="catalog-container">
-        <h2 class="section-title"><i class="fas fa-bolt" style="color: #eab308;"></i> Live Store Offers</h2>
-        <div class="product-grid" id="productGridDisplayBox">
-            <!-- Products inject dynamically from Firestore -->
-            <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">
-                <i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 10px;"></i>
-                <p>Loading live store deals...</p>
-            </div>
-        </div>
-    </main>
+    <!-- Promotional Billboard Banner -->
+    <div class="promo-banner-billboard">
+        <h2>Premium Quality, Unbeatable Deals</h2>
+        <p>Explore original phones, solar gear, appliances, and luxury electronics with secure instant checkout payment processing pipelines.</p>
+    </div>
 
-    <!-- SLIDEOUT CART OVERLAY AND CONTAINER PANEL -->
-    <div class="cart-overlay" id="cartOverlay"></div>
-    <div class="cart-sidebar" id="cartSidebar">
-        <div class="cart-header">
-            <h3><i class="fas fa-shopping-cart"></i> Ordered Items</h3>
-            <button type="button" class="close-cart-btn" id="closeCartBtn">&times;</button>
-        </div>
-        
-        <!-- Cart Items Scroller -->
-        <div class="cart-items-list" id="cartItemsContainer">
-            <p style="text-align: center; color: var(--text-muted); margin-top: 30px;">Your cart box is empty.</p>
-        </div>
-
-        <!-- Receipt Calculations Summary Block -->
-        <div class="cart-summary">
-            <div class="summary-row">
-                <span>Items Subtotal:</span>
-                <span id="txtSubtotal">₦0</span>
-            </div>
-            <div class="summary-row">
-                <span>Delivery Logistics Fee:</span>
-                <span id="txtDeliveryTotal" style="font-weight: 600;">₦0</span>
-            </div>
-            <div class="summary-row grand-total">
-                <span>Total Amount:</span>
-                <span id="txtGrandTotal">₦0</span>
-            </div>
-
-            <!-- Customer Validation & Paystack Form trigger -->
-            <input type="email" id="buyerEmail" class="checkout-email-input" placeholder="Enter delivery email address" required>
-            <button type="button" class="pay-btn" id="paystackTriggerBtn">
-                <i class="fas fa-shield-alt"></i> PAY WITH PAYSTACK NOW
-            </button>
+    <!-- Top Selling Highlights Section -->
+    <div class="section-container" id="topSellersSection">
+        <div class="section-title"><i class="fas fa-fire" style="color:#f97316;"></i> Trending Highlights</div>
+        <div class="horizontal-scroll-row" id="topSellersScrollBox">
+            <!-- Populated dynamically via Firebase -->
         </div>
     </div>
 
-    <!-- INJECT PAYSTACK POP INLINE INLINE FRAMEWORK RUNTIME -->
-    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <!-- Main Dynamic Shopping Catalog -->
+    <div class="section-container">
+        <div class="section-title"><i class="fas fa-store" style="color:var(--primary)"></i> Explore Catalog Inventory</div>
+        
+        <!-- Category Switching Scroll Tabs -->
+        <div class="tabs-container" id="categoryTabsBar">
+            <button class="cat-btn active" data-cat="all">All Items</button>
+            <button class="cat-btn" data-cat="electronics">Electronics</button>
+            <button class="cat-btn" data-cat="solar">Solar</button>
+            <button class="cat-btn" data-cat="appliances">Appliances</button>
+            <button class="cat-btn" data-cat="computers">Computers</button>
+            <button class="cat-btn" data-cat="phones">Phones</button>
+            <button class="cat-btn" data-cat="fashion">Fashion</button>
+        </div>
 
-    <!-- CORE WEB APP SCRIPT HANDLER LOGIC MODULE -->
+        <!-- Master Product Showcase Grid -->
+        <div class="products-grid-layout" id="mainCatalogGrid">
+            <!-- Rendered in real-time -->
+        </div>
+    </div>
+
+    <!-- REGISTER AND GATEWAY SECURITY OVERLAY MODAL -->
+    <div class="modal-overlay-sheet" id="gateModal" style="display: block;">
+        <div class="modal-body-wrapper" style="margin-top: 80px;">
+            <button type="button" class="modal-close-trigger" id="closeGateBtn" style="display:none;">×</button>
+            <h3 id="gateTitle" style="font-size:20px; margin-bottom:6px;">Customer Registration</h3>
+            <p id="gateSubtitle" style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Please enter your delivery details to open your account instantly.</p>
+            
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <input type="text" id="gateName" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text;" placeholder="Full Name">
+                <input type="email" id="gateEmail" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text;" placeholder="Email Address">
+                <input type="tel" id="gatePhone" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text;" placeholder="Phone Number (e.g., 08012345678)">
+                <select id="gateState" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; height:42px; padding:0 15px;"></select>
+                <input type="text" id="gateAddress" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text;" placeholder="Street Address, Town/City Details">
+            </div>
+            
+            <p id="gateNote" style="font-size: 11px; color: var(--text-muted); margin-top:12px; line-height:1.4;">
+                <i class="fas fa-shield-alt"></i> Secure registration framework verified. These delivery profiles link directly into active automated processing tracking receipts.
+            </p>
+            <button type="button" id="gateSubmitBtn" class="btn-action-primary btn-buy" style="margin-top:20px;">CREATE ACCOUNT & ENTER STORE</button>
+        </div>
+    </div>
+
+    <!-- MULTI-IMAGE PRODUCT SPECIFICATIONS MODAL SHEET -->
+    <div class="modal-overlay-sheet" id="productModal">
+        <div class="modal-body-wrapper">
+            <button class="modal-close-trigger" id="closeDetailsBtn">×</button>
+            <img src="" id="mImg" class="modal-main-img" alt="Main View">
+            
+            <!-- Hidden inputs to feed automated order metadata systems -->
+            <input type="hidden" id="custName"><input type="hidden" id="custEmail">
+            <input type="hidden" id="custPhone"><input type="hidden" id="custAddress">
+
+            <h3 id="mName" style="margin-top:15px; font-size:18px;">Product Title Here</h3>
+            <div class="price-row-wrapper">
+                <span id="mPrice" class="product-price" style="font-size:22px; color:var(--primary);">₦0</span>
+                <span id="mOld" class="modal-slashed-old-price">₦0</span>
+            </div>
+            
+            <!-- Added product-level delivery indicator inside popup modal -->
+            <div id="mDeliveryInfo" style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px;">
+                <i class="fas fa-truck"></i> Delivery Logistics: ₦0
+            </div>
+            
+            <p id="mDesc" style="font-size:14px; color:#475569; line-height:1.5; margin-bottom:20px; max-height:120px; overflow-y:auto;"></p>
+            
+            <div class="modal-action-buttons-group">
+                <a href="#" target="_blank" id="whatsappProductChatBtn" class="btn-action-primary btn-whatsapp"><i class="fab fa-whatsapp"></i> Chat Availability on WhatsApp</a>
+                <button id="directBuyBtn" class="btn-action-primary btn-buy"><i class="fas fa-bolt"></i> INSTANT SECURE BUY NOW</button>
+                <button id="addToCartBtn" class="btn-action-primary btn-cart"><i class="fas fa-cart-plus"></i> ADD ITEM TO CART</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SHOPPING CART PORTFOLIO DRAWER MODAL SHEET -->
+    <div class="modal-overlay-sheet" id="cartModal">
+        <div class="modal-body-wrapper">
+            <button class="modal-close-trigger" id="closeCartBtn">×</button>
+            <h3 style="font-size:18px; margin-bottom:15px;"><i class="fas fa-shopping-basket"></i> Your Shopping Basket</h3>
+            <div id="cartItemsListContainer" style="max-height:240px; overflow-y:auto; margin-bottom:15px;"></div>
+            
+            <!-- FIXED RECEIPT CARD: Contains items subtotal, delivery logistics fee, and combined grand total -->
+            <div id="cartTotalSummaryCard" style="background:#f8fafc; padding:15px; border-radius:8px; display:none;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:14px; color:var(--text-muted);">
+                    <span>Items Subtotal:</span><span id="cartSubtotalAmount">₦0</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px; color:var(--text-muted);">
+                    <span>Delivery Logistics Fee:</span><span id="cartDeliveryAmount" style="font-weight:600;">₦0</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-weight:700; font-size:16px; border-top:1px dashed #cbd5e1; padding-top:8px;">
+                    <span>Grand Total Amount:</span><span id="cartTotalAmount" style="color:var(--primary);">₦0</span>
+                </div>
+            </div>
+            <div class="modal-action-buttons-group" id="cartActionBar" style="display:none; margin-top:15px;">
+                <button id="cartCheckoutBtn" class="btn-action-primary btn-buy"><i class="fas fa-credit-card"></i> SECURE CHECKOUT PORTFOLIO</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIVE SECURE CHECKOUT PORTAL TRANSACTION WINDOW -->
+    <div class="modal-overlay-sheet" id="checkoutModal">
+        <div class="modal-body-wrapper" style="text-align:center; padding:30px;">
+            <button class="modal-close-trigger" id="closeCheckoutBtn">×</button>
+            <i class="fas fa-lock" style="font-size:36px; color:var(--secondary); margin-bottom:12px;"></i>
+            <h3>Secure Gateway</h3>
+            <p style="font-size:14px; color:var(--text-muted); margin:8px 0 20px 0;">Your order tracking sequence parameters are locked. Process instant settlement using secure channels.</p>
+            
+            <div style="background:#f1f5f9; padding:20px; border-radius:10px; margin-bottom:25px;">
+                <span style="font-size:13px; text-transform:uppercase; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Total Payable Net (Includes Delivery)</span>
+                <span id="checkoutPayableAmount" style="font-size:28px; font-weight:800; color:var(--text-main);">₦0</span>
+            </div>
+            <button id="paystackTriggerBtn" class="btn-action-primary btn-buy" style="background:#34d399;"><i class="fas fa-shield-alt"></i> AUTHORIZE PAYMENT VIA PAYSTACK</button>
+        </div>
+    </div>
+
+    <!-- TERMS AND CORPORATE COMPLIANCE SHEETS -->
+    <div class="modal-overlay-sheet" id="privacyModal"><div class="modal-body-wrapper"><button class="modal-close-trigger close-policy-btn">×</button><h3>Privacy Policy Statement</h3><p style="font-size:14px; margin-top:10px; line-height:1.5;">Holuwafemi Mega Store secures customer delivery records strictly for automated payload tracking execution routines. Profile data configurations stay safely localized on sandbox caching contexts.</p></div></div>
+    <div class="modal-overlay-sheet" id="termsModal"><div class="modal-body-wrapper"><button class="modal-close-trigger close-policy-btn">×</button><h3>Terms & Service Guidelines</h3><p style="font-size:14px; margin-top:10px; line-height:1.5;">All electronic merchandise listings, monocrystalline solar configurations, and dynamic appliance distribution portfolios carry structural merchant warranties verified at settlement checkpoints.</p></div></div>
+
+    <!-- Footer Information block -->
+    <footer>
+        <p>&copy; 2026 Holuwafemi Mega Store. All Rights Reserved.</p>
+        <p style="font-size:11px; margin-top:4px; color:#64748b;">Premium Electronics, Appliances & High-Efficiency Solar Ecosystem Installations.</p>
+        <div class="footer-links">
+            <a data-policy="privacyModal">Privacy Shield</a>
+            <a data-policy="termsModal">Terms Matrix</a>
+        </div>
+    </footer>
+
+    <!-- MAIN APP SCRIPT LOGIC (Firebase configuration with Multi-Image Support) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-        // Firebase Configuration Context Credentials
         const firebaseConfig = {
             apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
             authDomain: "holuwafemi-mega-store.firebaseapp.com",
@@ -424,232 +472,479 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-
-        // State Trackers
-        let globalCartItemsArray = [];
-
-        // --- DOM ELEMENTS SELECTORS ---
-        const productGridDisplayBox = document.getElementById("productGridDisplayBox");
-        const cartSidebar = document.getElementById("cartSidebar");
-        const cartOverlay = document.getElementById("cartOverlay");
-        const openCartBtn = document.getElementById("openCartBtn");
-        const closeCartBtn = document.getElementById("closeCartBtn");
-        const cartItemsContainer = document.getElementById("cartItemsContainer");
         
-        const txtSubtotal = document.getElementById("txtSubtotal");
-        const txtDeliveryTotal = document.getElementById("txtDeliveryTotal");
-        const txtGrandTotal = document.getElementById("txtGrandTotal");
-        const globalCartCounter = document.getElementById("globalCartCounter");
-        const buyerEmailField = document.getElementById("buyerEmail");
-        const paystackTriggerBtn = document.getElementById("paystackTriggerBtn");
+        let allProducts = [];
+        let selectedProduct = null; 
+        let checkoutMode = ""; 
+        let checkoutAmount = 0;
+        let checkoutItemsDescription = "";
+        let cart = JSON.parse(localStorage.getItem("megaStoreCart")) || [];
 
-        // --- SIDEBAR CART ANIMATION TOGGLES ---
-        openCartBtn.addEventListener("click", () => { cartSidebar.classList.add("open"); cartOverlay.classList.add("open"); });
-        closeCartBtn.addEventListener("click", () => { cartSidebar.classList.remove("open"); cartOverlay.classList.remove("open"); });
-        cartOverlay.addEventListener("click", () => { cartSidebar.classList.remove("open"); cartOverlay.classList.remove("open"); });
+        const nigeriaStates = [
+            "Select State", "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue", "Borno", 
+            "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti", "Enugu", "FCT - Abuja", "Gombe", "Imo", 
+            "Jigawa", "Kaduna", "Kano", "Katsina", "Kebbi", "Kogi", "Kwara", "Lagos", "Nasarawa", 
+            "Niger", "Ogun", "Ondo", "Osun", "Oyo", "Plateau", "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara"
+        ];
 
-        // --- FETCH REAL-TIME ASSETS OUT OF FIRESTORE ---
-        const productsQuery = query(collection(db, "products"), orderBy("timestamp", "desc"));
-        
-        onSnapshot(productsQuery, (snapshot) => {
-            productGridDisplayBox.innerHTML = "";
+        const stateSelector = document.getElementById("gateState");
+        if (stateSelector) {
+            stateSelector.innerHTML = nigeriaStates.map(state => `<option value="${state === 'Select State' ? '' : state}">${state}</option>`).join("");
+        }
+
+        function safeFormatPrice(val) {
+            if (val === undefined || val === null || val === "") return "0";
+            const num = Number(val);
+            return isNaN(num) ? "0" : num.toLocaleString();
+        }
+
+        function openProfileForEditing() {
+            document.getElementById("gateName").value = localStorage.getItem("storeCustomerName") || "";
+            document.getElementById("gateEmail").value = localStorage.getItem("storeCustomerEmail") || "";
+            document.getElementById("gatePhone").value = localStorage.getItem("storeCustomerPhone") || "";
+            document.getElementById("gateState").value = localStorage.getItem("storeCustomerState") || "";
+            document.getElementById("gateAddress").value = localStorage.getItem("storeCustomerAddress") || "";
             
-            if (snapshot.empty) {
-                productGridDisplayBox.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No products running inside the storefront catalog gallery yet.</div>`;
+            document.getElementById("gateName").setAttribute("readonly", "true");
+            document.getElementById("gateEmail").setAttribute("readonly", "true");
+            document.getElementById("gateName").style.background = "#eeeeee";
+            document.getElementById("gateEmail").style.background = "#eeeeee";
+
+            document.getElementById("gateTitle").innerText = "Update Profile";
+            document.getElementById("gateSubtitle").innerText = "You can update your phone number and delivery address below.";
+            document.getElementById("gateNote").style.display = "none"; 
+            document.getElementById("gateSubmitBtn").innerText = "SAVE CHANGES";
+            
+            document.getElementById("closeGateBtn").style.display = "flex";
+            document.getElementById("gateModal").style.setProperty("display", "block", "important");
+            document.body.style.overflow = "hidden";
+        }
+
+        function checkVisitorSession() {
+            const savedName = localStorage.getItem("storeCustomerName");
+            const savedEmail = localStorage.getItem("storeCustomerEmail");
+            const savedPhone = localStorage.getItem("storeCustomerPhone");
+            const savedState = localStorage.getItem("storeCustomerState");
+            const savedAddress = localStorage.getItem("storeCustomerAddress");
+            
+            const gate = document.getElementById("gateModal");
+            const badge = document.getElementById("headerUserBadge");
+            const logoutBtn = document.getElementById("headerLogoutBtn");
+            const editProfileBtn = document.getElementById("headerEditProfileBtn");
+            const closeGateBtn = document.getElementById("closeGateBtn");
+
+            if (savedName && savedEmail) {
+                if (gate) gate.style.setProperty("display", "none", "important");
+                document.body.style.overflow = "auto";
+                if (badge) {
+                    badge.innerText = "👤 " + savedName.split(" ")[0];
+                    badge.style.display = "block";
+                }
+                if (logoutBtn) logoutBtn.style.display = "block";
+                if (editProfileBtn) editProfileBtn.style.display = "block";
+                if (closeGateBtn) closeGateBtn.style.display = "none";
+                
+                document.getElementById("custName").value = savedName;
+                document.getElementById("custEmail").value = savedEmail;
+                document.getElementById("custPhone").value = savedPhone || "";
+                document.getElementById("custAddress").value = `${savedAddress || ""}, ${savedState || ""}`;
+            } else {
+                if (gate) gate.style.setProperty("display", "block", "important");
+                document.body.style.overflow = "hidden";
+                if (badge) badge.style.display = "none";
+                if (logoutBtn) logoutBtn.style.display = "none";
+                if (editProfileBtn) editProfileBtn.style.display = "none";
+                if (closeGateBtn) closeGateBtn.style.display = "none";
+                
+                document.getElementById("gateName").removeAttribute("readonly");
+                document.getElementById("gateEmail").removeAttribute("readonly");
+                document.getElementById("gateName").style.background = "#ffffff";
+                document.getElementById("gateEmail").style.background = "#ffffff";
+
+                document.getElementById("gateTitle").innerText = "Customer Registration";
+                document.getElementById("gateSubtitle").innerText = "Please enter your delivery details to open your account instantly.";
+                document.getElementById("gateNote").style.display = "block";
+                document.getElementById("gateSubmitBtn").innerText = "CREATE ACCOUNT & ENTER STORE";
+            }
+        }
+
+        document.getElementById("headerUserBadge")?.addEventListener("click", openProfileForEditing);
+        document.getElementById("headerEditProfileBtn")?.addEventListener("click", openProfileForEditing);
+
+        document.getElementById("closeGateBtn")?.addEventListener("click", () => {
+            document.getElementById("gateModal").style.display = "none";
+            document.body.style.overflow = "auto";
+        });
+
+        document.getElementById("gateSubmitBtn")?.addEventListener("click", () => {
+            const name = document.getElementById("gateName").value.trim();
+            const email = document.getElementById("gateEmail").value.trim();
+            const phone = document.getElementById("gatePhone").value.trim();
+            const state = document.getElementById("gateState").value;
+            const address = document.getElementById("gateAddress").value.trim();
+
+            if (!name || !email || !phone || !state || !address) {
+                alert("Please fill in all delivery details perfectly.");
                 return;
             }
 
+            localStorage.setItem("storeCustomerName", name);
+            localStorage.setItem("storeCustomerEmail", email);
+            localStorage.setItem("storeCustomerPhone", phone);
+            localStorage.setItem("storeCustomerState", state);
+            localStorage.setItem("storeCustomerAddress", address);
+
+            alert("Profile successfully configured!");
+            checkVisitorSession();
+        });
+
+        document.getElementById("headerLogoutBtn")?.addEventListener("click", () => {
+            if (confirm("Are you sure you want to change accounts?")) {
+                localStorage.removeItem("storeCustomerName");
+                localStorage.removeItem("storeCustomerEmail");
+                localStorage.removeItem("storeCustomerPhone");
+                localStorage.removeItem("storeCustomerState");
+                localStorage.removeItem("storeCustomerAddress");
+                checkVisitorSession();
+            }
+        });
+
+        // FETCH PRODUCTS IN REAL-TIME
+        const productsCollection = collection(db, "products");
+        const productsQuery = query(productsCollection, orderBy("timestamp", "desc"));
+
+        onSnapshot(productsQuery, (snapshot) => {
+            allProducts = [];
             snapshot.forEach((doc) => {
-                const item = doc.data();
-                const itemId = doc.id;
+                allProducts.push({ id: doc.id, ...doc.data() });
+            });
+            renderStoreProducts("all");
+            renderTopSellers();
+            updateCartCounterIcon();
+        }, (error) => {
+            console.error("Firestore read failure: ", error);
+        });
 
-                // Safe parsing of metrics fallback defaults
-                const price = Number(item.price) || 0;
-                const oldPrice = item.oldPrice ? Number(item.oldPrice) : null;
-                const shippingCost = item.deliveryFee !== undefined ? Number(item.deliveryFee) : 0;
+        function renderStoreProducts(categoryFilter) {
+            const gridContainer = document.getElementById("mainCatalogGrid");
+            if (!gridContainer) return;
+            gridContainer.innerHTML = "";
 
-                // Handle conditional indicator badges
-                let conditionBadgeText = "";
-                if (item.topSeller) conditionBadgeText = "Top Seller";
-                else if (item.featured) conditionBadgeText = "Featured";
+            const filtered = categoryFilter === "all" 
+                ? allProducts 
+                : allProducts.filter(p => p.category === categoryFilter);
+
+            if (filtered.length === 0) {
+                gridContainer.innerHTML = `<p style="grid-column: span 4; text-align:center; padding: 40px; color: var(--text-muted);">No products available in this section yet.</p>`;
+                return;
+            }
+
+            filtered.forEach(product => {
+                const discountAmount = product.oldPrice ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) : 0;
+                const discountTag = discountAmount > 0 ? `<span class="discount-badge">-${discountAmount}%</span>` : "";
 
                 const card = document.createElement("div");
-                card.className = "product-card";
-                
+                card.className = "grid-product-card";
                 card.innerHTML = `
-                    ${conditionBadgeText ? `<div class="badge-tag">${conditionBadgeText}</div>` : ''}
-                    <div class="img-wrapper">
-                        <img src="${item.imageUrl || 'https://via.placeholder.com/200'}" 
-                             class="product-img" 
-                             alt="${item.name}"
-                             referrerpolicy="no-referrer"
-                             onerror="this.src='https://images.placeholders.dev/?width=200&height=200&text=IMAGE+ERROR&color=%23ef4444&bgColor=%23fef2f2';">
-                    </div>
-                    <div class="product-info">
-                        <div class="product-name">${item.name}</div>
-                        <div class="pricing-box">
-                            <span class="live-price">₦${price.toLocaleString()}</span>
-                            ${oldPrice ? `<span class="slash-price">₦${oldPrice.toLocaleString()}</span>` : ''}
-                        </div>
-                        <div class="delivery-tag ${shippingCost === 0 ? 'free' : ''}">
-                            <i class="fas ${shippingCost === 0 ? 'fa-gift' : 'fa-truck'}"></i>
-                            ${shippingCost === 0 ? 'Free Delivery' : `Delivery: ₦${shippingCost.toLocaleString()}`}
-                        </div>
-                        <button type="button" class="add-to-cart-btn" data-id="${itemId}">
-                            <i class="fas fa-cart-plus"></i> Add To Cart
-                        </button>
-                    </div>
+                    ${discountTag}
+                    <img src="${product.imageUrl || 'https://via.placeholder.com/150'}" alt="${product.name}">
+                    <div class="product-title">${product.name}</div>
+                    <div class="product-price">₦${safeFormatPrice(product.price)}</div>
                 `;
+                card.addEventListener("click", () => openProductDetailsModal(product));
+                gridContainer.appendChild(card);
+            });
+        }
 
-                // Handle dynamic addition array operations trigger
-                card.querySelector(".add-to-cart-btn").addEventListener("click", () => {
-                    addItemToCartBox(itemId, item.name, price, shippingCost, item.imageUrl);
-                });
+        function renderTopSellers() {
+            const scrollBox = document.getElementById("topSellersScrollBox");
+            if (!scrollBox) return;
+            scrollBox.innerHTML = "";
 
-                productGridDisplayBox.appendChild(card);
+            const topProducts = allProducts.filter(p => p.topSeller === true || p.featured === true).slice(0, 6);
+            const displayList = topProducts.length > 0 ? topProducts : allProducts.slice(0, 6);
+
+            if (displayList.length === 0) {
+                document.getElementById("topSellersSection").style.display = "none";
+                return;
+            } else {
+                document.getElementById("topSellersSection").style.display = "block";
+            }
+
+            displayList.forEach(product => {
+                const card = document.createElement("div");
+                card.className = "grid-product-card";
+                card.style.minWidth = "150px";
+                card.style.maxWidth = "150px";
+                card.innerHTML = `
+                    <img src="${product.imageUrl || 'https://via.placeholder.com/150'}" style="height:100px;" alt="${product.name}">
+                    <div class="product-title" style="height:32px; font-size:12px;">${product.name}</div>
+                    <div class="product-price" style="font-size:13px;">₦${safeFormatPrice(product.price)}</div>
+                `;
+                card.addEventListener("click", () => openProductDetailsModal(product));
+                scrollBox.appendChild(card);
+            });
+        }
+
+        // CATEGORY BAR ACTIONS RUNNER
+        document.querySelectorAll("#categoryTabsBar .cat-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                document.querySelectorAll("#categoryTabsBar .cat-btn").forEach(b => b.classList.remove("active"));
+                e.target.classList.add("active");
+                renderStoreProducts(e.target.getAttribute("data-cat"));
             });
         });
 
-        // --- ARRAY STORAGE CART ACTIONS ---
-        function addItemToCartBox(id, name, price, deliveryFee, imageUrl) {
-            // Check if item already exists to avoid stacking lines up
-            const targetIndex = globalCartItemsArray.findIndex(cartElement => cartElement.id === id);
+        // POPUP PRODUCT REVEAL DIALOG
+        function openProductDetailsModal(product) {
+            selectedProduct = product;
+            document.getElementById("mImg").src = product.imageUrl || 'https://via.placeholder.com/220';
+            document.getElementById("mName").innerText = product.name;
+            document.getElementById("mPrice").innerText = "₦" + safeFormatPrice(product.price);
             
-            if (targetIndex > -1) {
-                globalCartItemsArray[targetIndex].quantity += 1;
+            if (product.oldPrice) {
+                document.getElementById("mOld").innerText = "₦" + safeFormatPrice(product.oldPrice);
+                document.getElementById("mOld").style.display = "inline";
             } else {
-                globalCartItemsArray.push({
-                    id: id,
-                    name: name,
-                    price: Number(price),
-                    deliveryFee: Number(deliveryFee),
-                    imageUrl: imageUrl,
+                document.getElementById("mOld").style.display = "none";
+            }
+
+            // Display individual item delivery fee metric cleanly inside product details modal
+            const deliveryCost = product.deliveryFee !== undefined ? Number(product.deliveryFee) : 0;
+            document.getElementById("mDeliveryInfo").innerHTML = `<i class="fas fa-truck"></i> Delivery Logistics: ${deliveryCost === 0 ? '<span style="color:#10b981;">Free Delivery</span>' : '₦' + deliveryCost.toLocaleString()}`;
+
+            document.getElementById("mDesc").innerText = product.description || "No specific detailed overview description provided for this item inventory catalog index.";
+            
+            // Setup custom localized WhatsApp chat anchors
+            const whatsappMsg = encodeURIComponent(`Hello Holuwafemi Mega Store, I am interested in ordering: ${product.name} listed at ₦${Number(product.price).toLocaleString()}. Is it currently available?`);
+            document.getElementById("whatsappProductChatBtn").href = `https://wa.me/2348149463943?text=${whatsappMsg}`;
+
+            document.getElementById("productModal").style.display = "block";
+            document.body.style.overflow = "hidden";
+        }
+
+        // CLOSE UTILITIES LOGIC HANDLERS
+        document.getElementById("closeDetailsBtn").addEventListener("click", () => { document.getElementById("productModal").style.display = "none"; document.body.style.overflow = "auto"; });
+        document.getElementById("closeCartBtn").addEventListener("click", () => { document.getElementById("cartModal").style.display = "none"; document.body.style.overflow = "auto"; });
+        document.getElementById("closeCheckoutBtn").addEventListener("click", () => { document.getElementById("checkoutModal").style.display = "none"; document.body.style.overflow = "auto"; });
+
+        // CORE SHOPPING CART ARRAY MANAGEMENT ENGINE
+        document.getElementById("addToCartBtn").addEventListener("click", () => {
+            if (!selectedProduct) return;
+            
+            const existingIndex = cart.findIndex(item => item.id === selectedProduct.id);
+            if (existingIndex > -1) {
+                cart[existingIndex].quantity += 1;
+            } else {
+                cart.push({
+                    id: selectedProduct.id,
+                    name: selectedProduct.name,
+                    price: Number(selectedProduct.price) || 0,
+                    deliveryFee: selectedProduct.deliveryFee !== undefined ? Number(selectedProduct.deliveryFee) : 0,
+                    imageUrl: selectedProduct.imageUrl,
                     quantity: 1
                 });
             }
             
-            renderCartSummaryView();
-            // Automatically snap open the shopping cart so they see the item was added
-            cartSidebar.classList.add("open");
-            cartOverlay.classList.add("open");
+            saveCartStateToLocalStorage();
+            alert(`${selectedProduct.name} successfully inserted into shopping basket!`);
+            document.getElementById("productModal").style.display = "none";
+            document.body.style.overflow = "auto";
+        });
+
+        function saveCartStateToLocalStorage() {
+            localStorage.setItem("megaStoreCart", JSON.stringify(cart));
+            updateCartCounterIcon();
         }
 
-        function removeElementFromCartBox(id) {
-            globalCartItemsArray = globalCartItemsArray.filter(element => element.id !== id);
-            renderCartSummaryView();
+        function updateCartCounterIcon() {
+            const counter = document.getElementById("cartCounter");
+            if (!counter) return;
+            const count = cart.reduce((total, current) => total + current.quantity, 0);
+            counter.innerText = count;
         }
 
-        // --- MATH RE-CALCULATION & ELEMENT DISPLAY RENDERER ---
-        function renderCartSummaryView() {
-            cartItemsContainer.innerHTML = "";
-            
-            if (globalCartItemsArray.length === 0) {
-                cartItemsContainer.innerHTML = `<p style="text-align: center; color: var(--text-muted); margin-top: 30px;">Your cart box is empty.</p>`;
-                txtSubtotal.innerText = "₦0";
-                txtDeliveryTotal.innerText = "₦0";
-                txtGrandTotal.innerText = "₦0";
-                globalCartCounter.innerText = "0";
-                return;
-            }
+        // RENDER INTERACTIVE CART DRAWER VIEW PANEL
+        document.getElementById("openCartIconBtn").addEventListener("click", () => {
+            const container = document.getElementById("cartItemsListContainer");
+            container.innerHTML = "";
 
-            let calculatedSubtotal = 0;
-            let calculatedDeliveryTotal = 0;
-            let runningItemsCount = 0;
+            if (cart.length === 0) {
+                container.innerHTML = `<p style="text-align:center; color:var(--text-muted); padding:20px;">Your basket workspace parameters are empty.</p>`;
+                document.getElementById("cartTotalSummaryCard").style.display = "none";
+                document.getElementById("cartActionBar").style.display = "none";
+            } else {
+                let subtotal = 0;
+                let totalDelivery = 0;
 
-            globalCartItemsArray.forEach(item => {
-                const itemTotalCost = item.price * item.quantity;
-                calculatedSubtotal += itemTotalCost;
-                
-                // Add the specific item's delivery fee * once per item type * in the basket
-                calculatedDeliveryTotal += item.deliveryFee;
-                runningItemsCount += item.quantity;
+                cart.forEach(item => {
+                    const linePriceSum = item.price * item.quantity;
+                    subtotal += linePriceSum;
+                    
+                    // Add delivery fee for each item item class present inside the portfolio context
+                    const lineDeliverySum = item.deliveryFee * item.quantity;
+                    totalDelivery += lineDeliverySum;
 
-                const row = document.createElement("div");
-                row.className = "cart-item";
-                row.innerHTML = `
-                    <img src="${item.imageUrl}" class="cart-item-img" referrerpolicy="no-referrer" onerror="this.src='https://via.placeholder.com/50';">
-                    <div class="cart-item-details">
-                        <div class="cart-item-name">${item.name} (x${item.quantity})</div>
-                        <div class="cart-item-price">₦${itemTotalCost.toLocaleString()}</div>
-                        <div class="cart-item-shipping" style="color: ${item.deliveryFee === 0 ? 'var(--green)' : 'var(--text-muted)'}">
-                            ${item.deliveryFee === 0 ? 'Free Shipping' : `Shipping: ₦${item.deliveryFee.toLocaleString()}`}
+                    const row = document.createElement("div");
+                    row.className = "cart-item-row";
+                    row.innerHTML = `
+                        <img src="${item.imageUrl || 'https://via.placeholder.com/60'}" alt="${item.name}">
+                        <div class="cart-item-details">
+                            <div class="cart-item-title">${item.name} (x${item.quantity})</div>
+                            <div class="cart-item-price">₦${linePriceSum.toLocaleString()}</div>
+                            <div class="cart-item-shipping">${item.deliveryFee === 0 ? '<span style="color:#10b981;">Free Delivery</span>' : 'Delivery: ₦' + lineDeliverySum.toLocaleString()}</div>
+                            <button type="button" class="btn-remove" data-id="${item.id}"><i class="fas fa-trash-alt"></i> Remove</button>
                         </div>
-                    </div>
-                    <button type="button" class="remove-item-btn" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>
-                `;
+                    `;
+                    
+                    row.querySelector(".btn-remove").addEventListener("click", () => {
+                        cart = cart.filter(cartEl => cartEl.id !== item.id);
+                        saveCartStateToLocalStorage();
+                        document.getElementById("openCartIconBtn").click(); // Trigger layout hot reload
+                    });
 
-                row.querySelector(".remove-item-btn").addEventListener("click", (e) => {
-                    removeElementFromCartBox(item.id);
+                    container.appendChild(row);
                 });
 
-                cartItemsContainer.appendChild(row);
-            });
+                // COMBINED CALCULATION SCORE
+                const finalGrandTotal = subtotal + totalDelivery;
 
-            // FIXED TOTAL MATH LOGIC (Combines items cost + delivery fee accurately)
-            const finalGrandTotalAmount = calculatedSubtotal + calculatedDeliveryTotal;
+                document.getElementById("cartSubtotalAmount").innerText = "₦" + subtotal.toLocaleString();
+                document.getElementById("cartDeliveryAmount").innerText = totalDelivery === 0 ? "Free" : "₦" + totalDelivery.toLocaleString();
+                document.getElementById("cartTotalAmount").innerText = "₦" + finalGrandTotal.toLocaleString();
+                
+                document.getElementById("cartTotalSummaryCard").style.display = "block";
+                document.getElementById("cartActionBar").style.display = "block";
+            }
 
-            // Render strings back into the interface view layers
-            globalCartCounter.innerText = runningItemsCount;
-            txtSubtotal.innerText = `₦${calculatedSubtotal.toLocaleString()}`;
-            txtDeliveryTotal.innerText = calculatedDeliveryTotal === 0 ? "Free" : `₦${calculatedDeliveryTotal.toLocaleString()}`;
-            txtGrandTotal.innerText = `₦${finalGrandTotalAmount.toLocaleString()}`;
+            document.getElementById("cartModal").style.display = "block";
+            document.body.style.overflow = "hidden";
+        });
+
+        // MODAL CHECKOUT ROUTER ENTRY
+        document.getElementById("cartCheckoutBtn").addEventListener("click", () => {
+            checkoutMode = "cart";
             
-            // Return numeric value out for programmatic bindings
-            return finalGrandTotalAmount;
-        }
+            let subtotal = 0;
+            let delivery = 0;
+            cart.forEach(i => {
+                subtotal += (i.price * i.quantity);
+                delivery += (i.deliveryFee * i.quantity);
+            });
+            
+            checkoutAmount = subtotal + delivery; // Binds items cost + logistic variables accurately
+            checkoutItemsDescription = cart.map(i => `${i.name} (x${i.quantity})`).join(", ");
 
-        // --- PAYSTACK CHECKOUT GATEWAY TRIGGER INTEGRATION ---
-        paystackTriggerBtn.addEventListener("click", () => {
-            if (globalCartItemsArray.length === 0) {
-                alert("Please add items to your cart box before checking out!");
+            document.getElementById("checkoutPayableAmount").innerText = "₦" + checkoutAmount.toLocaleString();
+            document.getElementById("cartModal").style.display = "none";
+            document.getElementById("checkoutModal").style.display = "block";
+        });
+
+        document.getElementById("directBuyBtn").addEventListener("click", () => {
+            if (!selectedProduct) return;
+            checkoutMode = "direct";
+            
+            const directPrice = Number(selectedProduct.price) || 0;
+            const directDelivery = selectedProduct.deliveryFee !== undefined ? Number(selectedProduct.deliveryFee) : 0;
+            
+            checkoutAmount = directPrice + directDelivery; // Single execution transaction math calculations
+            checkoutItemsDescription = `${selectedProduct.name} (Direct Buy)`;
+
+            document.getElementById("checkoutPayableAmount").innerText = "₦" + checkoutAmount.toLocaleString();
+            document.getElementById("productModal").style.display = "none";
+            document.getElementById("checkoutModal").style.display = "block";
+        });
+
+        // CORE SYSTEM PAYSTACK POP PAYMENT ROUTINE TRIGGERS
+        document.getElementById("paystackTriggerBtn").addEventListener("click", () => {
+            const email = localStorage.getItem("storeCustomerEmail");
+            const name = localStorage.getItem("storeCustomerName");
+            const phone = localStorage.getItem("storeCustomerPhone");
+            const fullAddress = document.getElementById("custAddress").value;
+
+            if (!email || !name) {
+                alert("Session context profiles missing. Please sign up to checkout securely.");
+                checkVisitorSession();
                 return;
             }
 
-            const email = buyerEmailField.value.trim();
-            if (!email || !email.includes("@")) {
-                alert("Please provide a valid delivery email address to process payment transaction securely!");
-                return;
-            }
+            const checkoutBtn = document.getElementById("paystackTriggerBtn");
+            checkoutBtn.innerText = "PROCESSING PAYMENT HUB...";
+            checkoutBtn.disabled = true;
 
-            // Lock final amount calculation score down
-            const totalPayableValueNGN = renderCartSummaryView();
-
-            paystackTriggerBtn.innerText = "OPENING SECURE CHECKOUT...";
-            paystackTriggerBtn.disabled = true;
-
-            // Fire up Paystack handler object configuration
             const handler = PaystackPop.setup({
-                key: 'pk_live_your_actual_public_key_here', // Replace with your live or public test Paystack key
+                key: 'pk_live_your_actual_public_key_here', // Insert active Merchant Key Token safely inside live deployment
                 email: email,
-                amount: totalPayableValueNGN * 100, // Multiplied by 100 to convert NGN to Kobo values correctly
-                currency: 'NGN',
+                amount: Math.round(checkoutAmount * 100), // Converted explicitly to raw Kobo subunits integer
+                currency: "NGN",
                 metadata: {
                     custom_fields: [
-                        {
-                            display_name: "Cart Inventory Items",
-                            variable_name: "cart_items",
-                            value: globalCartItemsArray.map(i => `${i.name} (x${i.quantity})`).join(", ")
-                        }
+                        { display_name: "Customer Name", variable_name: "customer_name", value: name },
+                        { display_name: "Phone Number", variable_name: "customer_phone", value: phone || "N/A" },
+                        { display_name: "Delivery Address", variable_name: "delivery_address", value: fullAddress },
+                        { display_name: "Ordered Content", variable_name: "ordered_content", value: checkoutItemsDescription }
                     ]
                 },
-                callback: function(response) {
-                    alert(`Payment verified successfully! Reference ID: ${response.reference}. Thank you for choosing Holuwafemi Mega Store.`);
+                callback: async function(response) {
+                    alert(`Payment authenticated! Reference ID: ${response.reference}. Initializing receipt processing pipeline...`);
                     
-                    // Clear state upon complete verification success loop
-                    globalCartItemsArray = [];
-                    renderCartSummaryView();
-                    buyerEmailField.value = "";
-                    cartSidebar.classList.remove("open");
-                    cartOverlay.classList.remove("open");
+                    try {
+                        // Log payment safely directly inside Firestore orders table database layout context
+                        await addDoc(collection(db, "orders"), {
+                            reference: response.reference,
+                            customerName: name,
+                            customerEmail: email,
+                            customerPhone: phone || "",
+                            deliveryAddress: fullAddress,
+                            items: checkoutItemsDescription,
+                            amountPaid: checkoutAmount,
+                            status: "Paid/Pending",
+                            timestamp: serverTimestamp()
+                        });
+                        
+                        if (checkoutMode === "cart") {
+                            cart = [];
+                            saveCartStateToLocalStorage();
+                        }
+                        
+                        document.getElementById("checkoutModal").style.display = "none";
+                        document.body.style.overflow = "auto";
+                    } catch (err) {
+                        console.error("Failed to commit orders collection payload: ", err);
+                    } finally {
+                        checkoutBtn.innerText = "AUTHORIZE PAYMENT VIA PAYSTACK";
+                        checkoutBtn.disabled = false;
+                    }
                 },
                 onClose: function() {
-                    alert("Payment operation transaction suspended by user.");
-                    paystackTriggerBtn.innerText = "PAY WITH PAYSTACK NOW";
-                    paystackTriggerBtn.disabled = false;
+                    alert("Transaction payment sequence canceled by user gateway framework request.");
+                    checkoutBtn.innerText = "AUTHORIZE PAYMENT VIA PAYSTACK";
+                    checkoutBtn.disabled = false;
                 }
             });
 
             handler.openIframe();
+        });
+
+        // STATICS EXTRA LAYOUT BINDINGS
+        document.querySelectorAll("[data-policy]").forEach(el => {
+            el.addEventListener("click", (e) => {
+                const modalId = e.target.getAttribute("data-policy");
+                document.getElementById(modalId).style.display = "block";
+                document.body.style.overflow = "hidden";
+            });
+        });
+
+        document.querySelectorAll(".close-policy-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.target.closest(".modal-overlay-sheet").style.display = "none";
+                document.body.style.overflow = "auto";
+            });
+        });
+
+        // INIT LOAD VERIFICATION LOOP
+        window.addEventListener("DOMContentLoaded", () => {
+            checkVisitorSession();
         });
     </script>
 </body>
