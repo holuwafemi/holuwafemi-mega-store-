@@ -321,6 +321,50 @@
         .cart-item-price { font-size: 14px; font-weight: 700; color: var(--secondary); margin: 4px 0; }
         .btn-remove { background: none; border: none; color: #ef4444; font-size: 12px; cursor: pointer; font-weight: 500; }
 
+        /* --- INTEGRATED REFUND LAYOUT --- */
+        .refund-card-section {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid #ef4444;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+            display: none;
+            animation: formSlideUp 0.4s ease-out;
+        }
+        @keyframes formSlideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .refund-card-section h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #ef4444;
+        }
+        .refund-input-field {
+            width: 100%;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            padding: 11px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text-main);
+            outline: none;
+        }
+        .refund-input-field:focus {
+            border-color: #ef4444;
+        }
+        .refund-grid-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        @media (max-width: 600px) {
+            .refund-grid-row { grid-template-columns: 1fr; }
+        }
+
         footer {
             background: #0f172a;
             color: #94a3b8;
@@ -374,6 +418,49 @@
         </div>
 
         <div class="products-grid-layout" id="mainCatalogGrid"></div>
+    </div>
+
+    <!-- INTEGRATED REFUND LAYOUT COMPONENT -->
+    <div class="section-container" style="padding-top: 0; padding-bottom: 40px;">
+        <div class="refund-card-section" id="storefrontRefundBlock">
+            <h3>Submit Return & Refund Request</h3>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px;">Have an issue with a completed checkout transaction? Provide your verification references below.</p>
+            
+            <form id="storefrontRefundForm">
+                <div class="refund-grid-row">
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:700; margin-bottom:5px; color:var(--text-main);">TRANSACTION PAYSTACK REFERENCE</label>
+                        <input type="text" id="refundRefInput" class="refund-input-field" required placeholder="e.g. T749201739">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:700; margin-bottom:5px; color:var(--text-main);">YOUR ACCOUNT EMAIL</label>
+                        <input type="email" id="refundEmailInput" class="refund-input-field" required placeholder="example@mail.com">
+                    </div>
+                </div>
+
+                <div class="refund-grid-row">
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:700; margin-bottom:5px; color:var(--text-main);">REASON FOR RETURN</label>
+                        <select id="refundReasonInput" class="refund-input-field" required style="height:43px;">
+                            <option value="">-- Choose Option --</option>
+                            <option value="defective">Item is defective/damaged</option>
+                            <option value="wrong_item">Received wrong item profile</option>
+                            <option value="not_delivered">Item not delivered</option>
+                            <option value="accidental">Accidental charge balance</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:700; margin-bottom:5px; color:var(--text-main);">ADDITIONAL DETAILS</label>
+                        <input type="text" id="refundDetailsInput" class="refund-input-field" placeholder="Provide extra description notes...">
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:10px;">
+                    <button type="button" class="cat-btn" onclick="document.getElementById('storefrontRefundBlock').style.display='none'" style="padding:8px 16px;">Dismiss</button>
+                    <button type="submit" class="btn-action-primary btn-buy" style="width:auto; padding:8px 20px; font-size:14px; border-radius:30px; background:#ef4444;">SUBMIT REFUND APPLICATION</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- REGISTRATION SHEET -->
@@ -448,6 +535,12 @@
                     <span>Total Amount:</span><span id="cartTotalAmount" style="color:var(--secondary);">₦0</span>
                 </div>
             </div>
+            
+            <!-- Quick Link trigger integrated inside cart layout -->
+            <div style="text-align:center; margin-top:10px;">
+                <a href="javascript:void(0)" onclick="triggerRefundPanelInline('')" style="color: #ef4444; font-size: 13px; text-decoration:none; font-weight:600;">Need a refund for a previous order?</a>
+            </div>
+
             <div class="modal-action-buttons-group" id="cartActionBar" style="display:none; margin-top:15px;">
                 <button id="cartCheckoutBtn" class="btn-action-primary btn-buy-primary"><i class="fas fa-credit-card"></i> SECURE CHECKOUT PORTFOLIO</button>
             </div>
@@ -484,6 +577,8 @@
                 <li><b>Non-Refundable Fees:</b> Standard delivery tracking fees charged at shipment checkpoints are non-refundable.</li>
                 <li><b>Processing Timeline:</b> Once returns pass structural damage validation checks, authorized payouts are processed securely back to your original source channel within 3–5 working days.</li>
             </ul>
+            <!-- In-modal form trigger point -->
+            <button type="button" class="btn-action-primary" onclick="triggerRefundPanelInline('')" style="background:#f1f5f9; color:#ef4444; font-size:13px; margin-top:10px;">Open Refund Submission Form</button>
         </div>
     </div>
 
@@ -531,6 +626,22 @@
         if (stateSelector) {
             stateSelector.innerHTML = nigeriaStates.map(state => `<option value="${state === 'Select State' ? '' : state}">${state}</option>`).join("");
         }
+
+        // Expose global window function for refund toggles
+        window.triggerRefundPanelInline = function(presetRef) {
+            // Close active overlays safely to shift focus
+            document.getElementById("cartModal").style.display = "none";
+            document.getElementById("refundModal").style.display = "none";
+            document.body.style.overflow = "auto";
+
+            const refundPanel = document.getElementById("storefrontRefundBlock");
+            refundPanel.style.display = "block";
+            
+            document.getElementById("refundRefInput").value = presetRef || "";
+            document.getElementById("refundEmailInput").value = localStorage.getItem("storeCustomerEmail") || "";
+            
+            refundPanel.scrollIntoView({ behavior: "smooth" });
+        };
 
         function safeFormatPrice(val) {
             if (val === undefined || val === null || val === "") return "0";
@@ -931,6 +1042,34 @@
                 }
             });
             handler.openIframe();
+        });
+
+        // Handle Form Submissions for Manual Refund Processing
+        document.getElementById("storefrontRefundForm")?.addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const reference = document.getElementById("refundRefInput").value.trim();
+            const email = document.getElementById("refundEmailInput").value.trim();
+            const reason = document.getElementById("refundReasonInput").value;
+            const details = document.getElementById("refundDetailsInput").value.trim();
+
+            try {
+                // Creates a record inside a dedicated 'refund_requests' firestore collection
+                await addDoc(collection(db, "refund_requests"), {
+                    paystackReference: reference,
+                    customerEmail: email,
+                    returnReason: reason,
+                    additionalComments: details,
+                    status: "Pending Review",
+                    timestamp: serverTimestamp()
+                });
+                
+                alert("Your refund application for Reference " + reference + " has been logged successfully. The merchant team will review it within 24-48 hours.");
+                this.reset();
+                document.getElementById("storefrontRefundBlock").style.display = "none";
+            } catch (err) {
+                console.error("Error creating document: ", err);
+                alert("Something went wrong saving request logs. Please contact support via WhatsApp.");
+            }
         });
 
         document.querySelectorAll(".footer-links a").forEach(link => {
