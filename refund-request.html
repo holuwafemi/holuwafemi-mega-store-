@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request a Refund - Mega Store</title>
+    <style>
+        :root {
+            --primary-color: #3f51b5; /* Adjust to match your store theme */
+            --bg-color: #f9f9f9;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .refund-container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: var(--text-color);
+            font-size: 24px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        p {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 15px;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="refund-container">
+    <h2>Request a Refund</h2>
+    <p>Please fill out the form below. Once submitted, we will verify the transaction and process eligible refunds within 24-48 hours.</p>
+    
+    <form id="refundForm">
+        <div class="form-group">
+            <label for="email">Email Address used for purchase</label>
+            <input type="email" id="email" required placeholder="example@mail.com">
+        </div>
+
+        <div class="form-group">
+            <label for="reference">Transaction Reference / Order ID</label>
+            <input type="text" id="reference" required placeholder="e.g., T749201739 or Order #102">
+        </div>
+
+        <div class="form-group">
+            <label for="reason">Reason for Refund</label>
+            <select id="reason" required>
+                <option value="">-- Select a reason --</option>
+                <option value="wrong_item">Received wrong item</option>
+                <option value="defective">Item is defective/damaged</option>
+                <option value="not_delivered">Item not delivered</option>
+                <option value="accidental_charge">Accidental/Double payment</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="details">Additional Details</label>
+            <textarea id="details" placeholder="Tell us more about the issue..."></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">Submit Request</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('refundForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Grab the form data
+        const refundData = {
+            email: document.getElementById('email').value,
+            reference: document.getElementById('reference').value,
+            reason: document.getElementById('reason').value,
+            details: document.getElementById('details').value,
+            timestamp: new Date().toISOString()
+        };
+
+        console.log("Submitting request...", refundData);
+        
+        // TODO: Send this data to your database (Firebase/Node.js)
+        
+        alert("Your refund request has been received! We will look into it.");
+        this.reset();
+    });
+</script>
+
+</body>
+</html>
