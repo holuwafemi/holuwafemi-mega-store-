@@ -76,7 +76,13 @@
         }
         textarea.form-control {
             resize: vertical;
-            min-height: 100px;
+            min-height: 80px;
+        }
+        .info-tip {
+            font-size: 12px;
+            color: #2563eb;
+            margin-top: 4px;
+            font-weight: 500;
         }
         .ai-btn-wrapper {
             display: flex;
@@ -150,7 +156,7 @@
 
     <div class="admin-container">
         <h2><i class="fas fa-box-open" style="color: var(--primary);"></i> Stock Inventory Control</h2>
-        <p class="subtitle">Upload and configure products directly to Holuwafemi Mega Store</p>
+        <p class="subtitle">Upload items with single or multiple gallery images directly to your store database</p>
 
         <!-- Product Title -->
         <div class="form-group">
@@ -184,10 +190,11 @@
             </div>
         </div>
 
-        <!-- Product Image Link -->
+        <!-- Product Image Links (UPDATED FOR MULTIPLE IMAGES LIKE JUMIA) -->
         <div class="form-group">
-            <label for="prodImageUrl">Product Image Link URL</label>
-            <input type="url" id="prodImageUrl" class="form-control" placeholder="https://images.unsplash.com/... or your hosting link">
+            <label for="prodImageUrl">Product Image Link URLs (Gallery Support)</label>
+            <textarea id="prodImageUrl" class="form-control" placeholder="https://image1.com/pic.jpg&#10;https://image2.com/back.jpg&#10;https://image3.com/side.jpg"></textarea>
+            <p class="info-tip"><i class="fas fa-info-circle"></i> Jumia Style: Paste each image link on a **new line** or separate them with commas to show multiple pictures!</p>
         </div>
 
         <!-- Product Description & AI Generator -->
@@ -224,7 +231,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-        // Firebase Configuration (Matching Holuwafemi Mega Store Credentials)
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
             authDomain: "holuwafemi-mega-store.firebaseapp.com",
@@ -238,7 +245,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- LOCAL BUILT-IN AUTO RECOGNITION GENERATOR (Replaces external API Keys) ---
+        // --- LOCAL BUILT-IN AUTO RECOGNITION GENERATOR ---
         const localAiTemplates = {
             phones: "Original premium smartphone. High-capacity battery life, high-resolution crystal camera display, factory unlocked with complete accessories and valid store warranty included.",
             electronics: "High-performance premium electronic device. Engineered for power efficiency, durable build quality, and seamless modern integration.",
@@ -248,7 +255,6 @@
             fashion: "Premium high-quality luxury fashion wear. Comfortable fit, exquisite texture details, tailored perfectly for corporate and casual elegant appearances."
         };
 
-        // Activated locally without popping up errors asking for keys
         document.getElementById("activateAiBtn").addEventListener("click", () => {
             const productName = document.getElementById("prodName").value.trim();
             const category = document.getElementById("prodCategory").value;
@@ -259,11 +265,9 @@
                 return;
             }
 
-            // Generate localized marketing text content seamlessly
             const baseTemplate = localAiTemplates[category] || "Premium high-quality guaranteed product specifications details.";
             descField.value = `Brand New ${productName}. ${baseTemplate}`;
             
-            // Subtle visual success confirmation cue
             descField.style.borderColor = "#10b981";
             setTimeout(() => descField.style.borderColor = "#e2e8f0", 1500);
         });
@@ -276,34 +280,39 @@
             const oldPrice = document.getElementById("prodOldPrice").value ? Number(document.getElementById("prodOldPrice").value) : null;
             const category = document.getElementById("prodCategory").value;
             const description = document.getElementById("prodDesc").value.trim();
-            const imageUrl = document.getElementById("prodImageUrl").value.trim();
+            const imagesRawInput = document.getElementById("prodImageUrl").value.trim();
             const isTopSeller = document.getElementById("prodTopSeller").checked;
             const isFeatured = document.getElementById("prodFeatured").checked;
 
-            if (!name || !price || !category || !imageUrl) {
+            if (!name || !price || !category || !imagesRawInput) {
                 alert("Please fill in the Product Title, Category, Price, and Image Link address!");
                 return;
             }
+
+            // Clean up image input line breaks or commas into a structural array clean list
+            const imagesArray = imagesRawInput.split(/[\n,]+/).map(url => url.trim()).filter(url => url !== "");
 
             try {
                 document.getElementById("submitProductBtn").innerText = "UPLOADING TO STORE...";
                 document.getElementById("submitProductBtn").disabled = true;
 
+                // Send clean document arrays up to Firebase collection
                 await addDoc(collection(db, "products"), {
                     name: name,
                     price: price,
                     oldPrice: oldPrice,
                     category: category,
                     description: description || "Premium high-quality guaranteed product specifications details.",
-                    imageUrl: imageUrl,
+                    imageUrl: imagesArray[0], // Main preview image for the catalogue storefront grid card
+                    images: imagesArray,       // Array list of all links loaded into detail carousels
                     topSeller: isTopSeller,
                     featured: isFeatured,
                     timestamp: serverTimestamp()
                 });
 
-                alert("Product listed successfully on Holuwafemi Mega Store!");
+                alert("Product listed successfully on Holuwafemi Mega Store with a multi-image gallery structure!");
                 
-                // Reset form on database success pipeline execution
+                // Reset Form completely
                 document.getElementById("prodName").value = "";
                 document.getElementById("prodPrice").value = "";
                 document.getElementById("prodOldPrice").value = "";
@@ -313,7 +322,7 @@
                 document.getElementById("prodFeatured").checked = false;
 
             } catch (error) {
-                console.error("Error writing new document database record profiles: ", error);
+                console.error("Database save failure: ", error);
                 alert("Database save failure. Please verify connection credentials parameters.");
             } finally {
                 document.getElementById("submitProductBtn").innerText = "UPLOAD PRODUCT NOW";
