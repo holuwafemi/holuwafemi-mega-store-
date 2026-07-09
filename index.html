@@ -365,6 +365,20 @@
             .refund-grid-row { grid-template-columns: 1fr; }
         }
 
+        /* PRODUCT ID SYSTEM BADGE VIEW */
+        .product-id-badge {
+            display: inline-block;
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
         footer {
             background: #0f172a;
             color: #94a3b8;
@@ -495,7 +509,9 @@
             <input type="hidden" id="custName"><input type="hidden" id="custEmail">
             <input type="hidden" id="custPhone"><input type="hidden" id="custAddress">
 
-            <h3 id="mName" style="margin-top:15px; font-size:18px;">Product Title Here</h3>
+            <h3 id="mName" style="margin-top:15px; font-size:18px; margin-bottom: 2px;">Product Title Here</h3>
+            <!-- Integrated Unique Firestore ID Code Placeholder -->
+            <div id="mProductCode" class="product-id-badge">ID: LOADING</div>
             
             <div class="price-row-wrapper">
                 <span id="mPrice" class="product-price" style="font-size:22px; color:var(--secondary);">₦0</span>
@@ -536,7 +552,6 @@
                 </div>
             </div>
             
-            <!-- Quick Link trigger integrated inside cart layout -->
             <div style="text-align:center; margin-top:10px;">
                 <a href="javascript:void(0)" onclick="triggerRefundPanelInline('')" style="color: #ef4444; font-size: 13px; text-decoration:none; font-weight:600;">Need a refund for a previous order?</a>
             </div>
@@ -577,7 +592,6 @@
                 <li><b>Non-Refundable Fees:</b> Standard delivery tracking fees charged at shipment checkpoints are non-refundable.</li>
                 <li><b>Processing Timeline:</b> Once returns pass structural damage validation checks, authorized payouts are processed securely back to your original source channel within 3–5 working days.</li>
             </ul>
-            <!-- In-modal form trigger point -->
             <button type="button" class="btn-action-primary" onclick="triggerRefundPanelInline('')" style="background:#f1f5f9; color:#ef4444; font-size:13px; margin-top:10px;">Open Refund Submission Form</button>
         </div>
     </div>
@@ -627,9 +641,7 @@
             stateSelector.innerHTML = nigeriaStates.map(state => `<option value="${state === 'Select State' ? '' : state}">${state}</option>`).join("");
         }
 
-        // Expose global window function for refund toggles
         window.triggerRefundPanelInline = function(presetRef) {
-            // Close active overlays safely to shift focus
             document.getElementById("cartModal").style.display = "none";
             document.getElementById("refundModal").style.display = "none";
             document.body.style.overflow = "auto";
@@ -829,6 +841,10 @@
         function openProductDetailsModal(product) {
             selectedProduct = product;
             document.getElementById("mName").innerText = product.name;
+            
+            // Set unique product tracking ID code dynamically inside badge container
+            document.getElementById("mProductCode").innerText = "Item Code: " + product.id;
+            
             document.getElementById("mPrice").innerText = "₦" + safeFormatPrice(product.price);
             document.getElementById("mOld").innerText = product.oldPrice ? "₦" + safeFormatPrice(product.oldPrice) : "";
             document.getElementById("mDesc").innerText = product.description || "No dynamic specification text added yet.";
@@ -866,7 +882,8 @@
             }
 
             const storePhoneNum = "2348068564177"; 
-            const textFormat = encodeURIComponent(`Hello Holuwafemi Mega Store, I want to inquire about availability for:\n*${product.name}*\nPrice: ₦${safeFormatPrice(product.price)}`);
+            // Augmented WhatsApp template string schema with item unique code tracking parameter
+            const textFormat = encodeURIComponent(`Hello Holuwafemi Mega Store, I want to inquire about availability for:\n*${product.name}*\nPrice: ₦${safeFormatPrice(product.price)}\nProduct Code: ${product.id}`);
             document.getElementById("whatsappProductChatBtn").href = `https://wa.me/${storePhoneNum}?text=${textFormat}`;
 
             document.getElementById("productModal").style.display = "block";
@@ -1044,7 +1061,6 @@
             handler.openIframe();
         });
 
-        // Handle Form Submissions for Manual Refund Processing
         document.getElementById("storefrontRefundForm")?.addEventListener("submit", async function(e) {
             e.preventDefault();
             const reference = document.getElementById("refundRefInput").value.trim();
@@ -1053,7 +1069,6 @@
             const details = document.getElementById("refundDetailsInput").value.trim();
 
             try {
-                // Creates a record inside a dedicated 'refund_requests' firestore collection
                 await addDoc(collection(db, "refund_requests"), {
                     paystackReference: reference,
                     customerEmail: email,
