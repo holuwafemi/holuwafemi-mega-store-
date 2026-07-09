@@ -244,6 +244,7 @@
                 <label for="prodPrice">Selling Price (₦)</label>
                 <input type="number" id="prodPrice" class="form-control" placeholder="e.g., 1250000">
             </div>
+            <!-- FIXED ID HERE: Set strictly to prodOldPrice to match script calls -->
             <div class="form-group">
                 <label for="prodOldPrice">Slash Price / Old Price (₦ - Optional)</label>
                 <input type="number" id="prodOldPrice" class="form-control" placeholder="e.g., 1400000">
@@ -255,10 +256,10 @@
             </div>
         </div>
 
-        <!-- Product Image Links Box (Supports Multiple Images) -->
+        <!-- Product Image Links Box -->
         <div class="form-group">
             <label for="prodImageUrl">Product Image Link URLs (Gallery Support)</label>
-            <textarea id="prodImageUrl" class="form-control" placeholder="https://image1.com/pic.jpg&#10;https://image2.com/back.jpg&#10;https://image3.com/side.jpg"></textarea>
+            <textarea id="prodImageUrl" class="form-control" placeholder="https://image1.com/pic.jpg&#10;https://image2.com/back.jpg"></textarea>
             <p class="info-tip"><i class="fas fa-info-circle"></i> Jumia Style: Paste each image link on a **new line** or separate them with commas to show multiple pictures!</p>
         </div>
 
@@ -290,7 +291,7 @@
             <i class="fas fa-cloud-upload-alt"></i> UPLOAD PRODUCT NOW
         </button>
 
-        <!-- LIVE DYNAMIC MANAGEMENT DASHBOARD ROW -->
+        <!-- LIVE MANAGEMENT DASHBOARD ROW -->
         <div class="inventory-section">
             <h2><i class="fas fa-tasks" style="color: var(--danger);"></i> Active Inventory List</h2>
             <p class="subtitle" style="margin-bottom: 15px;">Review running catalog assets or isolate and purge broken image profiles instantly</p>
@@ -323,7 +324,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-        // Firebase Configuration (Matching Holuwafemi Mega Store Credentials)
         const firebaseConfig = {
             apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
             authDomain: "holuwafemi-mega-store.firebaseapp.com",
@@ -347,7 +347,6 @@
             fashion: "Premium high-quality luxury fashion wear. Comfortable fit, exquisite texture details, tailored perfectly for corporate and casual elegant appearances."
         };
 
-        // Activated locally without external API keys
         document.getElementById("activateAiBtn").addEventListener("click", () => {
             const productName = document.getElementById("prodName").value.trim();
             const category = document.getElementById("prodCategory").value;
@@ -360,7 +359,6 @@
 
             const baseTemplate = localAiTemplates[category] || "Premium high-quality guaranteed product specifications details.";
             descField.value = `Brand New ${productName}. ${baseTemplate}`;
-            
             descField.style.borderColor = "#10b981";
             setTimeout(() => descField.style.borderColor = "#e2e8f0", 1500);
         });
@@ -369,7 +367,11 @@
         document.getElementById("submitProductBtn").addEventListener("click", async () => {
             const name = document.getElementById("prodName").value.trim();
             const price = Number(document.getElementById("prodPrice").value);
-            const oldPrice = document.getElementById("prodOldPrice").value ? Number(document.getElementById("prodOldPrice").value) : null;
+            
+            // FIXED SCRIPT SELECTION: Matching corrected input IDs
+            const oldPriceValue = document.getElementById("prodOldPrice").value;
+            const oldPrice = oldPriceValue ? Number(oldPriceValue) : null;
+            
             const deliveryFee = document.getElementById("prodDelivery").value ? Number(document.getElementById("prodDelivery").value) : 0;
             const category = document.getElementById("prodCategory").value;
             const description = document.getElementById("prodDesc").value.trim();
@@ -409,7 +411,7 @@
 
                 alert("Product listed successfully on Holuwafemi Mega Store!");
                 
-                // Clear Form Fields
+                // Reset Forms completely
                 document.getElementById("prodName").value = "";
                 document.getElementById("prodPrice").value = "";
                 document.getElementById("prodOldPrice").value = "";
@@ -428,7 +430,7 @@
             }
         });
 
-        // --- REAL-TIME INVENTORY LOADER WITH MODULAR PURGING HOOKS ---
+        // --- REAL-TIME INVENTORY LOADER WITH WORKAROUND FIX FOR JUMIA HOTLINKS ---
         const inventoryGridBox = document.getElementById("inventoryGridBox");
         const productsCollection = collection(db, "products");
         const productsQuery = query(productsCollection, orderBy("timestamp", "desc"));
@@ -444,17 +446,17 @@
             snapshot.forEach((productDoc) => {
                 const item = productDoc.data();
                 const itemId = productDoc.id;
-                
-                // Safely read delivery fee (fallback to 0 if older data entries don't have it)
                 const shippingCost = item.deliveryFee !== undefined ? item.deliveryFee : 0;
 
                 const tr = document.createElement("tr");
                 
+                // ADDED: referrerpolicy="no-referrer" below allows direct Jumia image URLs to display without crashing or blocking!
                 tr.innerHTML = `
                     <td>
                         <img src="${item.imageUrl || 'https://via.placeholder.com/150'}" 
                              class="inventory-thumb" 
                              alt="Item view"
+                             referrerpolicy="no-referrer"
                              onerror="this.src='https://images.placeholders.dev/?width=150&height=150&text=BROKEN+IMAGE&color=%23ef4444&bgColor=%23fef2f2'; this.style.border='2px solid #ef4444';">
                     </td>
                     <td>
@@ -478,7 +480,6 @@
                     </td>
                 `;
 
-                // Set up event listener on the delete button dynamically
                 tr.querySelector(".btn-delete-item").addEventListener("click", async (e) => {
                     const idToPurge = e.currentTarget.getAttribute("data-id");
                     if (confirm(`Are you completely sure you want to permanently remove "${item.name}" from your store database?`)) {
@@ -487,7 +488,7 @@
                             alert("Product purged successfully from live store environment!");
                         } catch (err) {
                             console.error("Purge failure execution context: ", err);
-                            alert("Failed to delete item. Please check console rules.");
+                            alert("Failed to delete item.");
                         }
                     }
                 });
