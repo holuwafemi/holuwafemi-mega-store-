@@ -190,14 +190,14 @@
             </div>
         </div>
 
-        <!-- Product Image Links (UPDATED FOR MULTIPLE IMAGES LIKE JUMIA) -->
+        <!-- Product Image Links Box (Supports Multiple Images) -->
         <div class="form-group">
             <label for="prodImageUrl">Product Image Link URLs (Gallery Support)</label>
             <textarea id="prodImageUrl" class="form-control" placeholder="https://image1.com/pic.jpg&#10;https://image2.com/back.jpg&#10;https://image3.com/side.jpg"></textarea>
             <p class="info-tip"><i class="fas fa-info-circle"></i> Jumia Style: Paste each image link on a **new line** or separate them with commas to show multiple pictures!</p>
         </div>
 
-        <!-- Product Description & AI Generator -->
+        <!-- Product Description & Local AI Generator -->
         <div class="form-group">
             <label for="prodDesc">Product Specifications / Description</label>
             <textarea id="prodDesc" class="form-control" placeholder="Type specific details or use the local AI system generation helper..."></textarea>
@@ -231,7 +231,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-        // Firebase Configuration
+        // Firebase Configuration (Matching Holuwafemi Mega Store Credentials)
         const firebaseConfig = {
             apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
             authDomain: "holuwafemi-mega-store.firebaseapp.com",
@@ -245,7 +245,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- LOCAL BUILT-IN AUTO RECOGNITION GENERATOR ---
+        // --- LOCAL BUILT-IN AI GENERATOR TEMPLATES ---
         const localAiTemplates = {
             phones: "Original premium smartphone. High-capacity battery life, high-resolution crystal camera display, factory unlocked with complete accessories and valid store warranty included.",
             electronics: "High-performance premium electronic device. Engineered for power efficiency, durable build quality, and seamless modern integration.",
@@ -255,6 +255,7 @@
             fashion: "Premium high-quality luxury fashion wear. Comfortable fit, exquisite texture details, tailored perfectly for corporate and casual elegant appearances."
         };
 
+        // Activated locally without external API keys
         document.getElementById("activateAiBtn").addEventListener("click", () => {
             const productName = document.getElementById("prodName").value.trim();
             const category = document.getElementById("prodCategory").value;
@@ -272,7 +273,6 @@
             setTimeout(() => descField.style.borderColor = "#e2e8f0", 1500);
         });
 
-
         // --- FIRESTORE PRODUCT UPLOAD AND INVENTORY CREATION ---
         document.getElementById("submitProductBtn").addEventListener("click", async () => {
             const name = document.getElementById("prodName").value.trim();
@@ -289,30 +289,34 @@
                 return;
             }
 
-            // Clean up image input line breaks or commas into a structural array clean list
+            // Regex fixes the image processing and strips out all line break / spacing glitches
             const imagesArray = imagesRawInput.split(/[\n,]+/).map(url => url.trim()).filter(url => url !== "");
+
+            if (imagesArray.length === 0) {
+                alert("Please provide a valid image URL link layout!");
+                return;
+            }
 
             try {
                 document.getElementById("submitProductBtn").innerText = "UPLOADING TO STORE...";
                 document.getElementById("submitProductBtn").disabled = true;
 
-                // Send clean document arrays up to Firebase collection
                 await addDoc(collection(db, "products"), {
                     name: name,
                     price: price,
                     oldPrice: oldPrice,
                     category: category,
                     description: description || "Premium high-quality guaranteed product specifications details.",
-                    imageUrl: imagesArray[0], // Main preview image for the catalogue storefront grid card
-                    images: imagesArray,       // Array list of all links loaded into detail carousels
+                    imageUrl: imagesArray[0], // Main product thumbnail card string
+                    images: imagesArray,       // Entire array cluster loaded cleanly
                     topSeller: isTopSeller,
                     featured: isFeatured,
                     timestamp: serverTimestamp()
                 });
 
-                alert("Product listed successfully on Holuwafemi Mega Store with a multi-image gallery structure!");
+                alert("Product listed successfully on Holuwafemi Mega Store!");
                 
-                // Reset Form completely
+                // Clear Form Fields on Success
                 document.getElementById("prodName").value = "";
                 document.getElementById("prodPrice").value = "";
                 document.getElementById("prodOldPrice").value = "";
@@ -323,7 +327,7 @@
 
             } catch (error) {
                 console.error("Database save failure: ", error);
-                alert("Database save failure. Please verify connection credentials parameters.");
+                alert("Database save failure. Please verify configuration parameters.");
             } finally {
                 document.getElementById("submitProductBtn").innerText = "UPLOAD PRODUCT NOW";
                 document.getElementById("submitProductBtn").disabled = false;
