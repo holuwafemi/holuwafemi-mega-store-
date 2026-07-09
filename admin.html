@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Holuwafemi Mega Store - Admin Panel</title>
+    <title>Holuwafemi Mega Store - Admin Panel & Inventory</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -13,6 +14,8 @@
             --card-bg: #ffffff;
             --text: #1e293b;
             --border: #e2e8f0;
+            --danger: #ef4444;
+            --danger-dark: #dc2626;
         }
         * {
             box-sizing: border-box;
@@ -26,7 +29,7 @@
             padding: 20px;
         }
         .admin-container {
-            max-width: 700px;
+            max-width: 800px;
             margin: 40px auto;
             background: var(--card-bg);
             padding: 30px;
@@ -150,6 +153,64 @@
             background: #94a3b8;
             cursor: not-allowed;
         }
+
+        /* Inventory Management Styles */
+        .inventory-section {
+            margin-top: 40px;
+            border-top: 2px dashed var(--border);
+            padding-top: 30px;
+        }
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+        .inventory-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            text-align: left;
+            font-size: 14px;
+        }
+        .inventory-table th {
+            background: #f1f5f9;
+            padding: 12px;
+            font-weight: 700;
+            color: #475569;
+            border-bottom: 1px solid var(--border);
+        }
+        .inventory-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+        .inventory-thumb {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            border-radius: 6px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+        }
+        .btn-delete-item {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: background 0.2s;
+        }
+        .btn-delete-item:hover {
+            background: var(--danger-dark);
+        }
     </style>
 </head>
 <body>
@@ -221,15 +282,41 @@
         </div>
 
         <!-- Action Submission Trigger -->
-        <button type="button" id="submitProductBtn" class="submit-btn">
+        <button type="button" id="submitProductBtn" class="submit-btn" style="margin-bottom: 10px;">
             <i class="fas fa-cloud-upload-alt"></i> UPLOAD PRODUCT NOW
         </button>
+
+        <!-- LIVE DYNAMIC MANAGEMENT DASHBOARD ROW -->
+        <div class="inventory-section">
+            <h2><i class="fas fa-tasks" style="color: var(--danger);"></i> Active Inventory List</h2>
+            <p class="subtitle" style="margin-bottom: 15px;">Review running catalog assets or isolate and purge broken image profiles instantly</p>
+            
+            <div class="table-responsive">
+                <table class="inventory-table">
+                    <thead>
+                        <tr>
+                            <th>Preview</th>
+                            <th>Item Details</th>
+                            <th>Category</th>
+                            <th>Pricing Structure</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryGridBox">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 20px; color: #64748b;">Loading running store data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
     <!-- ADMIN PANEL CORE SCRIPT LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         // Firebase Configuration (Matching Holuwafemi Mega Store Credentials)
         const firebaseConfig = {
@@ -289,7 +376,6 @@
                 return;
             }
 
-            // Regex fixes the image processing and strips out all line break / spacing glitches
             const imagesArray = imagesRawInput.split(/[\n,]+/).map(url => url.trim()).filter(url => url !== "");
 
             if (imagesArray.length === 0) {
@@ -307,8 +393,8 @@
                     oldPrice: oldPrice,
                     category: category,
                     description: description || "Premium high-quality guaranteed product specifications details.",
-                    imageUrl: imagesArray[0], // Main product thumbnail card string
-                    images: imagesArray,       // Entire array cluster loaded cleanly
+                    imageUrl: imagesArray[0],
+                    images: imagesArray,       
                     topSeller: isTopSeller,
                     featured: isFeatured,
                     timestamp: serverTimestamp()
@@ -316,7 +402,7 @@
 
                 alert("Product listed successfully on Holuwafemi Mega Store!");
                 
-                // Clear Form Fields on Success
+                // Clear Form Fields
                 document.getElementById("prodName").value = "";
                 document.getElementById("prodPrice").value = "";
                 document.getElementById("prodOldPrice").value = "";
@@ -332,6 +418,69 @@
                 document.getElementById("submitProductBtn").innerText = "UPLOAD PRODUCT NOW";
                 document.getElementById("submitProductBtn").disabled = false;
             }
+        });
+
+        // --- REAL-TIME INVENTORY LOADER WITH MODULAR PURGING HOOKS ---
+        const inventoryGridBox = document.getElementById("inventoryGridBox");
+        const productsCollection = collection(db, "products");
+        const productsQuery = query(productsCollection, orderBy("timestamp", "desc"));
+
+        onSnapshot(productsQuery, (snapshot) => {
+            inventoryGridBox.innerHTML = "";
+            
+            if (snapshot.empty) {
+                inventoryGridBox.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 20px; color: #64748b;">No items registered in the database portfolio yet.</td></tr>`;
+                return;
+            }
+
+            snapshot.forEach((productDoc) => {
+                const item = productDoc.data();
+                const itemId = productDoc.id;
+
+                const tr = document.createElement("tr");
+                
+                // The onerror layout triggers automatically if the URL link is invalid or broken
+                tr.innerHTML = `
+                    <td>
+                        <img src="${item.imageUrl || 'https://via.placeholder.com/150'}" 
+                             class="inventory-thumb" 
+                             alt="Item view"
+                             onerror="this.src='https://images.placeholders.dev/?width=150&height=150&text=BROKEN+IMAGE&color=%23ef4444&bgColor=%23fef2f2'; this.style.border='2px solid #ef4444';">
+                    </td>
+                    <td>
+                        <div style="font-weight: 700; color: #1e293b;">${item.name}</div>
+                        <div style="font-size: 11px; color: #64748b; max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">ID: ${itemId}</div>
+                    </td>
+                    <td><span style="text-transform: uppercase; font-size: 11px; background: #e2e8f0; padding: 2px 6px; border-radius: 4px; font-weight:600;">${item.category}</span></td>
+                    <td>
+                        <div style="font-weight:700; color:var(--primary)">₦${Number(item.price).toLocaleString()}</div>
+                        ${item.oldPrice ? `<div style="text-decoration:line-through; font-size:12px; color:#94a3b8">₦${Number(item.oldPrice).toLocaleString()}</div>` : ''}
+                    </td>
+                    <td>
+                        <button type="button" class="btn-delete-item" data-id="${itemId}">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </button>
+                    </td>
+                `;
+
+                // Set up event listener on the delete button dynamically
+                tr.querySelector(".btn-delete-item").addEventListener("click", async (e) => {
+                    const idToPurge = e.currentTarget.getAttribute("data-id");
+                    if (confirm(`Are you completely sure you want to permanently remove "${item.name}" from your store database?`)) {
+                        try {
+                            await deleteDoc(doc(db, "products", idToPurge));
+                            alert("Product purged successfully from live store environment!");
+                        } catch (err) {
+                            console.error("Purge failure execution context: ", err);
+                            alert("Failed to delete item. Please check console rules.");
+                        }
+                    }
+                });
+
+                inventoryGridBox.appendChild(tr);
+            });
+        }, (err) => {
+            console.error("Inventory tracking failed: ", err);
         });
     </script>
 </body>
