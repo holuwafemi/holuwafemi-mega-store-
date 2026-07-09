@@ -3,230 +3,323 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mega Store - Admin Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <title>Holuwafemi Mega Store - Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --jumia-orange: #f68b1e; --bg-gray: #f1f1f2; --dark: #333; --danger: #e61601; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
-        body { background: var(--bg-gray); padding: 16px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        
-        .admin-card { background: white; padding: 24px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 450px; margin-bottom: 20px; }
-        h2 { color: var(--jumia-orange); text-align: center; margin-bottom: 20px; font-size: 20px; text-transform: uppercase; }
-        
-        label { display: block; font-size: 11px; font-weight: bold; margin-top: 15px; color: #666; text-transform: uppercase; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; margin-top: 5px; font-size: 14px; outline: none; }
-        input:focus { border-color: var(--jumia-orange); }
-        
-        button { width: 100%; padding: 14px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 15px; transition: 0.2s; }
-        .btn-publish { background: var(--jumia-orange); color: white; font-size: 16px; }
-        .btn-ai { background: #25D366; color: white; margin-top: 10px; font-size: 12px; }
-
-        #preview-box { width: 100%; height: 180px; border: 2px dashed #ccc; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: #fafafa; overflow: hidden; margin-bottom: 10px; }
-        #preview-img { max-width: 100%; max-height: 100%; display: none; }
-
-        /* Inventory Manager */
-        .catalog-list { margin-top: 10px; max-height: 300px; overflow-y: auto; }
-        .catalog-item { display: flex; align-items: center; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; gap: 10px; }
-        .catalog-item img { width: 30px; height: 40px; object-fit: contain; border-radius: 4px; }
-        .catalog-info { flex: 1; min-width: 0; }
-        .catalog-name { font-size: 13px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .catalog-price { font-size: 12px; color: var(--jumia-orange); }
-        .btn-delete { background: var(--danger); color: white; padding: 6px 10px; font-size: 12px; width: auto; margin-top: 0; border: none; border-radius: 4px; cursor: pointer; }
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 20px;
+        }
+        .admin-container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        h2 {
+            margin-bottom: 8px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        p.subtitle {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        .form-row .form-group {
+            flex: 1;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+            background: #fff;
+        }
+        .form-control:focus {
+            border-color: var(--primary);
+        }
+        textarea.form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .ai-btn-wrapper {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 6px;
+        }
+        .ai-btn {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+        .ai-btn:hover {
+            background: #059669;
+        }
+        .checkbox-group {
+            display: flex;
+            gap: 20px;
+            margin: 15px 0 25px 0;
+            padding: 10px;
+            background: #f1f5f9;
+            border-radius: 6px;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .checkbox-label input {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+        .submit-btn {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .submit-btn:hover {
+            background: var(--primary-dark);
+        }
+        .submit-btn:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
 
-    <div class="admin-card">
-        <h2>Add New Product</h2>
-        
-        <div id="preview-box">
-            <span id="pre-text" style="color:#999">Product Image Preview</span>
-            <img id="preview-img" src="">
+    <div class="admin-container">
+        <h2><i class="fas fa-box-open" style="color: var(--primary);"></i> Stock Inventory Control</h2>
+        <p class="subtitle">Upload and configure products directly to Holuwafemi Mega Store</p>
+
+        <!-- Product Title -->
+        <div class="form-group">
+            <label for="prodName">Product Title</label>
+            <input type="text" id="prodName" class="form-control" placeholder="e.g., iPhone 15 Pro Max 256GB">
         </div>
 
-        <label>Image URL (Direct Link)</label>
-        <input type="text" id="finalImgUrl" placeholder="Paste link ending in .jpg or .png">
-
-        <label>Product Name</label>
-        <input type="text" id="pName" placeholder="e.g. Earphones Wireless">
-        
-        <label>Current Price (₦)</label>
-        <input type="number" id="pPrice" placeholder="Selling price">
-        
-        <label>Old Price (₦)</label>
-        <input type="number" id="pOld" placeholder="Original price for discount badge">
-        
-        <label>Category</label>
-        <select id="pCat">
-            <option value="electronics">Electronics</option>
-            <option value="solar">Solar</option>
-            <option value="appliances">Appliances</option>
-            <option value="computers">Computers</option>
-            <option value="phones">Phones</option>
-            <option value="fashion">Fashion</option>
-        </select>
-        
-        <label>Description</label>
-        <textarea id="pDesc" rows="3" placeholder="Key specs..."></textarea>
-
-        <button id="publishBtn" class="btn-publish">PUBLISH TO STORE</button>
-    </div>
-
-    <div class="admin-card">
-        <h3 style="font-size: 14px; text-transform: uppercase; margin-bottom: 10px;">
-            <i class="fas fa-list"></i> Current Inventory
-        </h3>
-        <div class="catalog-list" id="adminCatalogList">
-            <p style="text-align:center; color:#999; font-size:12px; padding:10px;">Loading...</p>
+        <!-- Category & Prices Row -->
+        <div class="form-row">
+            <div class="form-group">
+                <label for="prodCategory">Product Category</label>
+                <select id="prodCategory" class="form-control">
+                    <option value="electronics">Electronics</option>
+                    <option value="solar">Solar</option>
+                    <option value="appliances">Appliances</option>
+                    <option value="computers">Computers</option>
+                    <option value="phones">Phones</option>
+                    <option value="fashion">Fashion</option>
+                </select>
+            </div>
         </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="prodPrice">Selling Price (₦)</label>
+                <input type="number" id="prodPrice" class="form-control" placeholder="e.g., 1250000">
+            </div>
+            <div class="form-group">
+                <label for="prodOldPrice">Slash Price / Old Price (₦ - Optional)</label>
+                <input type="number" id="prodOldPrice" class="form-control" placeholder="e.g., 1400000">
+            </div>
+        </div>
+
+        <!-- Product Image Link -->
+        <div class="form-group">
+            <label for="prodImageUrl">Product Image Link URL</label>
+            <input type="url" id="prodImageUrl" class="form-control" placeholder="https://images.unsplash.com/... or your hosting link">
+        </div>
+
+        <!-- Product Description & AI Generator -->
+        <div class="form-group">
+            <label for="prodDesc">Product Specifications / Description</label>
+            <textarea id="prodDesc" class="form-control" placeholder="Type specific details or use the local AI system generation helper..."></textarea>
+            <div class="ai-btn-wrapper">
+                <button type="button" id="activateAiBtn" class="ai-btn">
+                    <i class="fas fa-robot"></i> Activate AI System
+                </button>
+            </div>
+        </div>
+
+        <!-- Badges Settings -->
+        <div class="checkbox-group">
+            <label class="checkbox-label">
+                <input type="checkbox" id="prodTopSeller">
+                Mark as Top Dynamic Seller
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" id="prodFeatured">
+                Mark as Featured / Trending
+            </label>
+        </div>
+
+        <!-- Action Submission Trigger -->
+        <button type="button" id="submitProductBtn" class="submit-btn">
+            <i class="fas fa-cloud-upload-alt"></i> UPLOAD PRODUCT NOW
+        </button>
     </div>
 
-    <div class="admin-card" style="max-width: 350px; padding: 15px;">
-        <button id="aiSetupBtn" class="btn-ai">ACTIVATE AI SYSTEM</button>
-    </div>
+    <!-- ADMIN PANEL CORE SCRIPT LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        // Firebase Configuration (Matching Holuwafemi Mega Store Credentials)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
+            authDomain: "holuwafemi-mega-store.firebaseapp.com",
+            projectId: "holuwafemi-mega-store",
+            storageBucket: "holuwafemi-mega-store.firebasestorage.app",
+            messagingSenderId: "1002214759367",
+            appId: "1:1002214759367:web:0f3afecb88c0f8a0f397e2",
+            measurementId: "G-WPFKNZ20E3"
+        };
 
-    // 🖥️ Corrected Firebase Credentials pointed to your updated project workspace
-    const firebaseConfig = {
-        apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
-        authDomain: "holuwafemi-mega-store.firebaseapp.com",
-        projectId: "holuwafemi-mega-store",
-        storageBucket: "holuwafemi-mega-store.firebasestorage.app",
-        messagingSenderId: "1002214759367",
-        appId: "1:1002214759367:web:0f3afecb88c0f8a0f397e2",
-        measurementId: "G-WPFKNZ20E3"
-    };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-    // 🛡️ ADMIN ACCESS
-    const ADMIN_PASS = "MyMegaStoreSecret2026";
-    if (sessionStorage.getItem("adminAuth") !== "true") {
-        const attempt = prompt("Enter Admin Access Key:");
-        if (attempt === ADMIN_PASS) {
-            sessionStorage.setItem("adminAuth", "true");
-        } else {
-            alert("Unauthorized!");
-            window.location.href = "index.html";
-        }
-    }
+        // --- LOCAL BUILT-IN AUTO RECOGNITION GENERATOR (Replaces external API Keys) ---
+        const localAiTemplates = {
+            phones: "Original premium smartphone. High-capacity battery life, high-resolution crystal camera display, factory unlocked with complete accessories and valid store warranty included.",
+            electronics: "High-performance premium electronic device. Engineered for power efficiency, durable build quality, and seamless modern integration.",
+            appliances: "Home and office luxury appliance. Energy-saving technology certification, ergonomic layout, built to withstand local voltage fluctuations.",
+            solar: "High-efficiency monocrystalline solar equipment. Perfect for inverter backup setups, deep cycle stability, built for Nigerian weather conditions.",
+            computers: "High-speed professional computing system. Optimized for heavy multitasking, crisp graphics capabilities, processing power, and upgraded storage capacity.",
+            fashion: "Premium high-quality luxury fashion wear. Comfortable fit, exquisite texture details, tailored perfectly for corporate and casual elegant appearances."
+        };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+        // Activated locally without popping up errors asking for keys
+        document.getElementById("activateAiBtn").addEventListener("click", () => {
+            const productName = document.getElementById("prodName").value.trim();
+            const category = document.getElementById("prodCategory").value;
+            const descField = document.getElementById("prodDesc");
 
-    // Live Preview Event Handling
-    const imgUrlInput = document.getElementById('finalImgUrl');
-    imgUrlInput.addEventListener('input', (e) => {
-        const url = e.target.value.trim();
-        if(url){
-            document.getElementById('pre-text').style.display = 'none';
-            const img = document.getElementById('preview-img');
-            img.src = url; 
-            img.style.display = 'block';
-        } else {
-            document.getElementById('preview-img').style.display = 'none';
-            document.getElementById('pre-text').style.display = 'block';
-        }
-    });
-
-    // Real-time Synchronized Inventory Module
-    const q = query(collection(db, "products"), orderBy("timestamp", "desc"));
-    onSnapshot(q, (snapshot) => {
-        const list = document.getElementById("adminCatalogList");
-        let html = "";
-        snapshot.forEach((pDoc) => {
-            const p = pDoc.data();
-            const priceValue = p.price ? Number(p.price).toLocaleString() : "0";
-            html += `
-                <div class="catalog-item">
-                    <img src="${p.img || 'https://via.placeholder.com/40'}">
-                    <div class="catalog-info">
-                        <div class="catalog-name">${p.name || 'Unnamed Product'}</div>
-                        <div class="catalog-price">₦${priceValue}</div>
-                    </div>
-                    <button class="btn-delete item-delete-btn" data-id="${pDoc.id}"><i class="fas fa-trash"></i></button>
-                </div>`;
-        });
-        list.innerHTML = html || "<p style='text-align:center; font-size:12px; color:#999; padding:10px;'>No products found.</p>";
-
-        // Dynamically attach listeners to the delete buttons to prevent module closure crashes
-        document.querySelectorAll(".item-delete-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                const docId = btn.getAttribute("data-id");
-                deleteProduct(docId);
-            });
-        });
-    });
-
-    async function deleteProduct(id) {
-        if(confirm("Delete this product permanently?")) {
-            try {
-                await deleteDoc(doc(db, "products", id));
-                alert("🗑️ Product removed!");
-            } catch(e) { 
-                alert("Delete failed: " + e.message); 
+            if (!productName) {
+                alert("Please type a Product Title first so the system knows what to generate description details for!");
+                return;
             }
-        }
-    }
 
-    // Publish to Firestore Engine
-    document.getElementById("publishBtn").addEventListener("click", async () => {
-        const img = document.getElementById('finalImgUrl').value.trim();
-        const name = document.getElementById('pName').value.trim();
-        const priceInput = document.getElementById('pPrice').value;
-        const oldInput = document.getElementById('pOld').value;
-
-        if(!img || !name || !priceInput) {
-            return alert("Fill Name, Price and Image URL!");
-        }
-
-        const price = Number(priceInput);
-        const old = oldInput ? Number(oldInput) : price;
-        const cat = document.getElementById('pCat').value;
-        const desc = document.getElementById('pDesc').value.trim();
-
-        const btn = document.getElementById("publishBtn");
-        btn.disabled = true; 
-        btn.innerText = "Publishing...";
-
-        try {
-            await addDoc(collection(db, "products"), {
-                name, price, old, img, cat, desc,
-                pct: old > price ? Math.round(((old - price) / old) * 100) : 0,
-                timestamp: serverTimestamp(),
-                password: ADMIN_PASS
-            });
-            alert("🎉 Success! Product is now Live.");
+            // Generate localized marketing text content seamlessly
+            const baseTemplate = localAiTemplates[category] || "Premium high-quality guaranteed product specifications details.";
+            descField.value = `Brand New ${productName}. ${baseTemplate}`;
             
-            // Clear Dashboard Inputs cleanly
-            document.getElementById('finalImgUrl').value = "";
-            document.getElementById('pName').value = "";
-            document.getElementById('pPrice').value = "";
-            document.getElementById('pOld').value = "";
-            document.getElementById('pDesc').value = "";
-            document.getElementById('preview-img').style.display = 'none';
-            document.getElementById('pre-text').style.display = 'block';
-            
-            btn.disabled = false; 
-            btn.innerText = "PUBLISH TO STORE";
-        } catch(e) { 
-            alert("Error writing to database: " + e.message); 
-            btn.disabled = false; 
-            btn.innerText = "PUBLISH TO STORE";
-        }
-    });
+            // Subtle visual success confirmation cue
+            descField.style.borderColor = "#10b981";
+            setTimeout(() => descField.style.borderColor = "#e2e8f0", 1500);
+        });
 
-    // AI Configuration Setup Handler
-    document.getElementById("aiSetupBtn").addEventListener("click", () => {
-        const key = prompt("Paste Groq API Key:");
-        if(key && key.startsWith("gsk_")) {
-            localStorage.setItem("GROQ_API_KEY", key);
-            alert("AI Activated!");
-        } else if (key) {
-            alert("Invalid Key format. Should start with 'gsk_'.");
-        }
-    });
-</script>
+
+        // --- FIRESTORE PRODUCT UPLOAD AND INVENTORY CREATION ---
+        document.getElementById("submitProductBtn").addEventListener("click", async () => {
+            const name = document.getElementById("prodName").value.trim();
+            const price = Number(document.getElementById("prodPrice").value);
+            const oldPrice = document.getElementById("prodOldPrice").value ? Number(document.getElementById("prodOldPrice").value) : null;
+            const category = document.getElementById("prodCategory").value;
+            const description = document.getElementById("prodDesc").value.trim();
+            const imageUrl = document.getElementById("prodImageUrl").value.trim();
+            const isTopSeller = document.getElementById("prodTopSeller").checked;
+            const isFeatured = document.getElementById("prodFeatured").checked;
+
+            if (!name || !price || !category || !imageUrl) {
+                alert("Please fill in the Product Title, Category, Price, and Image Link address!");
+                return;
+            }
+
+            try {
+                document.getElementById("submitProductBtn").innerText = "UPLOADING TO STORE...";
+                document.getElementById("submitProductBtn").disabled = true;
+
+                await addDoc(collection(db, "products"), {
+                    name: name,
+                    price: price,
+                    oldPrice: oldPrice,
+                    category: category,
+                    description: description || "Premium high-quality guaranteed product specifications details.",
+                    imageUrl: imageUrl,
+                    topSeller: isTopSeller,
+                    featured: isFeatured,
+                    timestamp: serverTimestamp()
+                });
+
+                alert("Product listed successfully on Holuwafemi Mega Store!");
+                
+                // Reset form on database success pipeline execution
+                document.getElementById("prodName").value = "";
+                document.getElementById("prodPrice").value = "";
+                document.getElementById("prodOldPrice").value = "";
+                document.getElementById("prodDesc").value = "";
+                document.getElementById("prodImageUrl").value = "";
+                document.getElementById("prodTopSeller").checked = false;
+                document.getElementById("prodFeatured").checked = false;
+
+            } catch (error) {
+                console.error("Error writing new document database record profiles: ", error);
+                alert("Database save failure. Please verify connection credentials parameters.");
+            } finally {
+                document.getElementById("submitProductBtn").innerText = "UPLOAD PRODUCT NOW";
+                document.getElementById("submitProductBtn").disabled = false;
+            }
+        });
+    </script>
 </body>
 </html>
