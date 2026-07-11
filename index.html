@@ -144,6 +144,14 @@
             border-color: var(--primary);
         }
 
+        /* Fix mobile select dropdown activation blocking */
+        select#gateState {
+            white-space: normal !important;
+            appearance: auto !important;
+            -webkit-appearance: listbox !important;
+            cursor: pointer !important;
+        }
+
         /* --- STABLE DYNAMIC GRID CONFIGURATION --- */
         .products-grid-layout {
             display: grid;
@@ -206,21 +214,21 @@
         /* Responsive Mobile Layout Fix for 2 Columns */
         @media (max-width: 480px) {
             .products-grid-layout {
-                grid-template-columns: repeat(2, 1fr); /* Forces exactly 2 items per row */
-                gap: 10px; /* Reduces spacing slightly so cards fit perfectly side-by-side */
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
             }
             .grid-product-card {
-                padding: 10px; /* Makes card padding tighter for mobile screens */
+                padding: 10px;
             }
             .grid-product-card img {
-                height: 110px; /* Prevents images from getting too tall on smaller screens */
+                height: 110px;
             }
             .product-title {
-                font-size: 12px; /* Scales down the title font size slightly to fit nicely */
-                height: 32px; /* Keeps text box aligned across rows */
+                font-size: 12px;
+                height: 32px;
             }
             .product-price {
-                font-size: 14px; /* Adjusts price sizing slightly for small screens */
+                font-size: 14px;
             }
         }
 
@@ -255,7 +263,7 @@
             object-fit: contain;
             border-radius: 8px;
             background: #f8fafc;
-            touch-action: pan-y; /* Permits normal up/down scrolling while swiping horizontally */
+            touch-action: pan-y;
             user-select: none;
         }
 
@@ -347,7 +355,6 @@
         .cart-item-price { font-size: 14px; font-weight: 700; color: var(--secondary); margin: 4px 0; }
         .btn-remove { background: none; border: none; color: #ef4444; font-size: 12px; cursor: pointer; font-weight: 500; }
 
-        /* --- REFUND LAYOUT --- */
         .refund-card-section {
             background: var(--white);
             border: 1px solid var(--border-color);
@@ -391,7 +398,6 @@
             .refund-grid-row { grid-template-columns: 1fr; }
         }
 
-        /* UNIQUE TRACKING SYSTEM ID CODE BADGE */
         .product-id-badge {
             display: inline-block;
             background: #f1f5f9;
@@ -460,7 +466,6 @@
         <div class="products-grid-layout" id="mainCatalogGrid"></div>
     </div>
 
-    <!-- INTEGRATED REFUND LAYOUT PANEL -->
     <div class="section-container" style="padding-top: 0; padding-bottom: 40px;">
         <div class="refund-card-section" id="storefrontRefundBlock">
             <h3>Submit Return & Refund Request</h3>
@@ -514,7 +519,7 @@
                 <input type="text" id="gateName" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text;" placeholder="Full Name">
                 <input type="email" id="gateEmail" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text;" placeholder="Email Address">
                 <input type="tel" id="gatePhone" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text;" placeholder="Phone Number (e.g., 08012345678)">
-                <select id="gateState" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; height:42px; padding:0 15px;"></select>
+                <select id="gateState" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; height:42px; padding:0 15px; white-space: normal !important; -webkit-appearance: listbox !important; appearance: auto !important; cursor: pointer;"></select>
                 <input type="text" id="gateAddress" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text;" placeholder="Street Address, Town/City Details">
             </div>
             
@@ -536,7 +541,7 @@
             <input type="hidden" id="custPhone"><input type="hidden" id="custAddress">
 
             <h3 id="mName" style="margin-top:15px; font-size:18px; margin-bottom: 2px;">Product Title Here</h3>
-            <div id="mProductCode" class="product-id-badge">ID: LOADING</div>
+            <div id="mProductCode" class="product-id-badge">ID: LOADING[cite: 1]</div>
             
             <div class="price-row-wrapper">
                 <span id="mPrice" class="product-price" style="font-size:22px; color:var(--secondary);">₦0</span>
@@ -863,7 +868,6 @@
             });
         });
 
-        /* --- GALLERY MODAL WITH INTEGRATED SWIPE DETECTION GESTURE ENGINE --- */
         function openProductDetailsModal(product) {
             selectedProduct = product;
             document.getElementById("mName").innerText = product.name;
@@ -910,7 +914,6 @@
                     thumbsContainer.appendChild(thumb);
                 });
 
-                // Horizontal Mobile Drag/Swipe Detection Framework
                 let touchStartX = 0;
                 let touchEndX = 0;
 
@@ -922,14 +925,12 @@
                     touchEndX = e.changedTouches[0].screenX;
                     const swipeDistance = touchEndX - touchStartX;
 
-                    if (Math.abs(swipeDistance) > 50) { // Requires a minimum 50px drag swipe step
+                    if (Math.abs(swipeDistance) > 50) { 
                         if (swipeDistance < 0) {
-                            // Swiped Left -> Load next item layout index
                             if (currentImgIndex < imagesArray.length - 1) {
                                 activeImageIndex(currentImgIndex + 1);
                             }
                         } else {
-                            // Swiped Right -> Pull previous image snapshot parameters
                             if (currentImgIndex > 0) {
                                 activeImageIndex(currentImgIndex - 1);
                             }
@@ -1077,7 +1078,7 @@
             }
 
             const handler = PaystackPop.setup({
-                key: 'pk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', // Put your live public key here
+                key: 'pk_live_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', 
                 email: customerEmail,
                 amount: checkoutAmount * 100, 
                 currency: "NGN",
