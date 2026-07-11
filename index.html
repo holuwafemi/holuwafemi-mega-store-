@@ -144,9 +144,10 @@
             border-color: var(--primary);
         }
 
+        /* --- STABLE DYNAMIC GRID CONFIGURATION --- */
         .products-grid-layout {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             gap: 15px;
         }
         .grid-product-card {
@@ -170,6 +171,7 @@
             object-fit: contain;
             margin-bottom: 10px;
             border-radius: 6px;
+            user-select: none;
         }
         .product-title {
             font-size: 13px;
@@ -198,6 +200,28 @@
             font-weight: 700;
             padding: 2px 6px;
             border-radius: 4px;
+            z-index: 2;
+        }
+
+        /* Responsive Mobile Layout Fix for 2 Columns */
+        @media (max-width: 480px) {
+            .products-grid-layout {
+                grid-template-columns: repeat(2, 1fr); /* Forces exactly 2 items per row */
+                gap: 10px; /* Reduces spacing slightly so cards fit perfectly side-by-side */
+            }
+            .grid-product-card {
+                padding: 10px; /* Makes card padding tighter for mobile screens */
+            }
+            .grid-product-card img {
+                height: 110px; /* Prevents images from getting too tall on smaller screens */
+            }
+            .product-title {
+                font-size: 12px; /* Scales down the title font size slightly to fit nicely */
+                height: 32px; /* Keeps text box aligned across rows */
+            }
+            .product-price {
+                font-size: 14px; /* Adjusts price sizing slightly for small screens */
+            }
         }
 
         .modal-overlay-sheet {
@@ -231,6 +255,8 @@
             object-fit: contain;
             border-radius: 8px;
             background: #f8fafc;
+            touch-action: pan-y; /* Permits normal up/down scrolling while swiping horizontally */
+            user-select: none;
         }
 
         .gallery-thumbs-row {
@@ -321,7 +347,7 @@
         .cart-item-price { font-size: 14px; font-weight: 700; color: var(--secondary); margin: 4px 0; }
         .btn-remove { background: none; border: none; color: #ef4444; font-size: 12px; cursor: pointer; font-weight: 500; }
 
-        /* --- INTEGRATED REFUND LAYOUT --- */
+        /* --- REFUND LAYOUT --- */
         .refund-card-section {
             background: var(--white);
             border: 1px solid var(--border-color);
@@ -365,7 +391,7 @@
             .refund-grid-row { grid-template-columns: 1fr; }
         }
 
-        /* PRODUCT ID SYSTEM BADGE VIEW */
+        /* UNIQUE TRACKING SYSTEM ID CODE BADGE */
         .product-id-badge {
             display: inline-block;
             background: #f1f5f9;
@@ -434,7 +460,7 @@
         <div class="products-grid-layout" id="mainCatalogGrid"></div>
     </div>
 
-    <!-- INTEGRATED REFUND LAYOUT COMPONENT -->
+    <!-- INTEGRATED REFUND LAYOUT PANEL -->
     <div class="section-container" style="padding-top: 0; padding-bottom: 40px;">
         <div class="refund-card-section" id="storefrontRefundBlock">
             <h3>Submit Return & Refund Request</h3>
@@ -477,7 +503,7 @@
         </div>
     </div>
 
-    <!-- REGISTRATION SHEET -->
+    <!-- REGISTRATION MODAL -->
     <div class="modal-overlay-sheet" id="gateModal" style="display: block;">
         <div class="modal-body-wrapper" style="margin-top: 80px;">
             <button type="button" class="modal-close-trigger" id="closeGateBtn" style="display:none;">×</button>
@@ -510,7 +536,6 @@
             <input type="hidden" id="custPhone"><input type="hidden" id="custAddress">
 
             <h3 id="mName" style="margin-top:15px; font-size:18px; margin-bottom: 2px;">Product Title Here</h3>
-            <!-- Integrated Unique Firestore ID Code Placeholder -->
             <div id="mProductCode" class="product-id-badge">ID: LOADING</div>
             
             <div class="price-row-wrapper">
@@ -778,7 +803,7 @@
                 : allProducts.filter(p => p.category === categoryFilter);
 
             if (filtered.length === 0) {
-                gridContainer.innerHTML = `<p style="grid-column: span 4; text-align:center; padding: 40px; color: var(--text-muted);">No products available in this section yet.</p>`;
+                gridContainer.innerHTML = `<p style="grid-column: span 2; text-align:center; padding: 40px; color: var(--text-muted);">No products available in this section yet.</p>`;
                 return;
             }
 
@@ -791,7 +816,7 @@
                 card.className = "grid-product-card";
                 card.innerHTML = `
                     ${discountTag}
-                    <img src="${targetDisplayImg}" alt="${product.name}">
+                    <img src="${targetDisplayImg}" alt="${product.name}" draggable="false">
                     <div class="product-title">${product.name}</div>
                     <div class="product-price">₦${safeFormatPrice(product.price)}</div>
                 `;
@@ -818,10 +843,10 @@
 
                 const card = document.createElement("div");
                 card.className = "grid-product-card";
-                card.style.minWidth = "150px";
-                card.style.maxWidth = "150px";
+                card.style.minWidth = "140px";
+                card.style.maxWidth = "140px";
                 card.innerHTML = `
-                    <img src="${targetDisplayImg}" style="height:100px;" alt="${product.name}">
+                    <img src="${targetDisplayImg}" style="height:100px;" alt="${product.name}" draggable="false">
                     <div class="product-title" style="height:32px; font-size:12px;">${product.name}</div>
                     <div class="product-price" style="font-size:13px;">₦${safeFormatPrice(product.price)}</div>
                 `;
@@ -838,12 +863,11 @@
             });
         });
 
+        /* --- GALLERY MODAL WITH INTEGRATED SWIPE DETECTION GESTURE ENGINE --- */
         function openProductDetailsModal(product) {
             selectedProduct = product;
             document.getElementById("mName").innerText = product.name;
-            
-            // Set unique product tracking ID code dynamically inside badge container
-            document.getElementById("mProductCode").innerText = "Item Code: " + product.id;
+            document.getElementById("mProductCode").innerText = "Item Code: " + product.id;[cite: 1]
             
             document.getElementById("mPrice").innerText = "₦" + safeFormatPrice(product.price);
             document.getElementById("mOld").innerText = product.oldPrice ? "₦" + safeFormatPrice(product.oldPrice) : "";
@@ -865,24 +889,59 @@
                 imagesArray = ['https://via.placeholder.com/150'];
             }
 
+            let currentImgIndex = 0;
             mainImgElement.src = imagesArray[0];
+
+            function activeImageIndex(idx) {
+                currentImgIndex = idx;
+                mainImgElement.src = imagesArray[currentImgIndex];
+                document.querySelectorAll(".gallery-thumb-item").forEach((t, i) => {
+                    if (i === currentImgIndex) t.classList.add("active-thumb");
+                    else t.classList.remove("active-thumb");
+                });
+            }
 
             if (imagesArray.length > 1) {
                 imagesArray.forEach((imgUrl, idx) => {
                     const thumb = document.createElement("img");
                     thumb.src = imgUrl;
                     thumb.className = `gallery-thumb-item ${idx === 0 ? 'active-thumb' : ''}`;
-                    thumb.addEventListener("click", () => {
-                        mainImgElement.src = imgUrl;
-                        document.querySelectorAll(".gallery-thumb-item").forEach(t => t.classList.remove("active-thumb"));
-                        thumb.classList.add("active-thumb");
-                    });
+                    thumb.addEventListener("click", () => activeImageIndex(idx));
                     thumbsContainer.appendChild(thumb);
                 });
+
+                // Horizontal Mobile Drag/Swipe Detection Framework
+                let touchStartX = 0;
+                let touchEndX = 0;
+
+                mainImgElement.ontouchstart = (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                };
+
+                mainImgElement.ontouchend = (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    const swipeDistance = touchEndX - touchStartX;
+
+                    if (Math.abs(swipeDistance) > 50) { // Requires a minimum 50px drag swipe step
+                        if (swipeDistance < 0) {
+                            // Swiped Left -> Load next item layout index
+                            if (currentImgIndex < imagesArray.length - 1) {
+                                activeImageIndex(currentImgIndex + 1);
+                            }
+                        } else {
+                            // Swiped Right -> Pull previous image snapshot parameters
+                            if (currentImgIndex > 0) {
+                                activeImageIndex(currentImgIndex - 1);
+                            }
+                        }
+                    }
+                };
+            } else {
+                mainImgElement.ontouchstart = null;
+                mainImgElement.ontouchend = null;
             }
 
             const storePhoneNum = "2348068564177"; 
-            // Augmented WhatsApp template string schema with item unique code tracking parameter
             const textFormat = encodeURIComponent(`Hello Holuwafemi Mega Store, I want to inquire about availability for:\n*${product.name}*\nPrice: ₦${safeFormatPrice(product.price)}\nProduct Code: ${product.id}`);
             document.getElementById("whatsappProductChatBtn").href = `https://wa.me/${storePhoneNum}?text=${textFormat}`;
 
@@ -927,7 +986,7 @@
                 const row = document.createElement("div");
                 row.className = "cart-item-row";
                 row.innerHTML = `
-                    <img src="${item.image}" alt="">
+                    <img src="${item.image}" alt="" draggable="false">
                     <div class="cart-item-details">
                         <div class="cart-item-title">${item.name}</div>
                         <div class="cart-item-price">₦${safeFormatPrice(item.price)}</div>
