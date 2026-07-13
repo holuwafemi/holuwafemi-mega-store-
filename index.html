@@ -144,7 +144,6 @@
             border-color: var(--primary);
         }
 
-        /* HARD CORE EXPLICIT MOBILE SELECT FIXES */
         select#gateState {
             background-color: var(--white) !important;
             color: var(--text-main) !important;
@@ -428,34 +427,36 @@
         </div>
     </div>
 
-    <!-- STABLE GLOBAL CONFIGURATION REGISTRATION MODAL -->
+    <!-- REGISTRATION MODAL FORM -->
     <div class="modal-overlay-sheet" id="gateModal" style="display: block;">
         <div class="modal-body-wrapper" style="margin-top: 40px;">
             <button type="button" class="modal-close-trigger" id="closeGateBtn" style="display:none;">×</button>
             <h3 id="gateTitle" style="font-size:20px; margin-bottom:6px;">Customer Registration</h3>
             <p id="gateSubtitle" style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Please provide accurate shipping and verification fields to gain entry details.</p>
             
-            <div style="display:flex; flex-direction:column; gap:12px;">
-                <label style="font-size: 11px; font-weight:700; color:var(--text-main); margin-bottom: -6px;">FULL NAME</label>
-                <input type="text" id="gateName" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text; padding: 0 15px; height:42px;" placeholder="Enter your full name">
+            <form id="registrationFormElement" onsubmit="return false;">
+                <div style="display:flex; flex-direction:column; gap:12px;">
+                    <label style="font-size: 11px; font-weight:700; color:var(--text-main); margin-bottom: -6px;">FULL NAME</label>
+                    <input type="text" id="gateName" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text; padding: 0 15px; height:42px;" placeholder="Enter your full name" required>
+                    
+                    <label style="font-size: 11px; font-weight:700; color:var(--text-main); margin-bottom: -6px;">EMAIL ADDRESS</label>
+                    <input type="email" id="gateEmail" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text; padding: 0 15px; height:42px;" placeholder="name@example.com" required>
+                    
+                    <label style="font-size: 11px; font-weight:700; color:var(--text-main); margin-bottom: -6px;">MOBILE PHONE NUMBER</label>
+                    <input type="tel" id="gatePhone" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text; padding: 0 15px; height:42px;" placeholder="e.g. 08034567890" required>
+                    
+                    <label style="font-size: 11px; font-weight:700; color:var(--text-main); margin-bottom: -6px;">DELIVERY STATE (NIGERIA)</label>
+                    <select id="gateState" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; height:42px; padding:0 15px;" required></select>
+                    
+                    <label style="font-size: 11px; font-weight:700; color:var(--text-main); margin-bottom: -6px;">COMPLETE SHIPPING HOUSE ADDRESS</label>
+                    <input type="text" id="gateAddress" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text; padding: 0 15px; height:42px;" placeholder="Street No, Building Name, Town Name..." required>
+                </div>
                 
-                <label style="font-size: 11px; font-weight:700; color:var(--text-main); margin-bottom: -6px;">EMAIL ADDRESS</label>
-                <input type="email" id="gateEmail" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text; padding: 0 15px; height:42px;" placeholder="name@example.com">
-                
-                <label style="font-size: 11px; font-weight:700; color:var(--text-main); margin-bottom: -6px;">MOBILE PHONE NUMBER</label>
-                <input type="tel" id="gatePhone" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text; padding: 0 15px; height:42px;" placeholder="e.g. 08034567890">
-                
-                <label style="font-size: 11px; font-weight:700; color:var(--text-main); margin-bottom: -6px;">DELIVERY STATE (NIGERIA)</label>
-                <select id="gateState" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; height:42px; padding:0 15px;"></select>
-                
-                <label style="font-size: 11px; font-weight:700; color:var(--text-main); margin-bottom: -6px;">COMPLETE SHIPPING HOUSE ADDRESS</label>
-                <input type="text" id="gateAddress" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text; padding: 0 15px; height:42px;" placeholder="Street No, Building Name, Town Name...">
-            </div>
-            
-            <p id="gateNote" style="font-size: 11px; color: var(--text-muted); margin-top:12px; line-height:1.4;">
-                <i class="fas fa-shield-alt"></i> Data verified. These profiles integrate into your receipt tracking profiles at Paystack checkout pipelines.
-            </p>
-            <button type="button" id="gateSubmitBtn" class="btn-action-primary btn-buy" style="margin-top:20px;">CREATE ACCOUNT & ENTER STORE</button>
+                <p id="gateNote" style="font-size: 11px; color: var(--text-muted); margin-top:12px; line-height:1.4;">
+                    <i class="fas fa-shield-alt"></i> Data verified. These profiles integrate into your receipt tracking profiles at Paystack checkout pipelines.
+                </p>
+                <button type="submit" id="gateSubmitBtn" class="btn-action-primary btn-buy" style="margin-top:20px;">CREATE ACCOUNT & ENTER STORE</button>
+            </form>
         </div>
     </div>
 
@@ -470,7 +471,7 @@
             <input type="hidden" id="custPhone"><input type="hidden" id="custAddress">
 
             <h3 id="mName" style="margin-top:15px; font-size:18px; margin-bottom: 2px;">Product Title Here</h3>
-            <div id="mProductCode" class="product-id-badge">ID: LOADING[cite: 1]</div>
+            <div id="mProductCode" class="product-id-badge">ID: LOADING</div>[cite: 1]
             
             <div class="price-row-wrapper">
                 <span id="mPrice" class="product-price" style="font-size:22px; color:var(--secondary);">₦0</span>
@@ -565,9 +566,8 @@
         </div>
     </footer>
 
-    <!-- GLOBAL HIGH ACCESSIBILITY JAVASCRIPT BLOCK -->
+    <!-- HIGH-PRIORITY CONTENT DRIVEN INTERACTION SCRIPT -->
     <script>
-        // Execution priority 1: Populate dropdown before module code sandboxes the context.
         const nigeriaStates = [
             "Select State", "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue", "Borno", 
             "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti", "Enugu", "FCT - Abuja", "Gombe", "Imo", 
@@ -583,7 +583,6 @@
             }).join("");
         }
 
-        // Global proxy function for the refund dashboard
         window.triggerRefundPanelInline = function(presetRef) {
             document.getElementById("cartModal").style.display = "none";
             document.getElementById("refundModal").style.display = "none";
@@ -597,9 +596,37 @@
             
             refundPanel.scrollIntoView({ behavior: "smooth" });
         };
+
+        // EXPLICIT FIXED FORM PROCESSOR: Placed directly in standard global window environment scope
+        document.getElementById("registrationFormElement").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById("gateName").value.trim();
+            const email = document.getElementById("gateEmail").value.trim();
+            const phone = document.getElementById("gatePhone").value.trim();
+            const state = document.getElementById("gateState").value;
+            const address = document.getElementById("gateAddress").value.trim();
+
+            if (!name || !email || !phone || !state || !address) {
+                alert("Please complete all delivery profile rows cleanly.");
+                return false;
+            }
+
+            localStorage.setItem("storeCustomerName", name);
+            localStorage.setItem("storeCustomerEmail", email);
+            localStorage.setItem("storeCustomerPhone", phone);
+            localStorage.setItem("storeCustomerState", state);
+            localStorage.setItem("storeCustomerAddress", address);
+
+            alert("Session profile cached correctly!");
+            
+            // Dispatch a native event layout to update the Firebase sandboxed configuration module immediately
+            window.dispatchEvent(new Event("visitorSessionUpdated"));
+            return false;
+        });
     </script>
 
-    <!-- FIREBASE AND CART ENGINE -->
+    <!-- FIREBASE DATA SYNCHRONIZATION AND CONTEXT MODULE -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
@@ -662,7 +689,6 @@
                 if (logoutBtn) logoutBtn.style.display = "none";
                 if (editProfileBtn) editProfileBtn.style.display = "none";
 
-                // Re-evaluate form status strings back to standard creation guidelines
                 document.getElementById("gateTitle").innerText = "Customer Registration";
                 document.getElementById("gateSubtitle").innerText = "Please provide accurate shipping and verification fields to gain entry details.";
                 document.getElementById("gateName").removeAttribute("readonly");
@@ -673,6 +699,9 @@
                 document.getElementById("closeGateBtn").style.display = "none";
             }
         }
+
+        // Listen for internal profile updates
+        window.addEventListener("visitorSessionUpdated", checkVisitorSession);
 
         function openProfileForEditing() {
             document.getElementById("gateName").value = localStorage.getItem("storeCustomerName") || "";
@@ -702,28 +731,6 @@
         document.getElementById("closeGateBtn")?.addEventListener("click", () => {
             document.getElementById("gateModal").style.setProperty("display", "none", "important");
             document.body.style.overflow = "auto";
-        });
-
-        document.getElementById("gateSubmitBtn")?.addEventListener("click", () => {
-            const name = document.getElementById("gateName").value.trim();
-            const email = document.getElementById("gateEmail").value.trim();
-            const phone = document.getElementById("gatePhone").value.trim();
-            const state = document.getElementById("gateState").value;
-            const address = document.getElementById("gateAddress").value.trim();
-
-            if (!name || !email || !phone || !state || !address) {
-                alert("Please fill in all delivery details perfectly.");
-                return;
-            }
-
-            localStorage.setItem("storeCustomerName", name);
-            localStorage.setItem("storeCustomerEmail", email);
-            localStorage.setItem("storeCustomerPhone", phone);
-            localStorage.setItem("storeCustomerState", state);
-            localStorage.setItem("storeCustomerAddress", address);
-
-            alert("Profile setup completed successfully!");
-            checkVisitorSession();
         });
 
         document.getElementById("headerLogoutBtn")?.addEventListener("click", () => {
