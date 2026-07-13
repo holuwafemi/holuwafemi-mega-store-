@@ -471,7 +471,7 @@
             <input type="hidden" id="custPhone"><input type="hidden" id="custAddress">
 
             <h3 id="mName" style="margin-top:15px; font-size:18px; margin-bottom: 2px;">Product Title Here</h3>
-            <div id="mProductCode" class="product-id-badge">ID: LOADING</div>[cite: 1]
+            <div id="mProductCode" class="product-id-badge">ID: LOADING</div>
             
             <div class="price-row-wrapper">
                 <span id="mPrice" class="product-price" style="font-size:22px; color:var(--secondary);">₦0</span>
@@ -620,7 +620,14 @@
 
             alert("Session profile cached correctly!");
             
-            // Dispatch a native event layout to update the Firebase sandboxed configuration module immediately
+            // Explicitly close the modal and re-enable frontend scroll interactions immediately
+            const gateModal = document.getElementById("gateModal");
+            if (gateModal) {
+                gateModal.style.setProperty("display", "none", "important");
+            }
+            document.body.style.overflow = "auto";
+            
+            // Dispatch native event loop to notify the isolated Firebase configurations module
             window.dispatchEvent(new Event("visitorSessionUpdated"));
             return false;
         });
@@ -826,7 +833,7 @@
         function openProductDetailsModal(product) {
             selectedProduct = product;
             document.getElementById("mName").innerText = product.name;
-            document.getElementById("mProductCode").innerText = "Item Code: " + product.id;[cite: 1]
+            document.getElementById("mProductCode").innerText = "Item Code: " + product.id;
             
             document.getElementById("mPrice").innerText = "₦" + safeFormatPrice(product.price);
             document.getElementById("mOld").innerText = product.oldPrice ? "₦" + safeFormatPrice(product.oldPrice) : "";
