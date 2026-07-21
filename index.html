@@ -1000,49 +1000,60 @@
                 return;
             }
 
-            const handler = PaystackPop.setup({
-                key: 'pk_live_e64fc7ce9677d4f5f4f4e4cb89999c51f52a1475', 
-                email: customerEmail,
-                amount: Math.round(Number(checkoutAmount) * 100), 
-                currency: "NGN",
-                metadata: {
-                    custom_fields: [
-                        { display_name: "Customer Name", variable_name: "customer_name", value: customerName },
-                        { display_name: "Checkout Type", variable_name: "checkout_type", value: checkoutMode },
-                        { display_name: "Delivery Details", variable_name: "delivery_details", value: deliveryAddress }
-                    ]
-                },
-                callback: async function(response) {
-                    alert("Settlement authorized securely! Reference: " + response.reference);
-                    
-                    try {
-                        await addDoc(collection(db, "orders"), {
-                            customerName,
-                            customerEmail,
-                            customerPhone,
-                            deliveryAddress,
-                            amountPaid: checkoutAmount,
-                            paystackReference: response.reference,
-                            status: "Paid",
-                            timestamp: serverTimestamp()
-                        });
-                    } catch (dbErr) {
-                        console.error("Failed to archive details metadata: ", dbErr);
-                    }
+          // Ensure email and amount exist before opening Paystack
+const validEmail = customerEmail && customerEmail.trim() !== "" ? customerEmail.trim() : "customer@example.com";
+const totalKobo = Math.round(Number(String(checkoutAmount || 0).replace(/,/g, '')) * 100);
 
-                    if (checkoutMode === "cart") {
-                        cart = [];
-                        updateCartUI();
-                    }
+if (totalKobo <= 0) {
+    alert("Please select items to buy before checking out.");
+    return;
+}
 
-                    document.getElementById("checkoutModal").style.display = "none";
-                    document.body.style.overflow = "auto";
-                },
-                onClose: function() {
-                    alert("Transaction portal safely paused.");
-                }
+const handler = PaystackPop.setup({
+    key: 'pk_live_e64fc7ce9677d4f5f4f4e4cb89999c51f52a1475', 
+    email: validEmail,
+    amount: totalKobo, 
+    currency: "NGN",
+    metadata: {
+        custom_fields: [
+            { display_name: "Customer Name", variable_name: "customer_name", value: customerName || "Customer" },
+            { display_name: "Checkout Type", variable_name: "checkout_type", value: checkoutMode || "cart" },
+            { display_name: "Delivery Details", variable_name: "delivery_details", value: deliveryAddress || "Address not provided" }
+        ]
+    },
+    callback: async function(response) {
+        alert("Payment authorized! Reference: " + response.reference);
+        
+        try {
+            await addDoc(collection(db, "orders"), {
+                customerName: customerName || "Customer",
+                customerEmail: validEmail,
+                customerPhone: customerPhone || "",
+                deliveryAddress: deliveryAddress || "",
+                amountPaid: checkoutAmount,
+                paystackReference: response.reference,
+                status: "Paid",
+                timestamp: serverTimestamp()
             });
-            handler.openIframe();
+        } catch (dbErr) {
+            console.error("Firebase write error: ", dbErr);
+        }
+
+        if (typeof checkoutMode !== "undefined" && checkoutMode === "cart") {
+            cart = [];
+            if (typeof updateCartUI === "function") updateCartUI();
+        }
+
+        const modal = document.getElementById("checkoutModal");
+        if (modal) modal.style.display = "none";
+        document.body.style.overflow = "auto";
+    },
+    onClose: function() {
+        alert("Transaction window closed.");
+    }
+});
+
+handler.openIframe();
         });
 
         document.getElementById("storefrontRefundForm")?.addEventListener("submit", async function(e) {
