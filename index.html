@@ -534,7 +534,6 @@
             </ul>
             <button type="button" class="btn-action-primary" onclick="triggerRefundPanelInline('')" style="background:#f1f5f9; color:#ef4444; font-size:13px; margin-top:10px;">Open Refund Submission Form</button>
         </div>
-    </div>
 
     <footer>
         <p>&copy; 2026 Holuwafemi Mega Store. All Rights Reserved.</p>
@@ -1004,7 +1003,7 @@
             const handler = PaystackPop.setup({
                 key: 'pk_live_e64fc7ce9677d4f5f4f4e4cb89999c51f52a1475', 
                 email: customerEmail,
-                amount: checkoutAmount * 100, 
+                amount: Math.round(Number(checkoutAmount) * 100), 
                 currency: "NGN",
                 metadata: {
                     custom_fields: [
