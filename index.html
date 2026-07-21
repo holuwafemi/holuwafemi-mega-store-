@@ -141,16 +141,9 @@
             border-color: var(--primary);
         }
         select#gateState {
-            background-color: var(--white) !important;
-            color: var(--text-main) !important;
             white-space: normal !important;
-            word-wrap: normal !important;
-            display: block !important;
-            visibility: visible !important;
-            opacity: 1 !important;
             appearance: auto !important;
-            -webkit-appearance: menulist !important;
-            -moz-appearance: menulist !important;
+            -webkit-appearance: listbox !important;
             cursor: pointer !important;
         }
         .products-grid-layout {
@@ -215,10 +208,19 @@
                 grid-template-columns: repeat(2, 1fr);
                 gap: 10px;
             }
-            .grid-product-card { padding: 10px; }
-            .grid-product-card img { height: 110px; }
-            .product-title { font-size: 12px; height: 32px; }
-            .product-price { font-size: 14px; }
+            .grid-product-card {
+                padding: 10px;
+            }
+            .grid-product-card img {
+                height: 110px;
+            }
+            .product-title {
+                font-size: 12px;
+                height: 32px;
+            }
+            .product-price {
+                font-size: 14px;
+            }
         }
         .modal-overlay-sheet {
             position: fixed;
@@ -271,7 +273,9 @@
             background: #f8fafc;
             flex-shrink: 0;
         }
-        .gallery-thumb-item.active-thumb { border-color: var(--secondary); }
+        .gallery-thumb-item.active-thumb {
+            border-color: var(--secondary);
+        }
         .delivery-fee-badge-container {
             background: #f0fdf4;
             border: 1px solid #bbf7d0;
@@ -296,34 +300,108 @@
             align-items: center;
             gap: 12px;
         }
-        .modal-slashed-old-price { text-decoration: line-through; color: var(--text-muted); font-size: 14px; }
-        .modal-action-buttons-group { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        .modal-slashed-old-price {
+            text-decoration: line-through;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        .modal-action-buttons-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
         .btn-action-primary {
-            width: 100%; padding: 12px; border-radius: 8px; border: none; font-size: 15px; font-weight: 600;
-            cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; text-decoration: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
         }
         .btn-whatsapp { background-color: #25d366; color: white; }
         .btn-buy { background-color: var(--secondary); color: white; }
         .btn-buy-primary { background-color: var(--primary); color: white; }
         .btn-cart { background-color: #f1f5f9; color: var(--text-main); }
-        .cart-item-row { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border-color); }
+        .cart-item-row {
+            display: flex;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
         .cart-item-row img { width: 60px; height: 60px; object-fit: contain; border-radius: 6px; }
         .cart-item-details { flex: 1; }
         .cart-item-title { font-size: 13px; font-weight: 600; }
         .cart-item-price { font-size: 14px; font-weight: 700; color: var(--secondary); margin: 4px 0; }
         .btn-remove { background: none; border: none; color: #ef4444; font-size: 12px; cursor: pointer; font-weight: 500; }
         .refund-card-section {
-            background: var(--white); border: 1px solid var(--border-color); border-left: 4px solid #ef4444;
-            border-radius: 12px; padding: 25px; margin-top: 20px; display: none; animation: formSlideUp 0.4s ease-out;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid #ef4444;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+            display: none;
+            animation: formSlideUp 0.4s ease-out;
         }
-        @keyframes formSlideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        .refund-card-section h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; color: #ef4444; }
-        .refund-input-field { width: 100%; background: #f8fafc; border: 1px solid var(--border-color); padding: 11px 14px; border-radius: 8px; font-size: 14px; color: var(--text-main); outline: none; }
-        .refund-input-field:focus { border-color: #ef4444; }
-        .refund-grid-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
-        @media (max-width: 600px) { .refund-grid-row { grid-template-columns: 1fr; } }
-        .product-id-badge { display: inline-block; background: #f1f5f9; color: #475569; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 6px; margin-top: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
-        footer { background: #0f172a; color: #94a3b8; padding: 40px 5%; text-align: center; border-top: 1px solid #1e293b; font-size: 14px; }
+        @keyframes formSlideUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .refund-card-section h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #ef4444;
+        }
+        .refund-input-field {
+            width: 100%;
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            padding: 11px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text-main);
+            outline: none;
+        }
+        .refund-input-field:focus {
+            border-color: #ef4444;
+        }
+        .refund-grid-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        @media (max-width: 600px) {
+            .refund-grid-row { grid-template-columns: 1fr; }
+        }
+        .product-id-badge {
+            display: inline-block;
+            background: #f1f5f9;
+            color: #475569;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-top: 6px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        footer {
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 40px 5%;
+            text-align: center;
+            border-top: 1px solid #1e293b;
+            font-size: 14px;
+        }
         .footer-links { display: flex; justify-content: center; gap: 20px; margin-top: 15px; }
         .footer-links a { color: #cbd5e1; text-decoration: none; cursor: pointer; }
     </style>
@@ -334,6 +412,10 @@
             <h1>Holuwafemi Mega Store</h1>
         </div>
         <div class="header-actions">
+            <!-- ADMIN LOGIN TRIGGER BUTTON -->
+            <button id="openAdminModalBtn" class="nav-icon-btn" title="Admin Portal Login" style="margin-right: 5px;">
+                <i class="fas fa-lock" style="color: var(--primary);"></i>
+            </button>
             <span id="headerUserBadge" class="user-badge-btn">👤 Profile</span>
             <button id="headerEditProfileBtn" class="btn-edit-profile" title="Edit Profile"><i class="fas fa-user-edit"></i></button>
             <button id="headerLogoutBtn" class="btn-logout" title="Logout Switch"><i class="fas fa-sign-out-alt"></i></button>
@@ -343,17 +425,14 @@
             </button>
         </div>
     </header>
-
     <div class="promo-banner-billboard">
         <h2>Premium Quality, Unbeatable Deals</h2>
         <p>Explore original phones, solar gear, appliances, and luxury electronics with secure instant checkout payment processing pipelines.</p>
     </div>
-
     <div class="section-container" id="topSellersSection">
         <div class="section-title"><i class="fas fa-fire" style="color:#f97316;"></i> Trending Highlights</div>
         <div class="horizontal-scroll-row" id="topSellersScrollBox"></div>
     </div>
-
     <div class="section-container">
         <div class="section-title"><i class="fas fa-store" style="color:var(--secondary)"></i> Explore Catalog Inventory</div>
         
@@ -368,8 +447,6 @@
         </div>
         <div class="products-grid-layout" id="mainCatalogGrid"></div>
     </div>
-
-    <!-- REFUND SUBMISSION PANEL -->
     <div class="section-container" style="padding-top: 0; padding-bottom: 40px;">
         <div class="refund-card-section" id="storefrontRefundBlock">
             <h3>Submit Return & Refund Request</h3>
@@ -410,39 +487,50 @@
         </div>
     </div>
 
-    <!-- REGISTRATION MODAL FORM -->
-    <div class="modal-overlay-sheet" id="gateModal" style="display: block;">
-        <div class="modal-body-wrapper" style="margin-top: 40px;">
-            <button type="button" class="modal-close-trigger" id="closeGateBtn" style="display:none;">×</button>
-            <h3 id="gateTitle" style="font-size:20px; margin-bottom:6px;">Customer Registration</h3>
-            <p id="gateSubtitle" style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Please provide accurate shipping and verification fields to gain entry details.</p>
+    <!-- ADMIN LOGIN MODAL -->
+    <div class="modal-overlay-sheet" id="adminLoginModal">
+        <div class="modal-body-wrapper" style="max-width: 400px; margin-top: 80px;">
+            <button class="modal-close-trigger" id="closeAdminLoginBtn">×</button>
+            <h3 style="font-size:20px; margin-bottom:6px; color:var(--primary);"><i class="fas fa-lock"></i> Admin Authorization</h3>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Enter administrative email & password to access management control.</p>
             
-            <form id="registrationFormElement" onsubmit="return false;">
+            <form id="adminLoginForm">
                 <div style="display:flex; flex-direction:column; gap:12px;">
-                    <label style="font-size: 11px; font-weight:700; color:var(--text-main); margin-bottom: -6px;">FULL NAME</label>
-                    <input type="text" id="gateName" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text; padding: 0 15px; height:42px;" placeholder="Enter your full name" required>
-                    
-                    <label style="font-size: 11px; font-weight:700; color:var(--text-main); margin-bottom: -6px;">EMAIL ADDRESS</label>
-                    <input type="email" id="gateEmail" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text; padding: 0 15px; height:42px;" placeholder="name@example.com" required>
-                    
-                    <label style="font-size: 11px; font-weight:700; color:var(--text-main); margin-bottom: -6px;">MOBILE PHONE NUMBER</label>
-                    <input type="tel" id="gatePhone" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text; padding: 0 15px; height:42px;" placeholder="e.g. 08034567890" required>
-                    
-                    <label style="font-size: 11px; font-weight:700; color:var(--text-main); margin-bottom: -6px;">DELIVERY STATE (NIGERIA)</label>
-                    <select id="gateState" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; height:42px; padding:0 15px;" required></select>
-                    
-                    <label style="font-size: 11px; font-weight:700; color:var(--text-main); margin-bottom: -6px;">COMPLETE SHIPPING HOUSE ADDRESS</label>
-                    <input type="text" id="gateAddress" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text; padding: 0 15px; height:42px;" placeholder="Street No, Building Name, Town Name..." required>
+                    <div>
+                        <label style="font-size:11px; font-weight:700; color:var(--text-main); display:block; margin-bottom:4px;">ADMIN EMAIL</label>
+                        <input type="email" id="adminAuthEmail" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text; padding:0 15px; height:42px;" placeholder="admin@example.com" required>
+                    </div>
+                    <div>
+                        <label style="font-size:11px; font-weight:700; color:var(--text-main); display:block; margin-bottom:4px;">PASSWORD</label>
+                        <input type="password" id="adminAuthPassword" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text; padding:0 15px; height:42px;" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" id="adminLoginSubmitBtn" class="btn-action-primary btn-buy" style="margin-top:10px; font-size:14px;">LOGIN TO ADMIN PORTAL</button>
                 </div>
-                
-                <p id="gateNote" style="font-size: 11px; color: var(--text-muted); margin-top:12px; line-height:1.4;">
-                    <i class="fas fa-shield-alt"></i> Data verified. These profiles integrate into your receipt tracking profiles at Paystack checkout pipelines.
-                </p>
-                <button type="submit" id="gateSubmitBtn" class="btn-action-primary btn-buy" style="margin-top:20px;">CREATE ACCOUNT & ENTER STORE</button>
             </form>
         </div>
     </div>
 
+    <!-- REGISTRATION MODAL -->
+    <div class="modal-overlay-sheet" id="gateModal" style="display: block;">
+        <div class="modal-body-wrapper" style="margin-top: 80px;">
+            <button type="button" class="modal-close-trigger" id="closeGateBtn" style="display:none;">×</button>
+            <h3 id="gateTitle" style="font-size:20px; margin-bottom:6px;">Customer Registration</h3>
+            <p id="gateSubtitle" style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Please enter your delivery details to open your account instantly.</p>
+            
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <input type="text" id="gateName" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text;" placeholder="Full Name">
+                <input type="email" id="gateEmail" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text;" placeholder="Email Address">
+                <input type="tel" id="gatePhone" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text;" placeholder="Phone Number (e.g., 08012345678)">
+                <select id="gateState" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; height:42px; padding:0 15px; white-space: normal !important; -webkit-appearance: listbox !important; appearance: auto !important; cursor: pointer;"></select>
+                <input type="text" id="gateAddress" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text;" placeholder="Street Address, Town/City Details">
+            </div>
+            
+            <p id="gateNote" style="font-size: 11px; color: var(--text-muted); margin-top:12px; line-height:1.4;">
+                <i class="fas fa-shield-alt"></i> Secure registration framework verified. These delivery profiles link directly into active automated processing tracking receipts.
+            </p>
+            <button type="button" id="gateSubmitBtn" class="btn-action-primary btn-buy" style="margin-top:20px;">CREATE ACCOUNT & ENTER STORE</button>
+        </div>
+    </div>
     <!-- MAIN PRODUCT MODAL -->
     <div class="modal-overlay-sheet" id="productModal">
         <div class="modal-body-wrapper">
@@ -473,7 +561,6 @@
             </div>
         </div>
     </div>
-
     <!-- CART MODAL -->
     <div class="modal-overlay-sheet" id="cartModal">
         <div class="modal-body-wrapper">
@@ -501,7 +588,6 @@
             </div>
         </div>
     </div>
-
     <!-- CHECKOUT MODAL -->
     <div class="modal-overlay-sheet" id="checkoutModal">
         <div class="modal-body-wrapper" style="text-align:center; padding:30px;">
@@ -517,8 +603,7 @@
             <button id="paystackTriggerBtn" class="btn-action-primary btn-buy" style="background:#34d399;"><i class="fas fa-shield-alt"></i> AUTHORIZE PAYMENT VIA PAYSTACK</button>
         </div>
     </div>
-
-    <!-- POLICY LAYERS -->
+    <!-- POLICIES -->
     <div class="modal-overlay-sheet" id="privacyModal"><div class="modal-body-wrapper"><button class="modal-close-trigger close-policy-btn">×</button><h3>Privacy Policy Statement</h3><p style="font-size:14px; margin-top:10px; line-height:1.5;">Holuwafemi Mega Store secures customer delivery records strictly for automated payload tracking execution routines. Profile data configurations stay safely localized on sandbox caching contexts.</p></div></div>
     <div class="modal-overlay-sheet" id="termsModal"><div class="modal-body-wrapper"><button class="modal-close-trigger close-policy-btn">×</button><h3>Terms & Service Guidelines</h3><p style="font-size:14px; margin-top:10px; line-height:1.5;">All electronic merchandise listings, monocrystalline solar configurations, and dynamic appliance distribution portfolios carry structural merchant warranties verified at settlement checkpoints.</p></div></div>
     <div class="modal-overlay-sheet" id="refundModal">
@@ -534,7 +619,7 @@
             </ul>
             <button type="button" class="btn-action-primary" onclick="triggerRefundPanelInline('')" style="background:#f1f5f9; color:#ef4444; font-size:13px; margin-top:10px;">Open Refund Submission Form</button>
         </div>
-
+    </div>
     <footer>
         <p>&copy; 2026 Holuwafemi Mega Store. All Rights Reserved.</p>
         <p style="font-size:11px; margin-top:4px; color:#64748b;">Premium Electronics, Appliances & High-Efficiency Solar Ecosystem Installations.</p>
@@ -544,22 +629,74 @@
             <a data-policy="refundModal">Refund Policy</a>
         </div>
     </footer>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
-    <!-- HIGH-PRIORITY CONTENT DRIVEN INTERACTION SCRIPT -->
-    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
+            authDomain: "holuwafemi-mega-store.firebaseapp.com",
+            projectId: "holuwafemi-mega-store",
+            storageBucket: "holuwafemi-mega-store.firebasestorage.app",
+            messagingSenderId: "1002214759367",
+            appId: "1:1002214759367:web:0f3afecb88c0f8a0f397e2",
+            measurementId: "G-WPFKNZ20E3"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        
+        let allProducts = [];
+        let selectedProduct = null; 
+        let checkoutMode = ""; 
+        let checkoutAmount = 0;
+        let cart = JSON.parse(localStorage.getItem("megaStoreCart")) || [];
         const nigeriaStates = [
             "Select State", "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue", "Borno", 
             "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti", "Enugu", "FCT - Abuja", "Gombe", "Imo", 
             "Jigawa", "Kaduna", "Kano", "Katsina", "Kebbi", "Kogi", "Kwara", "Lagos", "Nasarawa", 
             "Niger", "Ogun", "Ondo", "Osun", "Oyo", "Plateau", "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara"
         ];
-        const stateDropdown = document.getElementById("gateState");
-        if (stateDropdown) {
-            stateDropdown.innerHTML = nigeriaStates.map(st => {
-                const val = (st === "Select State") ? "" : st;
-                return `<option value="${val}">${st}</option>`;
-            }).join("");
+        const stateSelector = document.getElementById("gateState");
+        if (stateSelector) {
+            stateSelector.innerHTML = nigeriaStates.map(state => `<option value="${state === 'Select State' ? '' : state}">${state}</option>`).join("");
         }
+
+        // ADMIN LOGIN EVENT LISTENERS
+        document.getElementById("openAdminModalBtn")?.addEventListener("click", () => {
+            document.getElementById("adminLoginModal").style.display = "block";
+            document.body.style.overflow = "hidden";
+        });
+
+        document.getElementById("closeAdminLoginBtn")?.addEventListener("click", () => {
+            document.getElementById("adminLoginModal").style.display = "none";
+            document.body.style.overflow = "auto";
+        });
+
+        document.getElementById("adminLoginForm")?.addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const email = document.getElementById("adminAuthEmail").value.trim();
+            const password = document.getElementById("adminAuthPassword").value;
+            const submitBtn = document.getElementById("adminLoginSubmitBtn");
+
+            try {
+                submitBtn.innerText = "Verifying...";
+                submitBtn.disabled = true;
+
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                alert("Admin Access Authorized! Navigating to dashboard...");
+                
+                localStorage.setItem("isAdminLoggedIn", "true");
+                window.location.href = "admin.html";
+            } catch (error) {
+                console.error("Admin Auth Error:", error);
+                alert("Authentication Failed: " + error.message);
+            } finally {
+                submitBtn.innerText = "LOGIN TO ADMIN PORTAL";
+                submitBtn.disabled = false;
+            }
+        });
 
         window.triggerRefundPanelInline = function(presetRef) {
             document.getElementById("cartModal").style.display = "none";
@@ -573,70 +710,11 @@
             
             refundPanel.scrollIntoView({ behavior: "smooth" });
         };
-
-        // Standard global window environment form processor
-        document.getElementById("registrationFormElement").addEventListener("submit", function(event) {
-            event.preventDefault();
-            
-            const name = document.getElementById("gateName").value.trim();
-            const email = document.getElementById("gateEmail").value.trim();
-            const phone = document.getElementById("gatePhone").value.trim();
-            const state = document.getElementById("gateState").value;
-            const address = document.getElementById("gateAddress").value.trim();
-
-            if (!name || !email || !phone || !state || !address) {
-                alert("Please complete all delivery profile rows cleanly.");
-                return false;
-            }
-
-            localStorage.setItem("storeCustomerName", name);
-            localStorage.setItem("storeCustomerEmail", email);
-            localStorage.setItem("storeCustomerPhone", phone);
-            localStorage.setItem("storeCustomerState", state);
-            localStorage.setItem("storeCustomerAddress", address);
-            alert("Session profile cached correctly!");
-            
-            const gateModal = document.getElementById("gateModal");
-            if (gateModal) {
-                gateModal.style.setProperty("display", "none", "important");
-            }
-            document.body.style.overflow = "auto";
-            
-            window.dispatchEvent(new Event("visitorSessionUpdated"));
-            return false;
-        });
-    </script>
-
-    <!-- FIREBASE DATA SYNCHRONIZATION AND CONTEXT MODULE -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-        
-        const firebaseConfig = {
-            apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
-            authDomain: "holuwafemi-mega-store.firebaseapp.com",
-            projectId: "holuwafemi-mega-store",
-            storageBucket: "holuwafemi-mega-store.firebasestorage.app",
-            messagingSenderId: "1002214759367",
-            appId: "1:1002214759367:web:0f3afecb88c0f8a0f397e2",
-            measurementId: "G-WPFKNZ20E3"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        
-        let allProducts = [];
-        let selectedProduct = null; 
-        let checkoutMode = ""; 
-        let checkoutAmount = 0;
-        let cart = JSON.parse(localStorage.getItem("megaStoreCart")) || [];
-
         function safeFormatPrice(val) {
             if (val === undefined || val === null || val === "") return "0";
             const num = Number(val);
             return isNaN(num) ? "0" : num.toLocaleString();
         }
-
         function checkVisitorSession() {
             const savedName = localStorage.getItem("storeCustomerName");
             const savedEmail = localStorage.getItem("storeCustomerEmail");
@@ -648,7 +726,6 @@
             const badge = document.getElementById("headerUserBadge");
             const logoutBtn = document.getElementById("headerLogoutBtn");
             const editProfileBtn = document.getElementById("headerEditProfileBtn");
-
             if (savedName && savedEmail) {
                 if (gate) gate.style.setProperty("display", "none", "important");
                 document.body.style.overflow = "auto";
@@ -669,20 +746,8 @@
                 if (badge) badge.style.display = "none";
                 if (logoutBtn) logoutBtn.style.display = "none";
                 if (editProfileBtn) editProfileBtn.style.display = "none";
-                
-                document.getElementById("gateTitle").innerText = "Customer Registration";
-                document.getElementById("gateSubtitle").innerText = "Please provide accurate shipping and verification fields to gain entry details.";
-                document.getElementById("gateName").removeAttribute("readonly");
-                document.getElementById("gateEmail").removeAttribute("readonly");
-                document.getElementById("gateName").style.background = "#ffffff";
-                document.getElementById("gateEmail").style.background = "#ffffff";
-                document.getElementById("gateSubmitBtn").innerText = "CREATE ACCOUNT & ENTER STORE";
-                document.getElementById("closeGateBtn").style.display = "none";
             }
         }
-
-        window.addEventListener("visitorSessionUpdated", checkVisitorSession);
-
         function openProfileForEditing() {
             document.getElementById("gateName").value = localStorage.getItem("storeCustomerName") || "";
             document.getElementById("gateEmail").value = localStorage.getItem("storeCustomerEmail") || "";
@@ -703,25 +768,39 @@
             document.getElementById("gateModal").style.setProperty("display", "block", "important");
             document.body.style.overflow = "hidden";
         }
-
         document.getElementById("headerUserBadge")?.addEventListener("click", openProfileForEditing);
         document.getElementById("headerEditProfileBtn")?.addEventListener("click", openProfileForEditing);
         document.getElementById("closeGateBtn")?.addEventListener("click", () => {
             document.getElementById("gateModal").style.setProperty("display", "none", "important");
             document.body.style.overflow = "auto";
         });
-
+        document.getElementById("gateSubmitBtn")?.addEventListener("click", () => {
+            const name = document.getElementById("gateName").value.trim();
+            const email = document.getElementById("gateEmail").value.trim();
+            const phone = document.getElementById("gatePhone").value.trim();
+            const state = document.getElementById("gateState").value;
+            const address = document.getElementById("gateAddress").value.trim();
+            if (!name || !email || !phone || !state || !address) {
+                alert("Please fill in all delivery details perfectly.");
+                return;
+            }
+            localStorage.setItem("storeCustomerName", name);
+            localStorage.setItem("storeCustomerEmail", email);
+            localStorage.setItem("storeCustomerPhone", phone);
+            localStorage.setItem("storeCustomerState", state);
+            localStorage.setItem("storeCustomerAddress", address);
+            alert("Profile successfully configured!");
+            checkVisitorSession();
+        });
         document.getElementById("headerLogoutBtn")?.addEventListener("click", () => {
-            if (confirm("Are you sure you want to log out and change user profiles?")) {
+            if (confirm("Are you sure you want to change accounts?")) {
                 localStorage.clear();
                 checkVisitorSession();
                 updateCartUI();
             }
         });
-
         const productsCollection = collection(db, "products");
         const productsQuery = query(productsCollection, orderBy("timestamp", "desc"));
-        
         onSnapshot(productsQuery, (snapshot) => {
             allProducts = [];
             snapshot.forEach((doc) => {
@@ -730,26 +809,21 @@
             renderStoreProducts("all");
             renderTopSellers();
         });
-
         function renderStoreProducts(categoryFilter) {
             const gridContainer = document.getElementById("mainCatalogGrid");
             if (!gridContainer) return;
             gridContainer.innerHTML = "";
-            
             const filtered = categoryFilter === "all" 
                 ? allProducts 
                 : allProducts.filter(p => p.category === categoryFilter);
-                
             if (filtered.length === 0) {
                 gridContainer.innerHTML = `<p style="grid-column: span 2; text-align:center; padding: 40px; color: var(--text-muted);">No products available in this section yet.</p>`;
                 return;
             }
-
             filtered.forEach(product => {
                 const discountAmount = product.oldPrice ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100) : 0;
                 const discountTag = discountAmount > 0 ? `<span class="discount-badge">-${discountAmount}%</span>` : "";
                 const targetDisplayImg = Array.isArray(product.images) ? product.images[0] : (product.imageUrl || 'https://via.placeholder.com/150');
-                
                 const card = document.createElement("div");
                 card.className = "grid-product-card";
                 card.innerHTML = `
@@ -762,12 +836,10 @@
                 gridContainer.appendChild(card);
             });
         }
-
         function renderTopSellers() {
             const scrollBox = document.getElementById("topSellersScrollBox");
             if (!scrollBox) return;
             scrollBox.innerHTML = "";
-            
             const displayList = allProducts.filter(p => p.topSeller === true || p.featured === true).slice(0, 6);
             if (displayList.length === 0) {
                 document.getElementById("topSellersSection").style.display = "none";
@@ -775,7 +847,6 @@
             } else {
                 document.getElementById("topSellersSection").style.display = "block";
             }
-
             displayList.forEach(product => {
                 const targetDisplayImg = Array.isArray(product.images) ? product.images[0] : (product.imageUrl || 'https://via.placeholder.com/150');
                 const card = document.createElement("div");
@@ -791,7 +862,6 @@
                 scrollBox.appendChild(card);
             });
         }
-
         document.querySelectorAll("#categoryTabsBar .cat-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 document.querySelectorAll("#categoryTabsBar .cat-btn").forEach(b => b.classList.remove("active"));
@@ -799,7 +869,6 @@
                 renderStoreProducts(e.target.getAttribute("data-cat"));
             });
         });
-
         function openProductDetailsModal(product) {
             selectedProduct = product;
             document.getElementById("mName").innerText = product.name;
@@ -811,11 +880,9 @@
             
             const parsedDeliveryFee = product.deliveryFee ? Number(product.deliveryFee) : 0;
             document.getElementById("mDeliveryFee").innerText = parsedDeliveryFee > 0 ? "₦" + safeFormatPrice(parsedDeliveryFee) : "FREE";
-            
             const mainImgElement = document.getElementById("mImg");
             const thumbsContainer = document.getElementById("mThumbsRow");
             thumbsContainer.innerHTML = "";
-            
             let imagesArray = [];
             if (Array.isArray(product.images) && product.images.length > 0) {
                 imagesArray = product.images;
@@ -824,10 +891,8 @@
             } else {
                 imagesArray = ['https://via.placeholder.com/150'];
             }
-
             let currentImgIndex = 0;
             mainImgElement.src = imagesArray[0];
-
             function activeImageIndex(idx) {
                 currentImgIndex = idx;
                 mainImgElement.src = imagesArray[currentImgIndex];
@@ -836,7 +901,6 @@
                     else t.classList.remove("active-thumb");
                 });
             }
-
             if (imagesArray.length > 1) {
                 imagesArray.forEach((imgUrl, idx) => {
                     const thumb = document.createElement("img");
@@ -845,18 +909,23 @@
                     thumb.addEventListener("click", () => activeImageIndex(idx));
                     thumbsContainer.appendChild(thumb);
                 });
-
                 let touchStartX = 0;
                 let touchEndX = 0;
-                mainImgElement.ontouchstart = (e) => { touchStartX = e.changedTouches[0].screenX; };
+                mainImgElement.ontouchstart = (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                };
                 mainImgElement.ontouchend = (e) => {
                     touchEndX = e.changedTouches[0].screenX;
                     const swipeDistance = touchEndX - touchStartX;
                     if (Math.abs(swipeDistance) > 50) { 
                         if (swipeDistance < 0) {
-                            if (currentImgIndex < imagesArray.length - 1) activeImageIndex(currentImgIndex + 1);
+                            if (currentImgIndex < imagesArray.length - 1) {
+                                activeImageIndex(currentImgIndex + 1);
+                            }
                         } else {
-                            if (currentImgIndex > 0) activeImageIndex(currentImgIndex - 1);
+                            if (currentImgIndex > 0) {
+                                activeImageIndex(currentImgIndex - 1);
+                            }
                         }
                     }
                 };
@@ -864,15 +933,12 @@
                 mainImgElement.ontouchstart = null;
                 mainImgElement.ontouchend = null;
             }
-
             const storePhoneNum = "2348068564177"; 
             const textFormat = encodeURIComponent(`Hello Holuwafemi Mega Store, I want to inquire about availability for:\n*${product.name}*\nPrice: ₦${safeFormatPrice(product.price)}\nProduct Code: ${product.id}`);
             document.getElementById("whatsappProductChatBtn").href = `https://wa.me/${storePhoneNum}?text=${textFormat}`;
-            
             document.getElementById("productModal").style.display = "block";
             document.body.style.overflow = "hidden";
         }
-
         function setupModalCloseTriggers(triggerId, modalId) {
             document.getElementById(triggerId)?.addEventListener("click", () => {
                 document.getElementById(modalId).style.display = "none";
@@ -881,11 +947,9 @@
                 }
             });
         }
-
         setupModalCloseTriggers("closeDetailsBtn", "productModal");
         setupModalCloseTriggers("closeCartBtn", "cartModal");
         setupModalCloseTriggers("closeCheckoutBtn", "checkoutModal");
-
         function updateCartUI() {
             document.getElementById("cartCounter").innerText = cart.length;
             localStorage.setItem("megaStoreCart", JSON.stringify(cart));
@@ -893,21 +957,17 @@
             const container = document.getElementById("cartItemsListContainer");
             if (!container) return;
             container.innerHTML = "";
-
             if (cart.length === 0) {
                 container.innerHTML = `<p style="text-align:center; padding:20px; color:var(--text-muted);">Your shopping basket feels light.</p>`;
                 document.getElementById("cartTotalSummaryCard").style.display = "none";
                 document.getElementById("cartActionBar").style.display = "none";
                 return;
             }
-
             let subtotal = 0;
             let deliveryTotal = 0;
-
             cart.forEach((item, index) => {
                 subtotal += Number(item.price);
                 deliveryTotal += Number(item.deliveryFee || 0);
-                
                 const row = document.createElement("div");
                 row.className = "cart-item-row";
                 row.innerHTML = `
@@ -920,7 +980,6 @@
                 `;
                 container.appendChild(row);
             });
-
             const grandTotal = subtotal + deliveryTotal;
             document.getElementById("cartSubtotalAmount").innerText = "₦" + safeFormatPrice(subtotal);
             document.getElementById("cartDeliveryFeesTotal").innerText = deliveryTotal > 0 ? "₦" + safeFormatPrice(deliveryTotal) : "FREE";
@@ -928,7 +987,6 @@
             
             document.getElementById("cartTotalSummaryCard").style.display = "block";
             document.getElementById("cartActionBar").style.display = "block";
-
             container.querySelectorAll(".btn-remove").forEach(btn => {
                 btn.addEventListener("click", (e) => {
                     const idx = Number(e.currentTarget.getAttribute("data-idx"));
@@ -937,7 +995,6 @@
                 });
             });
         }
-
         document.getElementById("addToCartBtn")?.addEventListener("click", () => {
             if (!selectedProduct) return;
             const fallbackImg = Array.isArray(selectedProduct.images) ? selectedProduct.images[0] : selectedProduct.imageUrl;
@@ -954,13 +1011,11 @@
             document.getElementById("productModal").style.display = "none";
             document.body.style.overflow = "auto";
         });
-
         document.getElementById("openCartIconBtn")?.addEventListener("click", () => {
             document.getElementById("cartModal").style.display = "block";
             document.body.style.overflow = "hidden";
             updateCartUI();
         });
-
         function triggerCheckoutWindow(mode, amount) {
             checkoutMode = mode;
             checkoutAmount = amount;
@@ -971,14 +1026,12 @@
             document.getElementById("checkoutModal").style.display = "block";
             document.body.style.overflow = "hidden";
         }
-
         document.getElementById("directBuyBtn")?.addEventListener("click", () => {
             if (!selectedProduct) return;
             const deliveryCost = selectedProduct.deliveryFee ? Number(selectedProduct.deliveryFee) : 0;
             const grossSum = Number(selectedProduct.price) + deliveryCost;
             triggerCheckoutWindow("direct", grossSum);
         });
-
         document.getElementById("cartCheckoutBtn")?.addEventListener("click", () => {
             let totalBasketSum = 0;
             cart.forEach(item => {
@@ -988,72 +1041,61 @@
             triggerCheckoutWindow("cart", totalBasketSum);
         });
 
+        // PAYSTACK TRIGGER FIXED
         document.getElementById("paystackTriggerBtn")?.addEventListener("click", () => {
             const customerEmail = localStorage.getItem("storeCustomerEmail");
             const customerName = localStorage.getItem("storeCustomerName");
             const customerPhone = localStorage.getItem("storeCustomerPhone") || "";
             const deliveryAddress = localStorage.getItem("storeCustomerAddress") || "";
-
             if (!customerEmail || !customerName) {
-                alert("Session trace error. Please reload your delivery parameters.");
+                alert("Session context trace error. Refreshing gateway logs.");
                 checkVisitorSession();
                 return;
             }
 
-          // Ensure email and amount exist before opening Paystack
-const validEmail = customerEmail && customerEmail.trim() !== "" ? customerEmail.trim() : "customer@example.com";
-const totalKobo = Math.round(Number(String(checkoutAmount || 0).replace(/,/g, '')) * 100);
+            const totalKobo = Math.round(Number(checkoutAmount) * 100);
 
-if (totalKobo <= 0) {
-    alert("Please select items to buy before checking out.");
-    return;
-}
-
-const handler = PaystackPop.setup({
-    key: 'pk_live_e64fc7ce9677d4f5f4f4e4cb89999c51f52a1475', 
-    email: validEmail,
-    amount: totalKobo, 
-    currency: "NGN",
-    metadata: {
-        custom_fields: [
-            { display_name: "Customer Name", variable_name: "customer_name", value: customerName || "Customer" },
-            { display_name: "Checkout Type", variable_name: "checkout_type", value: checkoutMode || "cart" },
-            { display_name: "Delivery Details", variable_name: "delivery_details", value: deliveryAddress || "Address not provided" }
-        ]
-    },
-    callback: async function(response) {
-        alert("Payment authorized! Reference: " + response.reference);
-        
-        try {
-            await addDoc(collection(db, "orders"), {
-                customerName: customerName || "Customer",
-                customerEmail: validEmail,
-                customerPhone: customerPhone || "",
-                deliveryAddress: deliveryAddress || "",
-                amountPaid: checkoutAmount,
-                paystackReference: response.reference,
-                status: "Paid",
-                timestamp: serverTimestamp()
+            const handler = PaystackPop.setup({
+                key: 'pk_live_e64fc7ce9677d4f5f4f4e4cb89999c51f52a1475', 
+                email: customerEmail,
+                amount: totalKobo, 
+                currency: "NGN",
+                metadata: {
+                    custom_fields: [
+                        { display_name: "Customer Name", variable_name: "customer_name", value: customerName },
+                        { display_name: "Checkout Type", variable_name: "checkout_type", value: checkoutMode },
+                        { display_name: "Delivery Details", variable_name: "delivery_details", value: deliveryAddress }
+                    ]
+                },
+                callback: async function(response) {
+                    alert("Settlement authorized securely! Transaction Reference ID: " + response.reference);
+                    
+                    try {
+                        await addDoc(collection(db, "orders"), {
+                            customerName,
+                            customerEmail,
+                            customerPhone,
+                            deliveryAddress,
+                            amountPaid: checkoutAmount,
+                            paystackReference: response.reference,
+                            status: "Paid",
+                            timestamp: serverTimestamp()
+                        });
+                    } catch (dbErr) {
+                        console.error("Failed to archive transaction metadata: ", dbErr);
+                    }
+                    if (checkoutMode === "cart") {
+                        cart = [];
+                        updateCartUI();
+                    }
+                    document.getElementById("checkoutModal").style.display = "none";
+                    document.body.style.overflow = "auto";
+                },
+                onClose: function() {
+                    alert("Transaction portal paused safely before final authorization.");
+                }
             });
-        } catch (dbErr) {
-            console.error("Firebase write error: ", dbErr);
-        }
-
-        if (typeof checkoutMode !== "undefined" && checkoutMode === "cart") {
-            cart = [];
-            if (typeof updateCartUI === "function") updateCartUI();
-        }
-
-        const modal = document.getElementById("checkoutModal");
-        if (modal) modal.style.display = "none";
-        document.body.style.overflow = "auto";
-    },
-    onClose: function() {
-        alert("Transaction window closed.");
-    }
-});
-
-handler.openIframe();
+            handler.openIframe();
         });
 
         document.getElementById("storefrontRefundForm")?.addEventListener("submit", async function(e) {
@@ -1062,7 +1104,6 @@ handler.openIframe();
             const email = document.getElementById("refundEmailInput").value.trim();
             const reason = document.getElementById("refundReasonInput").value;
             const details = document.getElementById("refundDetailsInput").value.trim();
-
             try {
                 await addDoc(collection(db, "refund_requests"), {
                     paystackReference: reference,
@@ -1073,15 +1114,14 @@ handler.openIframe();
                     timestamp: serverTimestamp()
                 });
                 
-                alert("Refund request submitted for transaction reference " + reference);
+                alert("Your refund application for Reference " + reference + " has been logged successfully. The merchant team will review it within 24-48 hours.");
                 this.reset();
                 document.getElementById("storefrontRefundBlock").style.display = "none";
             } catch (err) {
-                console.error("Error creating record: ", err);
-                alert("Submission failed. Reach out to support on WhatsApp.");
+                console.error("Error creating document: ", err);
+                alert("Something went wrong saving request logs. Please contact support via WhatsApp.");
             }
         });
-
         document.querySelectorAll(".footer-links a").forEach(link => {
             link.addEventListener("click", (e) => {
                 const targetModalId = e.target.getAttribute("data-policy");
@@ -1091,14 +1131,12 @@ handler.openIframe();
                 }
             });
         });
-
         document.querySelectorAll(".close-policy-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 e.target.closest(".modal-overlay-sheet").style.display = "none";
                 document.body.style.overflow = "auto";
             });
         });
-
         window.addEventListener("DOMContentLoaded", () => {
             checkVisitorSession();
             updateCartUI();
