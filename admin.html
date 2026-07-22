@@ -13,7 +13,7 @@
         .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
         @media(max-width: 768px) { .grid { grid-template-columns: 1fr; } }
         .card { background: var(--white); padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px; }
-        .card h3 { margin-bottom: 15px; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; }
+        .card h3 { margin-bottom: 15px; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
         input, select, textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #cbd5e1; border-radius: 6px; }
         button { background: var(--secondary); color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
         button.btn-danger { background: #ef4444; }
@@ -21,6 +21,10 @@
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
         th, td { border: 1px solid #e2e8f0; padding: 8px; text-align: left; }
         th { background: #f1f5f9; }
+
+        /* AI SYSTEM ACTIVITY FEED STYLING */
+        .ai-log-item { background: #f8fafc; border-left: 3px solid #6366f1; padding: 8px 12px; margin-bottom: 8px; border-radius: 4px; font-size: 12px; }
+        .ai-log-time { color: #64748b; font-size: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -34,8 +38,9 @@
 
     <div class="grid">
         <div>
+            <!-- DIRECT EDIT & UPLOAD FORM -->
             <div class="card">
-                <h3 id="formHeading">Direct Product Upload</h3>
+                <h3 id="formHeading"><i class="fas fa-edit"></i> Direct Product Upload</h3>
                 <form id="addProductForm">
                     <input type="hidden" id="editDocId" value="">
                     <input type="text" id="pName" placeholder="Product Title" required>
@@ -54,6 +59,17 @@
                     <button type="submit" id="submitFormBtn">Publish to Store</button>
                     <button type="button" id="cancelEditBtn" class="btn-warning" style="display:none; margin-top:8px;" onclick="resetAdminForm()">Cancel Edit</button>
                 </form>
+            </div>
+
+            <!-- RESTORED AI SYSTEM ACTIVITY CARD -->
+            <div class="card" style="border-top: 4px solid #6366f1;">
+                <h3><i class="fas fa-robot" style="color: #6366f1;"></i> AI System Activity Log</h3>
+                <div id="aiActivityFeed">
+                    <div class="ai-log-item">
+                        <div class="ai-log-time">System Init • Active</div>
+                        <div>AI Catalog Scanner monitoring live inventory & payment transactions.</div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -75,7 +91,7 @@
             </div>
 
             <div class="card">
-                <h3>Live Customer Orders</h3>
+                <h3><i class="fas fa-receipt"></i> Live Customer Orders</h3>
                 <table>
                     <thead>
                         <tr>
@@ -90,7 +106,7 @@
             </div>
 
             <div class="card">
-                <h3>Active Store Inventory</h3>
+                <h3><i class="fas fa-boxes"></i> Active Store Inventory</h3>
                 <table>
                     <thead>
                         <tr>
@@ -110,7 +126,7 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, collection, onSnapshot, addDoc, deleteDoc, doc, updateDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-        // Prompt for Passcode directly upon accessing admin.html
+        // Passcode Authentication check
         let adminSession = localStorage.getItem("isAdminLoggedIn");
         if (adminSession !== "true") {
             const enteredPasscode = prompt("Enter Secret Admin Passcode:");
@@ -140,6 +156,15 @@
 
         let productsMap = {};
 
+        function logAiActivity(msg) {
+            const feed = document.getElementById("aiActivityFeed");
+            const time = new Date().toLocaleTimeString();
+            const item = document.createElement("div");
+            item.className = "ai-log-item";
+            item.innerHTML = `<div class="ai-log-time">${time} • Automated Insight</div><div>${msg}</div>`;
+            feed.prepend(item);
+        }
+
         // Admin Add / Edit Form Handler
         document.getElementById("addProductForm").addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -158,9 +183,11 @@
             try {
                 if (editId) {
                     await updateDoc(doc(db, "products", editId), productData);
+                    logAiActivity(`Updated product <b>"${productData.name}"</b> in Firestore store inventory.`);
                     alert("Product Updated Successfully!");
                 } else {
                     await addDoc(collection(db, "products"), productData);
+                    logAiActivity(`Published new product <b>"${productData.name}"</b> live to store catalog.`);
                     alert("Product Published Live!");
                 }
                 resetAdminForm();
@@ -170,7 +197,7 @@
         window.resetAdminForm = () => {
             document.getElementById("addProductForm").reset();
             document.getElementById("editDocId").value = "";
-            document.getElementById("formHeading").innerText = "Direct Product Upload";
+            document.getElementById("formHeading").innerHTML = `<i class="fas fa-edit"></i> Direct Product Upload`;
             document.getElementById("submitFormBtn").innerText = "Publish to Store";
             document.getElementById("cancelEditBtn").style.display = "none";
         };
@@ -232,7 +259,7 @@
             document.getElementById("pImages").value = Array.isArray(p.images) ? p.images[0] : (p.imageUrl || "");
             document.getElementById("pDesc").value = p.description || "";
             
-            document.getElementById("formHeading").innerText = "Edit Selected Product";
+            document.getElementById("formHeading").innerHTML = `<i class="fas fa-edit"></i> Edit Selected Product`;
             document.getElementById("submitFormBtn").innerText = "Save Changes";
             document.getElementById("cancelEditBtn").style.display = "block";
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -241,6 +268,7 @@
         window.approveProduct = async (id) => {
             try {
                 await updateDoc(doc(db, "products", id), { status: "approved" });
+                logAiActivity(`Approved pending item ID: <b>${id}</b>`);
                 alert("Product approved and published!");
             } catch (err) { alert("Error: " + err.message); }
         };
@@ -248,15 +276,18 @@
         window.deleteProduct = async (id) => {
             if (confirm("Remove this product?")) {
                 await deleteDoc(doc(db, "products", id));
+                logAiActivity(`Removed product ID: <b>${id}</b>`);
             }
         };
 
-        // Realtime Customer Orders
+        // Realtime Customer Orders Listener & AI Insights Trigger
         onSnapshot(query(collection(db, "orders"), orderBy("timestamp", "desc")), (snap) => {
             const body = document.getElementById("ordersTableBody");
             body.innerHTML = "";
+            let totalRev = 0;
             snap.forEach((docSnap) => {
                 const o = docSnap.data();
+                totalRev += Number(o.amountPaid || 0);
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td><b>${o.customerName}</b><br><small>${o.customerEmail}</small></td>
@@ -266,6 +297,9 @@
                 `;
                 body.appendChild(row);
             });
+            if (snap.docs.length > 0) {
+                logAiActivity(`Synced ${snap.docs.length} orders. Total Revenue: <b>₦${totalRev.toLocaleString()}</b>`);
+            }
         });
     </script>
 </body>
