@@ -17,6 +17,7 @@
         input, select, textarea { width: 100%; padding: 10px; margin-bottom: 10px; border: 1px solid #cbd5e1; border-radius: 6px; }
         button { background: var(--secondary); color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
         button.btn-danger { background: #ef4444; }
+        button.btn-warning { background: #f59e0b; color: white; }
         table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
         th, td { border: 1px solid #e2e8f0; padding: 8px; text-align: left; }
         th { background: #f1f5f9; }
@@ -34,8 +35,9 @@
     <div class="grid">
         <div>
             <div class="card">
-                <h3>Direct Product Upload</h3>
+                <h3 id="formHeading">Direct Product Upload</h3>
                 <form id="addProductForm">
+                    <input type="hidden" id="editDocId" value="">
                     <input type="text" id="pName" placeholder="Product Title" required>
                     <input type="number" id="pPrice" placeholder="Price (₦)" required>
                     <input type="number" id="pDelivery" placeholder="Delivery Fee (₦)" value="0">
@@ -49,7 +51,8 @@
                     </select>
                     <input type="text" id="pImages" placeholder="Image URL" required>
                     <textarea id="pDesc" placeholder="Product Description"></textarea>
-                    <button type="submit">Publish to Store</button>
+                    <button type="submit" id="submitFormBtn">Publish to Store</button>
+                    <button type="button" id="cancelEditBtn" class="btn-warning" style="display:none; margin-top:8px;" onclick="resetAdminForm()">Cancel Edit</button>
                 </form>
             </div>
         </div>
@@ -129,35 +132,55 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Admin Upload (Automatically Approved)
+        let productsMap = {};
+
+        // Admin Upload or Update Form Handler
         document.getElementById("addProductForm").addEventListener("submit", async (e) => {
             e.preventDefault();
+            const editId = document.getElementById("editDocId").value;
+            const productData = {
+                name: document.getElementById("pName").value,
+                price: Number(document.getElementById("pPrice").value),
+                deliveryFee: Number(document.getElementById("pDelivery").value) || 0,
+                category: document.getElementById("pCat").value,
+                images: [document.getElementById("pImages").value.trim()],
+                description: document.getElementById("pDesc").value,
+                status: "approved",
+                timestamp: serverTimestamp()
+            };
+
             try {
-                await addDoc(collection(db, "products"), {
-                    name: document.getElementById("pName").value,
-                    price: Number(document.getElementById("pPrice").value),
-                    deliveryFee: Number(document.getElementById("pDelivery").value) || 0,
-                    category: document.getElementById("pCat").value,
-                    images: [document.getElementById("pImages").value.trim()],
-                    description: document.getElementById("pDesc").value,
-                    status: "approved", // Directly active
-                    timestamp: serverTimestamp()
-                });
-                alert("Product Published Live!");
-                e.target.reset();
+                if (editId) {
+                    await updateDoc(doc(db, "products", editId), productData);
+                    alert("Product Updated Successfully!");
+                } else {
+                    await addDoc(collection(db, "products"), productData);
+                    alert("Product Published Live!");
+                }
+                resetAdminForm();
             } catch(err) { alert("Error: " + err.message); }
         });
 
-        // Realtime Products Listener (Segregates Active vs Pending)
+        window.resetAdminForm = () => {
+            document.getElementById("addProductForm").reset();
+            document.getElementById("editDocId").value = "";
+            document.getElementById("formHeading").innerText = "Direct Product Upload";
+            document.getElementById("submitFormBtn").innerText = "Publish to Store";
+            document.getElementById("cancelEditBtn").style.display = "none";
+        };
+
+        // Realtime Products Listener
         onSnapshot(query(collection(db, "products"), orderBy("timestamp", "desc")), (snap) => {
             const pendingBody = document.getElementById("pendingTableBody");
             const activeBody = document.getElementById("inventoryTableBody");
             pendingBody.innerHTML = "";
             activeBody.innerHTML = "";
+            productsMap = {};
 
             snap.forEach((docSnap) => {
                 const p = docSnap.data();
                 const id = docSnap.id;
+                productsMap[id] = p;
 
                 if (p.status === "pending") {
                     const row = document.createElement("tr");
@@ -166,8 +189,9 @@
                         <td>₦${Number(p.price).toLocaleString()}</td>
                         <td>${p.category}</td>
                         <td>
-                            <button style="background:#059669; padding:4px 8px; font-size:11px; margin-right:4px;" onclick="approveProduct('${id}')">Approve</button>
-                            <button class="btn-danger" style="padding:4px 8px; font-size:11px;" onclick="deleteProduct('${id}')">Decline</button>
+                            <button style="background:#059669; padding:4px 6px; font-size:11px; margin-right:2px;" onclick="approveProduct('${id}')">Approve</button>
+                            <button class="btn-warning" style="padding:4px 6px; font-size:11px; margin-right:2px;" onclick="editProduct('${id}')">Edit</button>
+                            <button class="btn-danger" style="padding:4px 6px; font-size:11px;" onclick="deleteProduct('${id}')">Decline</button>
                         </td>
                     `;
                     pendingBody.appendChild(row);
@@ -177,7 +201,10 @@
                         <td>${p.name}</td>
                         <td>₦${Number(p.price).toLocaleString()}</td>
                         <td>${p.category}</td>
-                        <td><button class="btn-danger" style="padding:4px 8px; font-size:11px;" onclick="deleteProduct('${id}')">Delete</button></td>
+                        <td>
+                            <button class="btn-warning" style="padding:4px 6px; font-size:11px; margin-right:2px;" onclick="editProduct('${id}')">Edit</button>
+                            <button class="btn-danger" style="padding:4px 6px; font-size:11px;" onclick="deleteProduct('${id}')">Delete</button>
+                        </td>
                     `;
                     activeBody.appendChild(row);
                 }
@@ -188,6 +215,23 @@
             }
         });
 
+        window.editProduct = (id) => {
+            const p = productsMap[id];
+            if (!p) return;
+            document.getElementById("editDocId").value = id;
+            document.getElementById("pName").value = p.name;
+            document.getElementById("pPrice").value = p.price;
+            document.getElementById("pDelivery").value = p.deliveryFee || 0;
+            document.getElementById("pCat").value = p.category || "electronics";
+            document.getElementById("pImages").value = Array.isArray(p.images) ? p.images[0] : (p.imageUrl || "");
+            document.getElementById("pDesc").value = p.description || "";
+            
+            document.getElementById("formHeading").innerText = "Edit Selected Product";
+            document.getElementById("submitFormBtn").innerText = "Save Changes";
+            document.getElementById("cancelEditBtn").style.display = "block";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
         window.approveProduct = async (id) => {
             try {
                 await updateDoc(doc(db, "products", id), { status: "approved" });
@@ -197,7 +241,7 @@
 
         window.deleteProduct = async (id) => {
             if (confirm("Remove this product?")) {
-                await deleteDoc(doc(db, "products", id));
+                await deleteDoc(doc(doc(db, "products", id)));
             }
         };
 
