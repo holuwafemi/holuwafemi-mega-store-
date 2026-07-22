@@ -22,8 +22,6 @@
         body { background-color: var(--bg-light); color: var(--text-main); }
         header { background-color: var(--white); border-bottom: 1px solid var(--border-color); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .logo-area h1 { font-size: 22px; color: var(--primary); font-weight: 800; letter-spacing: -0.5px; }
-        .header-actions { display: flex; align-items: center; gap: 15px; }
-        .nav-icon-btn { background: none; border: none; font-size: 20px; color: var(--text-main); cursor: pointer; position: relative; }
         .promo-banner-billboard { background: linear-gradient(135deg, #0f172a, #1e293b); color: var(--white); padding: 40px 5%; text-align: center; border-bottom: 4px solid var(--secondary); }
         .promo-banner-billboard h2 { font-size: 28px; margin-bottom: 10px; }
         .section-container { padding: 30px 5%; }
@@ -44,7 +42,6 @@
         .btn-action-primary { width: 100%; padding: 12px; border-radius: 8px; border: none; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; text-decoration: none; }
         .btn-buy { background-color: var(--secondary); color: white; }
         .btn-buy-primary { background-color: var(--primary); color: white; }
-        .btn-warning { background-color: #f59e0b; color: white; margin-top: 8px; }
         footer { background: #0f172a; color: #94a3b8; padding: 40px 5%; text-align: center; font-size: 14px; margin-top: 50px; }
     </style>
 </head>
@@ -52,11 +49,6 @@
     <header>
         <div class="logo-area">
             <h1>Holuwafemi Mega Store</h1>
-        </div>
-        <div class="header-actions">
-            <button id="openAdminPasscodeBtn" class="nav-icon-btn" title="Admin Portal Key">
-                <i class="fas fa-key" style="color: var(--secondary);"></i>
-            </button>
         </div>
     </header>
 
@@ -79,63 +71,6 @@
         <div class="products-grid-layout" id="mainCatalogGrid"></div>
     </div>
 
-    <!-- FLOATING CLIENT POST BUTTON -->
-    <button id="openVendorModalBtn" class="btn-action-primary btn-buy" style="position: fixed; bottom: 20px; right: 20px; width: auto; z-index: 99; padding: 12px 20px; border-radius: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-        <i class="fas fa-plus-circle"></i> Post / Edit Product
-    </button>
-
-    <!-- ADMIN PASSCODE MODAL -->
-    <div class="modal-overlay-sheet" id="adminPasscodeModal">
-        <div class="modal-body-wrapper" style="max-width: 380px; margin-top: 100px;">
-            <button class="modal-close-trigger" id="closeAdminPasscodeBtn">×</button>
-            <h3 style="font-size:20px; margin-bottom:6px; color:var(--primary);"><i class="fas fa-lock"></i> Admin Passcode</h3>
-            <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Enter secret passcode to unlock store management.</p>
-            <form id="adminPasscodeForm">
-                <div style="display:flex; flex-direction:column; gap:12px;">
-                    <input type="password" id="adminSecretPasscode" class="cat-btn" style="width:100%; border-radius:8px; text-align:center; letter-spacing: 4px; font-size:20px; padding:0 15px; height:46px;" placeholder="••••" required autofocus>
-                    <button type="submit" class="btn-action-primary btn-buy">VERIFY PASSCODE</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- CLIENT / VENDOR PRODUCT UPLOAD OR EDIT MODAL -->
-    <div class="modal-overlay-sheet" id="vendorUploadModal">
-        <div class="modal-body-wrapper">
-            <button class="modal-close-trigger" id="closeVendorModalBtn">×</button>
-            <h3 style="font-size: 18px; margin-bottom: 6px; color: var(--primary);" id="vendorFormTitle">
-                <i class="fas fa-box"></i> Client Product Submission / Edit
-            </h3>
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">
-                Enter vendor passcode to submit or edit an existing item.
-            </p>
-
-            <form id="vendorUploadForm" style="display: flex; flex-direction: column; gap: 10px;">
-                <input type="hidden" id="vEditDocId" value="">
-                <input type="password" id="vendorPasscode" class="cat-btn" style="width:100%; border-radius:8px; text-align:center; padding:0 12px; height:40px;" placeholder="Enter Vendor Passcode" required>
-                <input type="text" id="vTitle" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; padding:0 12px; height:40px;" placeholder="Product Name" required>
-                <input type="number" id="vPrice" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; padding:0 12px; height:40px;" placeholder="Price (₦)" required>
-                <input type="number" id="vDelivery" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; padding:0 12px; height:40px;" placeholder="Delivery Fee (₦)" value="0">
-                
-                <select id="vCategory" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; padding:0 12px; height:40px;" required>
-                    <option value="electronics">Electronics</option>
-                    <option value="solar">Solar</option>
-                    <option value="appliances">Appliances</option>
-                    <option value="computers">Computers</option>
-                    <option value="phones">Phones</option>
-                    <option value="fashion">Fashion</option>
-                </select>
-
-                <input type="text" id="vImage" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; padding:0 12px; height:40px;" placeholder="Image URL" required>
-                <textarea id="vDesc" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; padding:10px 12px; height:70px;" placeholder="Product Description"></textarea>
-
-                <button type="submit" id="vSubmitBtn" class="btn-action-primary btn-buy" style="margin-top: 5px;">
-                    <i class="fas fa-paper-plane"></i> SUBMIT FOR REVIEW
-                </button>
-            </form>
-        </div>
-    </div>
-
     <!-- PRODUCT DETAILS MODAL -->
     <div class="modal-overlay-sheet" id="productModal">
         <div class="modal-body-wrapper">
@@ -146,7 +81,6 @@
             <p id="mDesc" style="font-size:14px; color:#475569; margin-bottom:20px; max-height:120px; overflow-y:auto;"></p>
             
             <button id="directBuyBtn" class="btn-action-primary btn-buy-primary"><i class="fas fa-bolt"></i> INSTANT BUY NOW</button>
-            <button id="editClientProductBtn" class="btn-action-primary btn-warning"><i class="fas fa-edit"></i> EDIT THIS PRODUCT</button>
         </div>
     </div>
 
@@ -178,7 +112,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, doc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
@@ -192,8 +126,6 @@
         const db = getFirestore(app);
 
         let allProducts = [], selectedProduct = null, checkoutAmount = 0;
-        const ADMIN_PASSCODE = "1234";
-        const VENDOR_PASSCODE = "1234";
 
         function safeFormat(val) {
             const num = Number(val);
@@ -229,6 +161,15 @@
             });
         }
 
+        // Category Tabs listener
+        document.querySelectorAll(".cat-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
+                e.target.classList.add("active");
+                renderProducts(e.target.dataset.cat);
+            });
+        });
+
         function openModal(p) {
             selectedProduct = p;
             document.getElementById("mName").innerText = p.name;
@@ -238,79 +179,9 @@
             document.getElementById("productModal").style.display = "block";
         }
 
-        // Modal Controls
-        document.getElementById("openAdminPasscodeBtn").onclick = () => document.getElementById("adminPasscodeModal").style.display = "block";
-        document.getElementById("closeAdminPasscodeBtn").onclick = () => document.getElementById("adminPasscodeModal").style.display = "none";
-        document.getElementById("openVendorModalBtn").onclick = () => {
-            document.getElementById("vendorUploadForm").reset();
-            document.getElementById("vEditDocId").value = "";
-            document.getElementById("vendorFormTitle").innerText = "Client Product Submission";
-            document.getElementById("vSubmitBtn").innerHTML = `<i class="fas fa-paper-plane"></i> SUBMIT FOR REVIEW`;
-            document.getElementById("vendorUploadModal").style.display = "block";
-        };
-        document.getElementById("closeVendorModalBtn").onclick = () => document.getElementById("vendorUploadModal").style.display = "none";
+        // Modal Close Controls
         document.getElementById("closeDetailsBtn").onclick = () => document.getElementById("productModal").style.display = "none";
         document.getElementById("closeCheckoutBtn").onclick = () => document.getElementById("checkoutModal").style.display = "none";
-
-        // Client Edit Action Trigger
-        document.getElementById("editClientProductBtn").onclick = () => {
-            if (!selectedProduct) return;
-            document.getElementById("vEditDocId").value = selectedProduct.id;
-            document.getElementById("vTitle").value = selectedProduct.name;
-            document.getElementById("vPrice").value = selectedProduct.price;
-            document.getElementById("vDelivery").value = selectedProduct.deliveryFee || 0;
-            document.getElementById("vCategory").value = selectedProduct.category || "electronics";
-            document.getElementById("vImage").value = Array.isArray(selectedProduct.images) ? selectedProduct.images[0] : (selectedProduct.imageUrl || "");
-            document.getElementById("vDesc").value = selectedProduct.description || "";
-            
-            document.getElementById("vendorFormTitle").innerText = "Edit Product Details";
-            document.getElementById("vSubmitBtn").innerHTML = `<i class="fas fa-save"></i> UPDATE PRODUCT`;
-            
-            document.getElementById("productModal").style.display = "none";
-            document.getElementById("vendorUploadModal").style.display = "block";
-        };
-
-        // Admin Passcode Submit
-        document.getElementById("adminPasscodeForm").onsubmit = (e) => {
-            e.preventDefault();
-            if (document.getElementById("adminSecretPasscode").value === ADMIN_PASSCODE) {
-                localStorage.setItem("isAdminLoggedIn", "true");
-                window.location.href = "admin.html";
-            } else { alert("Incorrect Passcode!"); }
-        };
-
-        // Vendor Create or Edit Form Handler
-        document.getElementById("vendorUploadForm").onsubmit = async (e) => {
-            e.preventDefault();
-            if (document.getElementById("vendorPasscode").value.trim() !== VENDOR_PASSCODE) {
-                alert("Invalid vendor passcode!");
-                return;
-            }
-
-            const docId = document.getElementById("vEditDocId").value;
-            const productData = {
-                name: document.getElementById("vTitle").value.trim(),
-                price: Number(document.getElementById("vPrice").value),
-                deliveryFee: Number(document.getElementById("vDelivery").value) || 0,
-                category: document.getElementById("vCategory").value,
-                images: [document.getElementById("vImage").value.trim()],
-                description: document.getElementById("vDesc").value.trim(),
-                status: "pending", // Re-sent as pending for security verification after edit
-                timestamp: serverTimestamp()
-            };
-
-            try {
-                if (docId) {
-                    await updateDoc(doc(db, "products", docId), productData);
-                    alert("Product updated! Sent for admin re-approval.");
-                } else {
-                    await addDoc(collection(db, "products"), productData);
-                    alert("Product submitted! It will go live after admin approval.");
-                }
-                document.getElementById("vendorUploadForm").reset();
-                document.getElementById("vendorUploadModal").style.display = "none";
-            } catch (err) { alert("Error saving product: " + err.message); }
-        };
 
         // Direct Checkout
         document.getElementById("directBuyBtn").onclick = () => {
