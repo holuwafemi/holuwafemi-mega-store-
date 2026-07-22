@@ -60,7 +60,7 @@
         <div>
             <!-- PENDING APPROVALS SECTION -->
             <div class="card" style="border-left: 4px solid #f59e0b;">
-                <h3><i class="fas fa-clock" style="color: #f59e0b;"></i> Pending Client Submissions</h3>
+                <h3><i class="fas fa-clock" style="color: #f59e0b;"></i> Pending Submissions</h3>
                 <table>
                     <thead>
                         <tr>
@@ -110,10 +110,16 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, collection, onSnapshot, addDoc, deleteDoc, doc, updateDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-        // Security Authentication check
-        if (localStorage.getItem("isAdminLoggedIn") !== "true") {
-            alert("Unauthorized access! Redirecting...");
-            window.location.href = "index.html";
+        // Prompt for Passcode directly upon accessing admin.html
+        let adminSession = localStorage.getItem("isAdminLoggedIn");
+        if (adminSession !== "true") {
+            const enteredPasscode = prompt("Enter Secret Admin Passcode:");
+            if (enteredPasscode === "1234") {
+                localStorage.setItem("isAdminLoggedIn", "true");
+            } else {
+                alert("Unauthorized access!");
+                window.location.href = "index.html";
+            }
         }
 
         window.logoutAdmin = () => {
@@ -134,7 +140,7 @@
 
         let productsMap = {};
 
-        // Admin Upload or Update Form Handler
+        // Admin Add / Edit Form Handler
         document.getElementById("addProductForm").addEventListener("submit", async (e) => {
             e.preventDefault();
             const editId = document.getElementById("editDocId").value;
@@ -241,7 +247,7 @@
 
         window.deleteProduct = async (id) => {
             if (confirm("Remove this product?")) {
-                await deleteDoc(doc(doc(db, "products", id)));
+                await deleteDoc(doc(db, "products", id));
             }
         };
 
