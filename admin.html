@@ -34,12 +34,11 @@
     <div class="grid">
         <div>
             <div class="card">
-                <h3>Add New Product</h3>
+                <h3>Direct Product Upload</h3>
                 <form id="addProductForm">
                     <input type="text" id="pName" placeholder="Product Title" required>
                     <input type="number" id="pPrice" placeholder="Price (₦)" required>
-                    <input type="number" id="pOldPrice" placeholder="Old Price (₦)">
-                    <input type="number" id="pDelivery" placeholder="Delivery Fee (₦)">
+                    <input type="number" id="pDelivery" placeholder="Delivery Fee (₦)" value="0">
                     <select id="pCat">
                         <option value="electronics">Electronics</option>
                         <option value="solar">Solar</option>
@@ -48,14 +47,30 @@
                         <option value="phones">Phones</option>
                         <option value="fashion">Fashion</option>
                     </select>
-                    <input type="text" id="pImages" placeholder="Image URLs (comma separated)" required>
+                    <input type="text" id="pImages" placeholder="Image URL" required>
                     <textarea id="pDesc" placeholder="Product Description"></textarea>
-                    <button type="submit">Upload Product</button>
+                    <button type="submit">Publish to Store</button>
                 </form>
             </div>
         </div>
 
         <div>
+            <!-- PENDING APPROVALS SECTION -->
+            <div class="card" style="border-left: 4px solid #f59e0b;">
+                <h3><i class="fas fa-clock" style="color: #f59e0b;"></i> Pending Client Submissions</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Price</th>
+                            <th>Category</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pendingTableBody"></tbody>
+                </table>
+            </div>
+
             <div class="card">
                 <h3>Live Customer Orders</h3>
                 <table>
@@ -72,7 +87,7 @@
             </div>
 
             <div class="card">
-                <h3>Product Inventory Management</h3>
+                <h3>Active Store Inventory</h3>
                 <table>
                     <thead>
                         <tr>
@@ -90,8 +105,9 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, addDoc, deleteDoc, doc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, addDoc, deleteDoc, doc, updateDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
+        // Security Authentication check
         if (localStorage.getItem("isAdminLoggedIn") !== "true") {
             alert("Unauthorized access! Redirecting...");
             window.location.href = "index.html";
@@ -113,52 +129,79 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Upload Form
+        // Admin Upload (Automatically Approved)
         document.getElementById("addProductForm").addEventListener("submit", async (e) => {
             e.preventDefault();
-            const imagesArr = document.getElementById("pImages").value.split(",").map(s => s.trim());
             try {
                 await addDoc(collection(db, "products"), {
                     name: document.getElementById("pName").value,
                     price: Number(document.getElementById("pPrice").value),
-                    oldPrice: Number(document.getElementById("pOldPrice").value) || null,
                     deliveryFee: Number(document.getElementById("pDelivery").value) || 0,
                     category: document.getElementById("pCat").value,
-                    images: imagesArr,
+                    images: [document.getElementById("pImages").value.trim()],
                     description: document.getElementById("pDesc").value,
+                    status: "approved", // Directly active
                     timestamp: serverTimestamp()
                 });
-                alert("Product Added Successfully!");
+                alert("Product Published Live!");
                 e.target.reset();
-            } catch(err) {
-                alert("Error adding product: " + err.message);
+            } catch(err) { alert("Error: " + err.message); }
+        });
+
+        // Realtime Products Listener (Segregates Active vs Pending)
+        onSnapshot(query(collection(db, "products"), orderBy("timestamp", "desc")), (snap) => {
+            const pendingBody = document.getElementById("pendingTableBody");
+            const activeBody = document.getElementById("inventoryTableBody");
+            pendingBody.innerHTML = "";
+            activeBody.innerHTML = "";
+
+            snap.forEach((docSnap) => {
+                const p = docSnap.data();
+                const id = docSnap.id;
+
+                if (p.status === "pending") {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td><b>${p.name}</b></td>
+                        <td>₦${Number(p.price).toLocaleString()}</td>
+                        <td>${p.category}</td>
+                        <td>
+                            <button style="background:#059669; padding:4px 8px; font-size:11px; margin-right:4px;" onclick="approveProduct('${id}')">Approve</button>
+                            <button class="btn-danger" style="padding:4px 8px; font-size:11px;" onclick="deleteProduct('${id}')">Decline</button>
+                        </td>
+                    `;
+                    pendingBody.appendChild(row);
+                } else {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${p.name}</td>
+                        <td>₦${Number(p.price).toLocaleString()}</td>
+                        <td>${p.category}</td>
+                        <td><button class="btn-danger" style="padding:4px 8px; font-size:11px;" onclick="deleteProduct('${id}')">Delete</button></td>
+                    `;
+                    activeBody.appendChild(row);
+                }
+            });
+
+            if (pendingBody.children.length === 0) {
+                pendingBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#64748b;">No pending submissions.</td></tr>`;
             }
         });
 
-        // Load Inventory
-        onSnapshot(query(collection(db, "products"), orderBy("timestamp", "desc")), (snap) => {
-            const body = document.getElementById("inventoryTableBody");
-            body.innerHTML = "";
-            snap.forEach((docSnap) => {
-                const p = docSnap.data();
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${p.name}</td>
-                    <td>₦${Number(p.price).toLocaleString()}</td>
-                    <td>${p.category}</td>
-                    <td><button class="btn-danger" style="padding:4px 8px; font-size:11px;" onclick="deleteProduct('${docSnap.id}')">Delete</button></td>
-                `;
-                body.appendChild(row);
-            });
-        });
+        window.approveProduct = async (id) => {
+            try {
+                await updateDoc(doc(db, "products", id), { status: "approved" });
+                alert("Product approved and published!");
+            } catch (err) { alert("Error: " + err.message); }
+        };
 
         window.deleteProduct = async (id) => {
-            if (confirm("Delete this product permanently?")) {
+            if (confirm("Remove this product?")) {
                 await deleteDoc(doc(db, "products", id));
             }
         };
 
-        // Load Orders
+        // Realtime Customer Orders
         onSnapshot(query(collection(db, "orders"), orderBy("timestamp", "desc")), (snap) => {
             const body = document.getElementById("ordersTableBody");
             body.innerHTML = "";
