@@ -22,26 +22,46 @@
         body { background-color: var(--bg-light); color: var(--text-main); }
         header { background-color: var(--white); border-bottom: 1px solid var(--border-color); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
         .logo-area h1 { font-size: 22px; color: var(--primary); font-weight: 800; letter-spacing: -0.5px; }
+        
+        .header-actions { display: flex; align-items: center; gap: 15px; }
+        .cart-trigger-btn { background: none; border: none; font-size: 22px; color: var(--primary); cursor: pointer; position: relative; }
+        .cart-badge { position: absolute; top: -6px; right: -8px; background: #ef4444; color: white; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; font-weight: bold; display: flex; align-items: center; justify-content: center; }
+
         .promo-banner-billboard { background: linear-gradient(135deg, #0f172a, #1e293b); color: var(--white); padding: 40px 5%; text-align: center; border-bottom: 4px solid var(--secondary); }
         .promo-banner-billboard h2 { font-size: 28px; margin-bottom: 10px; }
+        
         .section-container { padding: 30px 5%; }
         .section-title { font-size: 20px; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        
         .tabs-container { display: flex; gap: 10px; overflow-x: auto; margin-bottom: 25px; padding-bottom: 5px; }
         .cat-btn { background: var(--white); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
         .cat-btn.active, .cat-btn:hover { background: var(--primary); color: var(--white); border-color: var(--primary); }
-        .products-grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
-        .grid-product-card { background: var(--white); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; cursor: pointer; position: relative; transition: transform 0.2s; display: flex; flex-direction: column; }
-        .grid-product-card:hover { transform: translateY(-2px); }
-        .grid-product-card img { width: 100%; height: 130px; object-fit: contain; margin-bottom: 10px; border-radius: 6px; }
-        .product-title { font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px; height: 34px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .product-price { font-size: 15px; font-weight: 700; color: var(--text-main); }
+        
+        /* RESTORED PRODUCT GRID */
+        .products-grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+        .grid-product-card { background: var(--white); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
+        .grid-product-card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08); }
+        .grid-product-card img { width: 100%; height: 150px; object-fit: contain; margin-bottom: 12px; border-radius: 6px; }
+        .product-title { font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 6px; height: 38px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .product-price { font-size: 16px; font-weight: 800; color: var(--secondary); margin-bottom: 10px; }
+        
+        .btn-action-primary { width: 100%; padding: 10px; border-radius: 8px; border: none; font-size: 14px; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; text-decoration: none; }
+        .btn-add-cart { background-color: var(--primary); color: white; }
+        .btn-buy { background-color: var(--secondary); color: white; }
+
+        /* MODALS & CART DRAWER */
         .modal-overlay-sheet { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 1000; display: none; overflow-y: auto; }
         .modal-body-wrapper { background: var(--white); width: 90%; max-width: 500px; margin: 50px auto; border-radius: 16px; padding: 25px; position: relative; }
         .modal-close-trigger { position: absolute; top: 15px; right: 15px; background: #f1f5f9; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-weight: bold; }
         .modal-main-img { width: 100%; height: 220px; object-fit: contain; border-radius: 8px; background: #f8fafc; }
-        .btn-action-primary { width: 100%; padding: 12px; border-radius: 8px; border: none; font-size: 15px; font-weight: 600; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px; text-decoration: none; }
-        .btn-buy { background-color: var(--secondary); color: white; }
-        .btn-buy-primary { background-color: var(--primary); color: white; }
+        
+        /* CART ITEM STYLING */
+        .cart-item-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border-color); }
+        .cart-item-info { display: flex; gap: 10px; align-items: center; }
+        .cart-item-info img { width: 45px; height: 45px; object-fit: contain; border-radius: 4px; background: #f1f5f9; }
+        .cart-qty-ctrl { display: flex; align-items: center; gap: 6px; }
+        .qty-btn { background: #e2e8f0; border: none; width: 22px; height: 22px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+
         footer { background: #0f172a; color: #94a3b8; padding: 40px 5%; text-align: center; font-size: 14px; margin-top: 50px; }
     </style>
 </head>
@@ -49,6 +69,13 @@
     <header>
         <div class="logo-area">
             <h1>Holuwafemi Mega Store</h1>
+        </div>
+        <div class="header-actions">
+            <!-- RESTORED SHOPPING CART TRIGGER -->
+            <button class="cart-trigger-btn" id="openCartModalBtn" title="Shopping Cart">
+                <i class="fas fa-shopping-basket"></i>
+                <span class="cart-badge" id="cartCountBadge">0</span>
+            </button>
         </div>
     </header>
 
@@ -80,7 +107,37 @@
             <div id="mPrice" class="product-price" style="font-size:22px; color:var(--secondary); margin: 8px 0;">₦0</div>
             <p id="mDesc" style="font-size:14px; color:#475569; margin-bottom:20px; max-height:120px; overflow-y:auto;"></p>
             
-            <button id="directBuyBtn" class="btn-action-primary btn-buy-primary"><i class="fas fa-bolt"></i> INSTANT BUY NOW</button>
+            <button id="modalAddToCartBtn" class="btn-action-primary btn-add-cart" style="margin-bottom:10px;"><i class="fas fa-cart-plus"></i> ADD TO CART</button>
+            <button id="directBuyBtn" class="btn-action-primary btn-buy"><i class="fas fa-bolt"></i> INSTANT BUY NOW</button>
+        </div>
+    </div>
+
+    <!-- RESTORED SHOPPING CART MODAL -->
+    <div class="modal-overlay-sheet" id="cartModal">
+        <div class="modal-body-wrapper">
+            <button class="modal-close-trigger" id="closeCartBtn">×</button>
+            <h3 style="font-size:18px; margin-bottom:15px;"><i class="fas fa-shopping-cart" style="color:var(--secondary);"></i> Your Cart</h3>
+            
+            <div id="cartItemsList" style="max-height: 250px; overflow-y: auto; margin-bottom: 15px;">
+                <p style="text-align: center; color: var(--text-muted); font-size: 14px;">Your cart is empty.</p>
+            </div>
+
+            <div style="background:#f1f5f9; padding:12px; border-radius:8px; margin-bottom:15px;">
+                <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
+                    <span>Subtotal:</span>
+                    <span id="cartSubtotalText">₦0</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:6px;">
+                    <span>Delivery Fee:</span>
+                    <span id="cartDeliveryText">₦0</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-weight:800; font-size:16px; border-top:1px solid #cbd5e1; padding-top:6px;">
+                    <span>Total:</span>
+                    <span id="cartTotalText" style="color:var(--secondary);">₦0</span>
+                </div>
+            </div>
+
+            <button id="proceedCartCheckoutBtn" class="btn-action-primary btn-buy"><i class="fas fa-arrow-right"></i> PROCEED TO CHECKOUT</button>
         </div>
     </div>
 
@@ -125,7 +182,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        let allProducts = [], selectedProduct = null, checkoutAmount = 0;
+        let allProducts = [], cart = [], selectedProduct = null, checkoutAmount = 0;
 
         function safeFormat(val) {
             const num = Number(val);
@@ -155,13 +212,16 @@
                     <img src="${img}">
                     <div class="product-title">${p.name}</div>
                     <div class="product-price">₦${safeFormat(p.price)}</div>
+                    <button class="btn-action-primary btn-add-cart" onclick="event.stopPropagation(); window.addToCart('${p.id}')">
+                        <i class="fas fa-cart-plus"></i> Add
+                    </button>
                 `;
                 el.onclick = () => openModal(p);
                 grid.appendChild(el);
             });
         }
 
-        // Category Tabs listener
+        // Category Tabs Listener
         document.querySelectorAll(".cat-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
@@ -169,6 +229,76 @@
                 renderProducts(e.target.dataset.cat);
             });
         });
+
+        // Cart State Management
+        window.addToCart = (productId) => {
+            const p = allProducts.find(item => item.id === productId);
+            if (!p) return;
+            const existing = cart.find(item => item.id === productId);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({ ...p, qty: 1 });
+            }
+            updateCartUI();
+        };
+
+        window.changeQty = (productId, delta) => {
+            const item = cart.find(i => i.id === productId);
+            if (!item) return;
+            item.qty += delta;
+            if (item.qty <= 0) {
+                cart = cart.filter(i => i.id !== productId);
+            }
+            updateCartUI();
+        };
+
+        function updateCartUI() {
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            document.getElementById("cartCountBadge").innerText = totalQty;
+
+            const listEl = document.getElementById("cartItemsList");
+            if (cart.length === 0) {
+                listEl.innerHTML = `<p style="text-align: center; color: var(--text-muted); font-size: 14px;">Your cart is empty.</p>`;
+                document.getElementById("cartSubtotalText").innerText = "₦0";
+                document.getElementById("cartDeliveryText").innerText = "₦0";
+                document.getElementById("cartTotalText").innerText = "₦0";
+                return;
+            }
+
+            listEl.innerHTML = "";
+            let subtotal = 0;
+            let deliveryTotal = 0;
+
+            cart.forEach(item => {
+                const itemSub = Number(item.price) * item.qty;
+                subtotal += itemSub;
+                deliveryTotal += (Number(item.deliveryFee) || 0) * item.qty;
+                const img = Array.isArray(item.images) ? item.images[0] : (item.imageUrl || 'https://via.placeholder.com/150');
+
+                const row = document.createElement("div");
+                row.className = "cart-item-row";
+                row.innerHTML = `
+                    <div class="cart-item-info">
+                        <img src="${img}">
+                        <div>
+                            <div style="font-weight:600; font-size:13px; max-width:140px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.name}</div>
+                            <div style="font-size:12px; color:var(--secondary); font-weight:700;">₦${safeFormat(item.price)}</div>
+                        </div>
+                    </div>
+                    <div class="cart-qty-ctrl">
+                        <button class="qty-btn" onclick="window.changeQty('${item.id}', -1)">-</button>
+                        <span style="font-size:13px; font-weight:bold;">${item.qty}</span>
+                        <button class="qty-btn" onclick="window.changeQty('${item.id}', 1)">+</button>
+                    </div>
+                `;
+                listEl.appendChild(row);
+            });
+
+            document.getElementById("cartSubtotalText").innerText = "₦" + safeFormat(subtotal);
+            document.getElementById("cartDeliveryText").innerText = "₦" + safeFormat(deliveryTotal);
+            document.getElementById("cartTotalText").innerText = "₦" + safeFormat(subtotal + deliveryTotal);
+        }
 
         function openModal(p) {
             selectedProduct = p;
@@ -179,15 +309,36 @@
             document.getElementById("productModal").style.display = "block";
         }
 
-        // Modal Close Controls
+        // Modal Trigger Controls
+        document.getElementById("openCartModalBtn").onclick = () => document.getElementById("cartModal").style.display = "block";
+        document.getElementById("closeCartBtn").onclick = () => document.getElementById("cartModal").style.display = "none";
         document.getElementById("closeDetailsBtn").onclick = () => document.getElementById("productModal").style.display = "none";
         document.getElementById("closeCheckoutBtn").onclick = () => document.getElementById("checkoutModal").style.display = "none";
 
-        // Direct Checkout
+        document.getElementById("modalAddToCartBtn").onclick = () => {
+            if (selectedProduct) {
+                window.addToCart(selectedProduct.id);
+                document.getElementById("productModal").style.display = "none";
+                document.getElementById("cartModal").style.display = "block";
+            }
+        };
+
+        // Direct Checkout vs Cart Checkout
         document.getElementById("directBuyBtn").onclick = () => {
             checkoutAmount = Number(selectedProduct.price) + Number(selectedProduct.deliveryFee || 0);
             document.getElementById("checkoutPayableAmount").innerText = "₦" + safeFormat(checkoutAmount);
             document.getElementById("productModal").style.display = "none";
+            document.getElementById("checkoutModal").style.display = "block";
+        };
+
+        document.getElementById("proceedCartCheckoutBtn").onclick = () => {
+            if (cart.length === 0) return alert("Your cart is empty!");
+            const subtotal = cart.reduce((sum, i) => sum + (Number(i.price) * i.qty), 0);
+            const delivery = cart.reduce((sum, i) => sum + ((Number(i.deliveryFee) || 0) * i.qty), 0);
+            checkoutAmount = subtotal + delivery;
+
+            document.getElementById("checkoutPayableAmount").innerText = "₦" + safeFormat(checkoutAmount);
+            document.getElementById("cartModal").style.display = "none";
             document.getElementById("checkoutModal").style.display = "block";
         };
 
@@ -212,6 +363,8 @@
                         deliveryAddress: address, amountPaid: checkoutAmount,
                         paystackReference: transaction.reference, status: "Paid", timestamp: serverTimestamp()
                     });
+                    cart = [];
+                    updateCartUI();
                     document.getElementById("checkoutModal").style.display = "none";
                 }
             });
