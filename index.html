@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Holuwafemi Mega Store - Premium Marketplace</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <!-- Updated Paystack Inline JS v2 -->
+    <script src="https://js.paystack.co/v2/inline.js"></script>
     <style>
         :root {
             --primary: #0f172a;       /* Deep Slate Charcoal */
@@ -49,15 +50,6 @@
             align-items: center;
             gap: 15px;
         }
-        .user-badge-btn {
-            background: #f1f5f9;
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            display: none;
-        }
         .nav-icon-btn {
             background: none;
             border: none;
@@ -81,15 +73,6 @@
             align-items: center;
             justify-content: center;
         }
-        .btn-logout, .btn-edit-profile {
-            font-size: 13px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            display: none;
-        }
-        .btn-edit-profile { color: var(--secondary); font-weight: 600; }
-        .btn-logout { color: #ef4444; font-weight: 600; }
         .promo-banner-billboard {
             background: linear-gradient(135deg, #0f172a, #1e293b);
             color: var(--white);
@@ -139,12 +122,6 @@
             background: var(--primary);
             color: var(--white);
             border-color: var(--primary);
-        }
-        select#gateState {
-            white-space: normal !important;
-            appearance: auto !important;
-            -webkit-appearance: listbox !important;
-            cursor: pointer !important;
         }
         .products-grid-layout {
             display: grid;
@@ -412,27 +389,27 @@
             <h1>Holuwafemi Mega Store</h1>
         </div>
         <div class="header-actions">
-            <!-- ADMIN LOGIN TRIGGER BUTTON -->
-            <button id="openAdminModalBtn" class="nav-icon-btn" title="Admin Portal Login" style="margin-right: 5px;">
-                <i class="fas fa-lock" style="color: var(--primary);"></i>
+            <!-- ADMIN PASSCODE BUTTON -->
+            <button id="openAdminPasscodeBtn" class="nav-icon-btn" title="Admin Portal Key" style="margin-right: 5px;">
+                <i class="fas fa-key" style="color: var(--secondary);"></i>
             </button>
-            <span id="headerUserBadge" class="user-badge-btn">👤 Profile</span>
-            <button id="headerEditProfileBtn" class="btn-edit-profile" title="Edit Profile"><i class="fas fa-user-edit"></i></button>
-            <button id="headerLogoutBtn" class="btn-logout" title="Logout Switch"><i class="fas fa-sign-out-alt"></i></button>
             <button id="openCartIconBtn" class="nav-icon-btn">
                 <i class="fas fa-shopping-cart"></i>
                 <span id="cartCounter" class="cart-counter-badge">0</span>
             </button>
         </div>
     </header>
+
     <div class="promo-banner-billboard">
         <h2>Premium Quality, Unbeatable Deals</h2>
         <p>Explore original phones, solar gear, appliances, and luxury electronics with secure instant checkout payment processing pipelines.</p>
     </div>
+
     <div class="section-container" id="topSellersSection">
         <div class="section-title"><i class="fas fa-fire" style="color:#f97316;"></i> Trending Highlights</div>
         <div class="horizontal-scroll-row" id="topSellersScrollBox"></div>
     </div>
+
     <div class="section-container">
         <div class="section-title"><i class="fas fa-store" style="color:var(--secondary)"></i> Explore Catalog Inventory</div>
         
@@ -447,6 +424,7 @@
         </div>
         <div class="products-grid-layout" id="mainCatalogGrid"></div>
     </div>
+
     <div class="section-container" style="padding-top: 0; padding-bottom: 40px;">
         <div class="refund-card-section" id="storefrontRefundBlock">
             <h3>Submit Return & Refund Request</h3>
@@ -487,50 +465,25 @@
         </div>
     </div>
 
-    <!-- ADMIN LOGIN MODAL -->
-    <div class="modal-overlay-sheet" id="adminLoginModal">
-        <div class="modal-body-wrapper" style="max-width: 400px; margin-top: 80px;">
-            <button class="modal-close-trigger" id="closeAdminLoginBtn">×</button>
-            <h3 style="font-size:20px; margin-bottom:6px; color:var(--primary);"><i class="fas fa-lock"></i> Admin Authorization</h3>
-            <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Enter administrative email & password to access management control.</p>
+    <!-- ADMIN PASSCODE MODAL -->
+    <div class="modal-overlay-sheet" id="adminPasscodeModal">
+        <div class="modal-body-wrapper" style="max-width: 380px; margin-top: 100px;">
+            <button class="modal-close-trigger" id="closeAdminPasscodeBtn">×</button>
+            <h3 style="font-size:20px; margin-bottom:6px; color:var(--primary);"><i class="fas fa-lock"></i> Admin Passcode</h3>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Enter your secret admin passcode to unlock store management.</p>
             
-            <form id="adminLoginForm">
+            <form id="adminPasscodeForm">
                 <div style="display:flex; flex-direction:column; gap:12px;">
                     <div>
-                        <label style="font-size:11px; font-weight:700; color:var(--text-main); display:block; margin-bottom:4px;">ADMIN EMAIL</label>
-                        <input type="email" id="adminAuthEmail" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text; padding:0 15px; height:42px;" placeholder="admin@example.com" required>
+                        <label style="font-size:11px; font-weight:700; color:var(--text-main); display:block; margin-bottom:4px;">SECRET PASSCODE</label>
+                        <input type="password" id="adminSecretPasscode" class="cat-btn" style="width:100%; border-radius:8px; text-align:center; letter-spacing: 4px; font-size:20px; padding:0 15px; height:46px;" placeholder="••••" required autofocus>
                     </div>
-                    <div>
-                        <label style="font-size:11px; font-weight:700; color:var(--text-main); display:block; margin-bottom:4px;">PASSWORD</label>
-                        <input type="password" id="adminAuthPassword" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text; padding:0 15px; height:42px;" placeholder="••••••••" required>
-                    </div>
-                    <button type="submit" id="adminLoginSubmitBtn" class="btn-action-primary btn-buy" style="margin-top:10px; font-size:14px;">LOGIN TO ADMIN PORTAL</button>
+                    <button type="submit" class="btn-action-primary btn-buy" style="margin-top:10px; font-size:14px;">VERIFY PASSCODE</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- REGISTRATION MODAL -->
-    <div class="modal-overlay-sheet" id="gateModal" style="display: block;">
-        <div class="modal-body-wrapper" style="margin-top: 80px;">
-            <button type="button" class="modal-close-trigger" id="closeGateBtn" style="display:none;">×</button>
-            <h3 id="gateTitle" style="font-size:20px; margin-bottom:6px;">Customer Registration</h3>
-            <p id="gateSubtitle" style="font-size:13px; color:var(--text-muted); margin-bottom:20px;">Please enter your delivery details to open your account instantly.</p>
-            
-            <div style="display:flex; flex-direction:column; gap:12px;">
-                <input type="text" id="gateName" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text;" placeholder="Full Name">
-                <input type="email" id="gateEmail" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text;" placeholder="Email Address">
-                <input type="tel" id="gatePhone" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text;" placeholder="Phone Number (e.g., 08012345678)">
-                <select id="gateState" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; height:42px; padding:0 15px; white-space: normal !important; -webkit-appearance: listbox !important; appearance: auto !important; cursor: pointer;"></select>
-                <input type="text" id="gateAddress" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; cursor:text;" placeholder="Street Address, Town/City Details">
-            </div>
-            
-            <p id="gateNote" style="font-size: 11px; color: var(--text-muted); margin-top:12px; line-height:1.4;">
-                <i class="fas fa-shield-alt"></i> Secure registration framework verified. These delivery profiles link directly into active automated processing tracking receipts.
-            </p>
-            <button type="button" id="gateSubmitBtn" class="btn-action-primary btn-buy" style="margin-top:20px;">CREATE ACCOUNT & ENTER STORE</button>
-        </div>
-    </div>
     <!-- MAIN PRODUCT MODAL -->
     <div class="modal-overlay-sheet" id="productModal">
         <div class="modal-body-wrapper">
@@ -538,8 +491,6 @@
             <img src="" id="mImg" class="modal-main-img" alt="Main View">
             <div class="gallery-thumbs-row" id="mThumbsRow"></div>
             
-            <input type="hidden" id="custName"><input type="hidden" id="custEmail">
-            <input type="hidden" id="custPhone"><input type="hidden" id="custAddress">
             <h3 id="mName" style="margin-top:15px; font-size:18px; margin-bottom: 2px;">Product Title Here</h3>
             <div id="mProductCode" class="product-id-badge">ID: LOADING</div>
             
@@ -561,6 +512,7 @@
             </div>
         </div>
     </div>
+
     <!-- CART MODAL -->
     <div class="modal-overlay-sheet" id="cartModal">
         <div class="modal-body-wrapper">
@@ -588,21 +540,32 @@
             </div>
         </div>
     </div>
-    <!-- CHECKOUT MODAL -->
+
+    <!-- CHECKOUT MODAL WITH DIRECT CUSTOMER ENTRY -->
     <div class="modal-overlay-sheet" id="checkoutModal">
-        <div class="modal-body-wrapper" style="text-align:center; padding:30px;">
+        <div class="modal-body-wrapper" style="padding:25px;">
             <button class="modal-close-trigger" id="closeCheckoutBtn">×</button>
-            <i class="fas fa-lock" style="font-size:36px; color:var(--secondary); margin-bottom:12px;"></i>
-            <h3>Secure Gateway Check</h3>
-            <p style="font-size:14px; color:var(--text-muted); margin:8px 0 20px 0;">Your order tracking sequence parameters are locked. Process instant settlement using secure channels.</p>
-            
-            <div style="background:#f1f5f9; padding:20px; border-radius:10px; margin-bottom:25px;">
-                <span style="font-size:13px; text-transform:uppercase; font-weight:700; color:var(--text-muted); display:block; margin-bottom:4px;">Total Payable Net</span>
-                <span id="checkoutPayableAmount" style="font-size:28px; font-weight:800; color:var(--text-main);">₦0</span>
+            <div style="text-align:center;">
+                <i class="fas fa-shield-alt" style="font-size:32px; color:var(--secondary); margin-bottom:8px;"></i>
+                <h3 style="font-size:18px;">Order & Shipping Details</h3>
+                <p style="font-size:12px; color:var(--text-muted); margin-bottom:15px;">Please provide your delivery information to finalize payment.</p>
             </div>
-            <button id="paystackTriggerBtn" class="btn-action-primary btn-buy" style="background:#34d399;"><i class="fas fa-shield-alt"></i> AUTHORIZE PAYMENT VIA PAYSTACK</button>
+
+            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:15px;">
+                <input type="text" id="checkoutName" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; padding:0 12px; height:40px;" placeholder="Full Name" required>
+                <input type="email" id="checkoutEmail" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; padding:0 12px; height:40px;" placeholder="Email Address" required>
+                <input type="tel" id="checkoutPhone" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; padding:0 12px; height:40px;" placeholder="Phone Number (e.g. 08012345678)" required>
+                <input type="text" id="checkoutAddress" class="cat-btn" style="width:100%; border-radius:8px; text-align:left; padding:0 12px; height:40px;" placeholder="Delivery Address & City" required>
+            </div>
+            
+            <div style="background:#f1f5f9; padding:12px; border-radius:8px; text-align:center; margin-bottom:15px;">
+                <span style="font-size:11px; text-transform:uppercase; font-weight:700; color:var(--text-muted); display:block;">Total Payable Amount</span>
+                <span id="checkoutPayableAmount" style="font-size:24px; font-weight:800; color:var(--text-main);">₦0</span>
+            </div>
+            <button id="paystackTriggerBtn" class="btn-action-primary btn-buy" style="background:#34d399;"><i class="fas fa-lock"></i> PAY NOW VIA PAYSTACK</button>
         </div>
     </div>
+
     <!-- POLICIES -->
     <div class="modal-overlay-sheet" id="privacyModal"><div class="modal-body-wrapper"><button class="modal-close-trigger close-policy-btn">×</button><h3>Privacy Policy Statement</h3><p style="font-size:14px; margin-top:10px; line-height:1.5;">Holuwafemi Mega Store secures customer delivery records strictly for automated payload tracking execution routines. Profile data configurations stay safely localized on sandbox caching contexts.</p></div></div>
     <div class="modal-overlay-sheet" id="termsModal"><div class="modal-body-wrapper"><button class="modal-close-trigger close-policy-btn">×</button><h3>Terms & Service Guidelines</h3><p style="font-size:14px; margin-top:10px; line-height:1.5;">All electronic merchandise listings, monocrystalline solar configurations, and dynamic appliance distribution portfolios carry structural merchant warranties verified at settlement checkpoints.</p></div></div>
@@ -613,13 +576,13 @@
             <p style="font-size:14px; margin-top:10px; line-height:1.5; color:#475569;">At Holuwafemi Mega Store, we ensure all electronic merchandise, solar systems, and home appliances go through intensive quality checks before deployment.</p>
             <ul style="font-size:13px; margin:12px 0; padding-left:20px; line-height:1.6; color:#475569;">
                 <li><b>Eligibility:</b> Requests for returns or refunds must be initiated within 7 days of delivery.</li>
-                <li><b>Condition:</b> Items must be in their original packaging, unused, with all accessories and warranty seals completely intact.</li>
-                <li><b>Non-Refundable Fees:</b> Standard delivery tracking fees charged at shipment checkpoints are non-refundable.</li>
-                <li><b>Processing Timeline:</b> Once returns pass structural damage validation checks, authorized payouts are processed securely back to your original source channel within 3–5 working days.</li>
+                <li><b>Condition:</b> Items must be in their original packaging, unused, with all accessories intact.</li>
+                <li><b>Processing:</b> Approved refunds are processed back to your channel within 3–5 working days.</li>
             </ul>
             <button type="button" class="btn-action-primary" onclick="triggerRefundPanelInline('')" style="background:#f1f5f9; color:#ef4444; font-size:13px; margin-top:10px;">Open Refund Submission Form</button>
         </div>
     </div>
+
     <footer>
         <p>&copy; 2026 Holuwafemi Mega Store. All Rights Reserved.</p>
         <p style="font-size:11px; margin-top:4px; color:#64748b;">Premium Electronics, Appliances & High-Efficiency Solar Ecosystem Installations.</p>
@@ -629,10 +592,10 @@
             <a data-policy="refundModal">Refund Policy</a>
         </div>
     </footer>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
@@ -645,56 +608,36 @@
         };
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const auth = getAuth(app);
         
         let allProducts = [];
         let selectedProduct = null; 
         let checkoutMode = ""; 
         let checkoutAmount = 0;
         let cart = JSON.parse(localStorage.getItem("megaStoreCart")) || [];
-        const nigeriaStates = [
-            "Select State", "Abia", "Adamawa", "Akwa Ibom", "Anambra", "Bauchi", "Bayelsa", "Benue", "Borno", 
-            "Cross River", "Delta", "Ebonyi", "Edo", "Ekiti", "Enugu", "FCT - Abuja", "Gombe", "Imo", 
-            "Jigawa", "Kaduna", "Kano", "Katsina", "Kebbi", "Kogi", "Kwara", "Lagos", "Nasarawa", 
-            "Niger", "Ogun", "Ondo", "Osun", "Oyo", "Plateau", "Rivers", "Sokoto", "Taraba", "Yobe", "Zamfara"
-        ];
-        const stateSelector = document.getElementById("gateState");
-        if (stateSelector) {
-            stateSelector.innerHTML = nigeriaStates.map(state => `<option value="${state === 'Select State' ? '' : state}">${state}</option>`).join("");
-        }
 
-        // ADMIN LOGIN EVENT LISTENERS
-        document.getElementById("openAdminModalBtn")?.addEventListener("click", () => {
-            document.getElementById("adminLoginModal").style.display = "block";
+        // ADMIN PASSCODE CONFIGURATION
+        const ADMIN_PASSCODE = "1234"; 
+
+        document.getElementById("openAdminPasscodeBtn")?.addEventListener("click", () => {
+            document.getElementById("adminPasscodeModal").style.display = "block";
             document.body.style.overflow = "hidden";
         });
 
-        document.getElementById("closeAdminLoginBtn")?.addEventListener("click", () => {
-            document.getElementById("adminLoginModal").style.display = "none";
+        document.getElementById("closeAdminPasscodeBtn")?.addEventListener("click", () => {
+            document.getElementById("adminPasscodeModal").style.display = "none";
             document.body.style.overflow = "auto";
         });
 
-        document.getElementById("adminLoginForm")?.addEventListener("submit", async function(e) {
+        document.getElementById("adminPasscodeForm")?.addEventListener("submit", function(e) {
             e.preventDefault();
-            const email = document.getElementById("adminAuthEmail").value.trim();
-            const password = document.getElementById("adminAuthPassword").value;
-            const submitBtn = document.getElementById("adminLoginSubmitBtn");
+            const inputPasscode = document.getElementById("adminSecretPasscode").value;
 
-            try {
-                submitBtn.innerText = "Verifying...";
-                submitBtn.disabled = true;
-
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                alert("Admin Access Authorized! Navigating to dashboard...");
-                
+            if (inputPasscode === ADMIN_PASSCODE) {
                 localStorage.setItem("isAdminLoggedIn", "true");
                 window.location.href = "admin.html";
-            } catch (error) {
-                console.error("Admin Auth Error:", error);
-                alert("Authentication Failed: " + error.message);
-            } finally {
-                submitBtn.innerText = "LOGIN TO ADMIN PORTAL";
-                submitBtn.disabled = false;
+            } else {
+                alert("Incorrect Admin Passcode!");
+                document.getElementById("adminSecretPasscode").value = "";
             }
         });
 
@@ -704,101 +647,16 @@
             document.body.style.overflow = "auto";
             const refundPanel = document.getElementById("storefrontRefundBlock");
             refundPanel.style.display = "block";
-            
             document.getElementById("refundRefInput").value = presetRef || "";
-            document.getElementById("refundEmailInput").value = localStorage.getItem("storeCustomerEmail") || "";
-            
             refundPanel.scrollIntoView({ behavior: "smooth" });
         };
+
         function safeFormatPrice(val) {
             if (val === undefined || val === null || val === "") return "0";
             const num = Number(val);
             return isNaN(num) ? "0" : num.toLocaleString();
         }
-        function checkVisitorSession() {
-            const savedName = localStorage.getItem("storeCustomerName");
-            const savedEmail = localStorage.getItem("storeCustomerEmail");
-            const savedPhone = localStorage.getItem("storeCustomerPhone");
-            const savedState = localStorage.getItem("storeCustomerState");
-            const savedAddress = localStorage.getItem("storeCustomerAddress");
-            
-            const gate = document.getElementById("gateModal");
-            const badge = document.getElementById("headerUserBadge");
-            const logoutBtn = document.getElementById("headerLogoutBtn");
-            const editProfileBtn = document.getElementById("headerEditProfileBtn");
-            if (savedName && savedEmail) {
-                if (gate) gate.style.setProperty("display", "none", "important");
-                document.body.style.overflow = "auto";
-                if (badge) {
-                    badge.innerText = "👤 " + savedName.split(" ")[0];
-                    badge.style.display = "block";
-                }
-                if (logoutBtn) logoutBtn.style.display = "block";
-                if (editProfileBtn) editProfileBtn.style.display = "block";
-                
-                document.getElementById("custName").value = savedName;
-                document.getElementById("custEmail").value = savedEmail;
-                document.getElementById("custPhone").value = savedPhone || "";
-                document.getElementById("custAddress").value = `${savedAddress || ""}, ${savedState || ""}`;
-            } else {
-                if (gate) gate.style.setProperty("display", "block", "important");
-                document.body.style.overflow = "hidden";
-                if (badge) badge.style.display = "none";
-                if (logoutBtn) logoutBtn.style.display = "none";
-                if (editProfileBtn) editProfileBtn.style.display = "none";
-            }
-        }
-        function openProfileForEditing() {
-            document.getElementById("gateName").value = localStorage.getItem("storeCustomerName") || "";
-            document.getElementById("gateEmail").value = localStorage.getItem("storeCustomerEmail") || "";
-            document.getElementById("gatePhone").value = localStorage.getItem("storeCustomerPhone") || "";
-            document.getElementById("gateState").value = localStorage.getItem("storeCustomerState") || "";
-            document.getElementById("gateAddress").value = localStorage.getItem("storeCustomerAddress") || "";
-            
-            document.getElementById("gateName").setAttribute("readonly", "true");
-            document.getElementById("gateEmail").setAttribute("readonly", "true");
-            document.getElementById("gateName").style.background = "#eeeeee";
-            document.getElementById("gateEmail").style.background = "#eeeeee";
-            document.getElementById("gateTitle").innerText = "Update Profile";
-            document.getElementById("gateSubtitle").innerText = "You can update your phone number and delivery address below.";
-            document.getElementById("gateNote").style.display = "none"; 
-            document.getElementById("gateSubmitBtn").innerText = "SAVE CHANGES";
-            
-            document.getElementById("closeGateBtn").style.display = "flex";
-            document.getElementById("gateModal").style.setProperty("display", "block", "important");
-            document.body.style.overflow = "hidden";
-        }
-        document.getElementById("headerUserBadge")?.addEventListener("click", openProfileForEditing);
-        document.getElementById("headerEditProfileBtn")?.addEventListener("click", openProfileForEditing);
-        document.getElementById("closeGateBtn")?.addEventListener("click", () => {
-            document.getElementById("gateModal").style.setProperty("display", "none", "important");
-            document.body.style.overflow = "auto";
-        });
-        document.getElementById("gateSubmitBtn")?.addEventListener("click", () => {
-            const name = document.getElementById("gateName").value.trim();
-            const email = document.getElementById("gateEmail").value.trim();
-            const phone = document.getElementById("gatePhone").value.trim();
-            const state = document.getElementById("gateState").value;
-            const address = document.getElementById("gateAddress").value.trim();
-            if (!name || !email || !phone || !state || !address) {
-                alert("Please fill in all delivery details perfectly.");
-                return;
-            }
-            localStorage.setItem("storeCustomerName", name);
-            localStorage.setItem("storeCustomerEmail", email);
-            localStorage.setItem("storeCustomerPhone", phone);
-            localStorage.setItem("storeCustomerState", state);
-            localStorage.setItem("storeCustomerAddress", address);
-            alert("Profile successfully configured!");
-            checkVisitorSession();
-        });
-        document.getElementById("headerLogoutBtn")?.addEventListener("click", () => {
-            if (confirm("Are you sure you want to change accounts?")) {
-                localStorage.clear();
-                checkVisitorSession();
-                updateCartUI();
-            }
-        });
+
         const productsCollection = collection(db, "products");
         const productsQuery = query(productsCollection, orderBy("timestamp", "desc"));
         onSnapshot(productsQuery, (snapshot) => {
@@ -809,6 +667,7 @@
             renderStoreProducts("all");
             renderTopSellers();
         });
+
         function renderStoreProducts(categoryFilter) {
             const gridContainer = document.getElementById("mainCatalogGrid");
             if (!gridContainer) return;
@@ -836,6 +695,7 @@
                 gridContainer.appendChild(card);
             });
         }
+
         function renderTopSellers() {
             const scrollBox = document.getElementById("topSellersScrollBox");
             if (!scrollBox) return;
@@ -862,6 +722,7 @@
                 scrollBox.appendChild(card);
             });
         }
+
         document.querySelectorAll("#categoryTabsBar .cat-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 document.querySelectorAll("#categoryTabsBar .cat-btn").forEach(b => b.classList.remove("active"));
@@ -869,6 +730,7 @@
                 renderStoreProducts(e.target.getAttribute("data-cat"));
             });
         });
+
         function openProductDetailsModal(product) {
             selectedProduct = product;
             document.getElementById("mName").innerText = product.name;
@@ -891,54 +753,29 @@
             } else {
                 imagesArray = ['https://via.placeholder.com/150'];
             }
-            let currentImgIndex = 0;
             mainImgElement.src = imagesArray[0];
-            function activeImageIndex(idx) {
-                currentImgIndex = idx;
-                mainImgElement.src = imagesArray[currentImgIndex];
-                document.querySelectorAll(".gallery-thumb-item").forEach((t, i) => {
-                    if (i === currentImgIndex) t.classList.add("active-thumb");
-                    else t.classList.remove("active-thumb");
-                });
-            }
+            
             if (imagesArray.length > 1) {
                 imagesArray.forEach((imgUrl, idx) => {
                     const thumb = document.createElement("img");
                     thumb.src = imgUrl;
                     thumb.className = `gallery-thumb-item ${idx === 0 ? 'active-thumb' : ''}`;
-                    thumb.addEventListener("click", () => activeImageIndex(idx));
+                    thumb.addEventListener("click", () => {
+                        mainImgElement.src = imgUrl;
+                        document.querySelectorAll(".gallery-thumb-item").forEach(t => t.classList.remove("active-thumb"));
+                        thumb.classList.add("active-thumb");
+                    });
                     thumbsContainer.appendChild(thumb);
                 });
-                let touchStartX = 0;
-                let touchEndX = 0;
-                mainImgElement.ontouchstart = (e) => {
-                    touchStartX = e.changedTouches[0].screenX;
-                };
-                mainImgElement.ontouchend = (e) => {
-                    touchEndX = e.changedTouches[0].screenX;
-                    const swipeDistance = touchEndX - touchStartX;
-                    if (Math.abs(swipeDistance) > 50) { 
-                        if (swipeDistance < 0) {
-                            if (currentImgIndex < imagesArray.length - 1) {
-                                activeImageIndex(currentImgIndex + 1);
-                            }
-                        } else {
-                            if (currentImgIndex > 0) {
-                                activeImageIndex(currentImgIndex - 1);
-                            }
-                        }
-                    }
-                };
-            } else {
-                mainImgElement.ontouchstart = null;
-                mainImgElement.ontouchend = null;
             }
+
             const storePhoneNum = "2348068564177"; 
             const textFormat = encodeURIComponent(`Hello Holuwafemi Mega Store, I want to inquire about availability for:\n*${product.name}*\nPrice: ₦${safeFormatPrice(product.price)}\nProduct Code: ${product.id}`);
             document.getElementById("whatsappProductChatBtn").href = `https://wa.me/${storePhoneNum}?text=${textFormat}`;
             document.getElementById("productModal").style.display = "block";
             document.body.style.overflow = "hidden";
         }
+
         function setupModalCloseTriggers(triggerId, modalId) {
             document.getElementById(triggerId)?.addEventListener("click", () => {
                 document.getElementById(modalId).style.display = "none";
@@ -950,6 +787,7 @@
         setupModalCloseTriggers("closeDetailsBtn", "productModal");
         setupModalCloseTriggers("closeCartBtn", "cartModal");
         setupModalCloseTriggers("closeCheckoutBtn", "checkoutModal");
+
         function updateCartUI() {
             document.getElementById("cartCounter").innerText = cart.length;
             localStorage.setItem("megaStoreCart", JSON.stringify(cart));
@@ -995,6 +833,7 @@
                 });
             });
         }
+
         document.getElementById("addToCartBtn")?.addEventListener("click", () => {
             if (!selectedProduct) return;
             const fallbackImg = Array.isArray(selectedProduct.images) ? selectedProduct.images[0] : selectedProduct.imageUrl;
@@ -1011,11 +850,13 @@
             document.getElementById("productModal").style.display = "none";
             document.body.style.overflow = "auto";
         });
+
         document.getElementById("openCartIconBtn")?.addEventListener("click", () => {
             document.getElementById("cartModal").style.display = "block";
             document.body.style.overflow = "hidden";
             updateCartUI();
         });
+
         function triggerCheckoutWindow(mode, amount) {
             checkoutMode = mode;
             checkoutAmount = amount;
@@ -1026,12 +867,14 @@
             document.getElementById("checkoutModal").style.display = "block";
             document.body.style.overflow = "hidden";
         }
+
         document.getElementById("directBuyBtn")?.addEventListener("click", () => {
             if (!selectedProduct) return;
             const deliveryCost = selectedProduct.deliveryFee ? Number(selectedProduct.deliveryFee) : 0;
             const grossSum = Number(selectedProduct.price) + deliveryCost;
             triggerCheckoutWindow("direct", grossSum);
         });
+
         document.getElementById("cartCheckoutBtn")?.addEventListener("click", () => {
             let totalBasketSum = 0;
             cart.forEach(item => {
@@ -1041,35 +884,35 @@
             triggerCheckoutWindow("cart", totalBasketSum);
         });
 
-        // PAYSTACK TRIGGER FIXED
+        // REFACTORED PAYSTACK PAYMENT PROCESSING ENGINE
         document.getElementById("paystackTriggerBtn")?.addEventListener("click", () => {
-            const customerEmail = localStorage.getItem("storeCustomerEmail");
-            const customerName = localStorage.getItem("storeCustomerName");
-            const customerPhone = localStorage.getItem("storeCustomerPhone") || "";
-            const deliveryAddress = localStorage.getItem("storeCustomerAddress") || "";
-            if (!customerEmail || !customerName) {
-                alert("Session context trace error. Refreshing gateway logs.");
-                checkVisitorSession();
+            const customerName = document.getElementById("checkoutName").value.trim();
+            const customerEmail = document.getElementById("checkoutEmail").value.trim();
+            const customerPhone = document.getElementById("checkoutPhone").value.trim();
+            const deliveryAddress = document.getElementById("checkoutAddress").value.trim();
+
+            if (!customerName || !customerEmail || !customerPhone || !deliveryAddress) {
+                alert("Please fill in all details (Name, Email, Phone, and Address) before proceeding.");
                 return;
             }
 
             const totalKobo = Math.round(Number(checkoutAmount) * 100);
 
-            const handler = PaystackPop.setup({
-                key: 'pk_live_e64fc7ce9677d4f5f4f4e4cb89999c51f52a1475', 
-                email: customerEmail,
-                amount: totalKobo, 
-                currency: "NGN",
-                metadata: {
-                    custom_fields: [
-                        { display_name: "Customer Name", variable_name: "customer_name", value: customerName },
-                        { display_name: "Checkout Type", variable_name: "checkout_type", value: checkoutMode },
-                        { display_name: "Delivery Details", variable_name: "delivery_details", value: deliveryAddress }
-                    ]
-                },
-                callback: async function(response) {
-                    alert("Settlement authorized securely! Transaction Reference ID: " + response.reference);
-                    
+            if (isNaN(totalKobo) || totalKobo <= 0) {
+                alert("Invalid total payable amount.");
+                return;
+            }
+
+            const paystackKey = 'pk_live_e64fc7ce9677d4f5f4f4e4cb89999c51f52a1475';
+
+            try {
+                if (typeof PaystackPop === 'undefined') {
+                    alert("Paystack SDK failed to load. Please check your network connection and retry.");
+                    return;
+                }
+
+                async function recordOrderAndCleanUp(referenceId) {
+                    alert("Settlement authorized securely! Transaction Reference ID: " + referenceId);
                     try {
                         await addDoc(collection(db, "orders"), {
                             customerName,
@@ -1077,12 +920,12 @@
                             customerPhone,
                             deliveryAddress,
                             amountPaid: checkoutAmount,
-                            paystackReference: response.reference,
+                            paystackReference: referenceId,
                             status: "Paid",
                             timestamp: serverTimestamp()
                         });
                     } catch (dbErr) {
-                        console.error("Failed to archive transaction metadata: ", dbErr);
+                        console.error("Failed to store order metadata: ", dbErr);
                     }
                     if (checkoutMode === "cart") {
                         cart = [];
@@ -1090,12 +933,62 @@
                     }
                     document.getElementById("checkoutModal").style.display = "none";
                     document.body.style.overflow = "auto";
-                },
-                onClose: function() {
-                    alert("Transaction portal paused safely before final authorization.");
                 }
-            });
-            handler.openIframe();
+
+                // Support for Paystack Pop v2 & v1 fallback
+                if (typeof PaystackPop === 'function') {
+                    const paystack = new PaystackPop();
+                    paystack.newTransaction({
+                        key: paystackKey,
+                        email: customerEmail,
+                        amount: totalKobo,
+                        currency: "NGN",
+                        metadata: {
+                            custom_fields: [
+                                { display_name: "Customer Name", variable_name: "customer_name", value: customerName },
+                                { display_name: "Customer Phone", variable_name: "customer_phone", value: customerPhone },
+                                { display_name: "Checkout Type", variable_name: "checkout_type", value: checkoutMode },
+                                { display_name: "Delivery Details", variable_name: "delivery_details", value: deliveryAddress }
+                            ]
+                        },
+                        onSuccess: (transaction) => {
+                            const ref = transaction.reference || transaction.trxref;
+                            recordOrderAndCleanUp(ref);
+                        },
+                        onCancel: () => {
+                            alert("Payment process was cancelled.");
+                        },
+                        onError: (err) => {
+                            alert("Paystack Error: " + (err.message || "Unable to complete transaction. Verify domain/keys on Paystack Dashboard."));
+                        }
+                    });
+                } else if (typeof PaystackPop.setup === 'function') {
+                    const handler = PaystackPop.setup({
+                        key: paystackKey,
+                        email: customerEmail,
+                        amount: totalKobo,
+                        currency: "NGN",
+                        metadata: {
+                            custom_fields: [
+                                { display_name: "Customer Name", variable_name: "customer_name", value: customerName },
+                                { display_name: "Customer Phone", variable_name: "customer_phone", value: customerPhone },
+                                { display_name: "Checkout Type", variable_name: "checkout_type", value: checkoutMode },
+                                { display_name: "Delivery Details", variable_name: "delivery_details", value: deliveryAddress }
+                            ]
+                        },
+                        callback: (response) => {
+                            recordOrderAndCleanUp(response.reference);
+                        },
+                        onClose: () => {
+                            alert("Payment portal closed.");
+                        }
+                    });
+                    handler.openIframe();
+                }
+            } catch (err) {
+                console.error("Paystack Checkout Exception: ", err);
+                alert("Error launching Paystack checkout modal: " + err.message);
+            }
         });
 
         document.getElementById("storefrontRefundForm")?.addEventListener("submit", async function(e) {
@@ -1114,14 +1007,15 @@
                     timestamp: serverTimestamp()
                 });
                 
-                alert("Your refund application for Reference " + reference + " has been logged successfully. The merchant team will review it within 24-48 hours.");
+                alert("Your refund application for Reference " + reference + " has been logged successfully.");
                 this.reset();
                 document.getElementById("storefrontRefundBlock").style.display = "none";
             } catch (err) {
                 console.error("Error creating document: ", err);
-                alert("Something went wrong saving request logs. Please contact support via WhatsApp.");
+                alert("Something went wrong saving request logs.");
             }
         });
+
         document.querySelectorAll(".footer-links a").forEach(link => {
             link.addEventListener("click", (e) => {
                 const targetModalId = e.target.getAttribute("data-policy");
@@ -1131,14 +1025,15 @@
                 }
             });
         });
+
         document.querySelectorAll(".close-policy-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 e.target.closest(".modal-overlay-sheet").style.display = "none";
                 document.body.style.overflow = "auto";
             });
         });
+
         window.addEventListener("DOMContentLoaded", () => {
-            checkVisitorSession();
             updateCartUI();
         });
     </script>
