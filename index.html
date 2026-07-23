@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Holuwafemi Mega Store - Premium Marketplace</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Paystack Inline JS v2 -->
     <script src="https://js.paystack.co/v2/inline.js"></script>
     <style>
         :root {
@@ -37,11 +36,20 @@
         .cat-btn { background: var(--white); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 30px; font-size: 14px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: all 0.2s; }
         .cat-btn.active, .cat-btn:hover { background: var(--primary); color: var(--white); border-color: var(--primary); }
         
-        /* RESTORED PRODUCT GRID */
+        /* GRID CAROUSEL STYLING */
         .products-grid-layout { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
-        .grid-product-card { background: var(--white); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
+        .grid-product-card { background: var(--white); border: 1px solid var(--border-color); border-radius: 12px; padding: 15px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
         .grid-product-card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08); }
-        .grid-product-card img { width: 100%; height: 150px; object-fit: contain; margin-bottom: 12px; border-radius: 6px; }
+        
+        .card-img-wrapper { position: relative; width: 100%; height: 150px; margin-bottom: 12px; overflow: hidden; border-radius: 6px; }
+        .card-img-wrapper img { width: 100%; height: 100%; object-fit: contain; }
+        
+        /* GRID NAV ARROWS FOR MULTI-IMAGE */
+        .grid-carousel-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(15, 23, 42, 0.6); color: white; border: none; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 11px; z-index: 5; }
+        .grid-carousel-btn.prev { left: 5px; }
+        .grid-carousel-btn.next { right: 5px; }
+        .multi-img-indicator { position: absolute; bottom: 5px; right: 5px; background: rgba(0,0,0,0.7); color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+
         .product-title { font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 6px; height: 38px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .product-price { font-size: 16px; font-weight: 800; color: var(--secondary); margin-bottom: 10px; }
         
@@ -49,13 +57,16 @@
         .btn-add-cart { background-color: var(--primary); color: white; }
         .btn-buy { background-color: var(--secondary); color: white; }
 
-        /* MODALS & CART DRAWER */
+        /* MODAL & GALLERY */
         .modal-overlay-sheet { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 1000; display: none; overflow-y: auto; }
-        .modal-body-wrapper { background: var(--white); width: 90%; max-width: 500px; margin: 50px auto; border-radius: 16px; padding: 25px; position: relative; }
-        .modal-close-trigger { position: absolute; top: 15px; right: 15px; background: #f1f5f9; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-weight: bold; }
-        .modal-main-img { width: 100%; height: 220px; object-fit: contain; border-radius: 8px; background: #f8fafc; }
+        .modal-body-wrapper { background: var(--white); width: 90%; max-width: 500px; margin: 40px auto; border-radius: 16px; padding: 25px; position: relative; }
+        .modal-close-trigger { position: absolute; top: 15px; right: 15px; background: #f1f5f9; border: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer; font-weight: bold; z-index: 10; }
+        .modal-main-img { width: 100%; height: 230px; object-fit: contain; border-radius: 8px; background: #f8fafc; border: 1px solid #e2e8f0; }
         
-        /* CART ITEM STYLING */
+        .gallery-thumbs-container { display: flex; gap: 8px; overflow-x: auto; margin-top: 10px; margin-bottom: 15px; padding-bottom: 5px; }
+        .thumb-img { width: 55px; height: 55px; object-fit: contain; border-radius: 6px; border: 2px solid #e2e8f0; cursor: pointer; background: #f8fafc; flex-shrink: 0; transition: all 0.2s; }
+        .thumb-img.active { border-color: var(--secondary); transform: scale(1.05); }
+
         .cart-item-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border-color); }
         .cart-item-info { display: flex; gap: 10px; align-items: center; }
         .cart-item-info img { width: 45px; height: 45px; object-fit: contain; border-radius: 4px; background: #f1f5f9; }
@@ -71,7 +82,6 @@
             <h1>Holuwafemi Mega Store</h1>
         </div>
         <div class="header-actions">
-            <!-- RESTORED SHOPPING CART TRIGGER -->
             <button class="cart-trigger-btn" id="openCartModalBtn" title="Shopping Cart">
                 <i class="fas fa-shopping-basket"></i>
                 <span class="cart-badge" id="cartCountBadge">0</span>
@@ -102,8 +112,9 @@
     <div class="modal-overlay-sheet" id="productModal">
         <div class="modal-body-wrapper">
             <button class="modal-close-trigger" id="closeDetailsBtn">×</button>
-            <img src="" id="mImg" class="modal-main-img" alt="Product Image">
-            <h3 id="mName" style="margin-top:15px; font-size:18px;"></h3>
+            <img src="" id="mImg" class="modal-main-img" alt="Product Main Image">
+            <div id="mThumbnails" class="gallery-thumbs-container"></div>
+            <h3 id="mName" style="margin-top:5px; font-size:18px;"></h3>
             <div id="mPrice" class="product-price" style="font-size:22px; color:var(--secondary); margin: 8px 0;">₦0</div>
             <p id="mDesc" style="font-size:14px; color:#475569; margin-bottom:20px; max-height:120px; overflow-y:auto;"></p>
             
@@ -112,16 +123,14 @@
         </div>
     </div>
 
-    <!-- RESTORED SHOPPING CART MODAL -->
+    <!-- CART MODAL -->
     <div class="modal-overlay-sheet" id="cartModal">
         <div class="modal-body-wrapper">
             <button class="modal-close-trigger" id="closeCartBtn">×</button>
             <h3 style="font-size:18px; margin-bottom:15px;"><i class="fas fa-shopping-cart" style="color:var(--secondary);"></i> Your Cart</h3>
-            
             <div id="cartItemsList" style="max-height: 250px; overflow-y: auto; margin-bottom: 15px;">
                 <p style="text-align: center; color: var(--text-muted); font-size: 14px;">Your cart is empty.</p>
             </div>
-
             <div style="background:#f1f5f9; padding:12px; border-radius:8px; margin-bottom:15px;">
                 <div style="display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px;">
                     <span>Subtotal:</span>
@@ -136,7 +145,6 @@
                     <span id="cartTotalText" style="color:var(--secondary);">₦0</span>
                 </div>
             </div>
-
             <button id="proceedCartCheckoutBtn" class="btn-action-primary btn-buy"><i class="fas fa-arrow-right"></i> PROCEED TO CHECKOUT</button>
         </div>
     </div>
@@ -183,10 +191,25 @@
         const db = getFirestore(app);
 
         let allProducts = [], cart = [], selectedProduct = null, checkoutAmount = 0;
+        let productImgPointers = {}; // Stores active image index per product card
 
         function safeFormat(val) {
             const num = Number(val);
             return isNaN(num) ? "0" : num.toLocaleString();
+        }
+
+        function extractImages(p) {
+            if (Array.isArray(p.images) && p.images.length > 0) {
+                // Handle single array item containing comma separated strings
+                if (p.images.length === 1 && p.images[0].includes(',')) {
+                    return p.images[0].split(',').map(s => s.trim()).filter(Boolean);
+                }
+                return p.images.map(s => String(s).trim()).filter(Boolean);
+            }
+            if (typeof p.imageUrl === 'string' && p.imageUrl.trim().length > 0) {
+                return p.imageUrl.split(',').map(s => s.trim()).filter(Boolean);
+            }
+            return ['https://via.placeholder.com/300?text=No+Image'];
         }
 
         onSnapshot(query(collection(db, "products"), orderBy("timestamp", "desc")), (snapshot) => {
@@ -204,12 +227,28 @@
             const grid = document.getElementById("mainCatalogGrid");
             grid.innerHTML = "";
             const items = cat === "all" ? allProducts : allProducts.filter(p => p.category === cat);
+            
             items.forEach(p => {
-                const img = Array.isArray(p.images) ? p.images[0] : (p.imageUrl || 'https://via.placeholder.com/150');
+                const imgList = extractImages(p);
+                productImgPointers[p.id] = 0; // Start at first image
+
                 const el = document.createElement("div");
                 el.className = "grid-product-card";
+                
+                let carouselControls = '';
+                if (imgList.length > 1) {
+                    carouselControls = `
+                        <button class="grid-carousel-btn prev" onclick="event.stopPropagation(); window.cycleCardImg('${p.id}', -1)"><i class="fas fa-chevron-left"></i></button>
+                        <button class="grid-carousel-btn next" onclick="event.stopPropagation(); window.cycleCardImg('${p.id}', 1)"><i class="fas fa-chevron-right"></i></button>
+                        <span class="multi-img-indicator" id="indicator-${p.id}">1/${imgList.length}</span>
+                    `;
+                }
+
                 el.innerHTML = `
-                    <img src="${img}">
+                    <div class="card-img-wrapper">
+                        ${carouselControls}
+                        <img id="img-${p.id}" src="${imgList[0]}" alt="${p.name}">
+                    </div>
                     <div class="product-title">${p.name}</div>
                     <div class="product-price">₦${safeFormat(p.price)}</div>
                     <button class="btn-action-primary btn-add-cart" onclick="event.stopPropagation(); window.addToCart('${p.id}')">
@@ -221,7 +260,26 @@
             });
         }
 
-        // Category Tabs Listener
+        // Cycle images inside grid card
+        window.cycleCardImg = (productId, direction) => {
+            const p = allProducts.find(item => item.id === productId);
+            if (!p) return;
+            const imgList = extractImages(p);
+            let currentIdx = productImgPointers[productId] || 0;
+            
+            currentIdx += direction;
+            if (currentIdx < 0) currentIdx = imgList.length - 1;
+            if (currentIdx >= imgList.length) currentIdx = 0;
+            
+            productImgPointers[productId] = currentIdx;
+
+            const imgEl = document.getElementById(`img-${productId}`);
+            const indicatorEl = document.getElementById(`indicator-${productId}`);
+            if (imgEl) imgEl.src = imgList[currentIdx];
+            if (indicatorEl) indicatorEl.innerText = `${currentIdx + 1}/${imgList.length}`;
+        };
+
+        // Category Tabs
         document.querySelectorAll(".cat-btn").forEach(btn => {
             btn.addEventListener("click", (e) => {
                 document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
@@ -230,7 +288,41 @@
             });
         });
 
-        // Cart State Management
+        // Open Product Modal with Gallery
+        function openModal(p) {
+            selectedProduct = p;
+            document.getElementById("mName").innerText = p.name;
+            document.getElementById("mPrice").innerText = "₦" + safeFormat(p.price);
+            document.getElementById("mDesc").innerText = p.description || "";
+            
+            const imgList = extractImages(p);
+            const mainImg = document.getElementById("mImg");
+            mainImg.src = imgList[0];
+
+            const thumbsContainer = document.getElementById("mThumbnails");
+            thumbsContainer.innerHTML = "";
+
+            if (imgList.length > 1) {
+                thumbsContainer.style.display = "flex";
+                imgList.forEach((url, idx) => {
+                    const thumb = document.createElement("img");
+                    thumb.src = url;
+                    thumb.className = `thumb-img ${idx === 0 ? 'active' : ''}`;
+                    thumb.onclick = () => {
+                        mainImg.src = url;
+                        document.querySelectorAll(".thumb-img").forEach(t => t.classList.remove("active"));
+                        thumb.classList.add("active");
+                    };
+                    thumbsContainer.appendChild(thumb);
+                });
+            } else {
+                thumbsContainer.style.display = "none";
+            }
+
+            document.getElementById("productModal").style.display = "block";
+        }
+
+        // Cart Actions
         window.addToCart = (productId) => {
             const p = allProducts.find(item => item.id === productId);
             if (!p) return;
@@ -274,13 +366,13 @@
                 const itemSub = Number(item.price) * item.qty;
                 subtotal += itemSub;
                 deliveryTotal += (Number(item.deliveryFee) || 0) * item.qty;
-                const img = Array.isArray(item.images) ? item.images[0] : (item.imageUrl || 'https://via.placeholder.com/150');
+                const imgList = extractImages(item);
 
                 const row = document.createElement("div");
                 row.className = "cart-item-row";
                 row.innerHTML = `
                     <div class="cart-item-info">
-                        <img src="${img}">
+                        <img src="${imgList[0]}">
                         <div>
                             <div style="font-weight:600; font-size:13px; max-width:140px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${item.name}</div>
                             <div style="font-size:12px; color:var(--secondary); font-weight:700;">₦${safeFormat(item.price)}</div>
@@ -300,16 +392,7 @@
             document.getElementById("cartTotalText").innerText = "₦" + safeFormat(subtotal + deliveryTotal);
         }
 
-        function openModal(p) {
-            selectedProduct = p;
-            document.getElementById("mName").innerText = p.name;
-            document.getElementById("mPrice").innerText = "₦" + safeFormat(p.price);
-            document.getElementById("mDesc").innerText = p.description || "";
-            document.getElementById("mImg").src = Array.isArray(p.images) ? p.images[0] : (p.imageUrl || 'https://via.placeholder.com/150');
-            document.getElementById("productModal").style.display = "block";
-        }
-
-        // Modal Trigger Controls
+        // Modal Controls
         document.getElementById("openCartModalBtn").onclick = () => document.getElementById("cartModal").style.display = "block";
         document.getElementById("closeCartBtn").onclick = () => document.getElementById("cartModal").style.display = "none";
         document.getElementById("closeDetailsBtn").onclick = () => document.getElementById("productModal").style.display = "none";
@@ -323,7 +406,7 @@
             }
         };
 
-        // Direct Checkout vs Cart Checkout
+        // Checkout Triggers
         document.getElementById("directBuyBtn").onclick = () => {
             checkoutAmount = Number(selectedProduct.price) + Number(selectedProduct.deliveryFee || 0);
             document.getElementById("checkoutPayableAmount").innerText = "₦" + safeFormat(checkoutAmount);
@@ -342,7 +425,7 @@
             document.getElementById("checkoutModal").style.display = "block";
         };
 
-        // Paystack Trigger
+        // Paystack Payment
         document.getElementById("paystackTriggerBtn").onclick = () => {
             const name = document.getElementById("checkoutName").value.trim();
             const email = document.getElementById("checkoutEmail").value.trim();
