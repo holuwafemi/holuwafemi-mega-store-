@@ -22,7 +22,6 @@
         th, td { border: 1px solid #e2e8f0; padding: 8px; text-align: left; }
         th { background: #f1f5f9; }
 
-        /* AI SYSTEM ACTIVITY FEED STYLING */
         .ai-log-item { background: #f8fafc; border-left: 3px solid #6366f1; padding: 8px 12px; margin-bottom: 8px; border-radius: 4px; font-size: 12px; }
         .ai-log-time { color: #64748b; font-size: 10px; font-weight: bold; }
     </style>
@@ -38,7 +37,7 @@
 
     <div class="grid">
         <div>
-            <!-- DIRECT EDIT & UPLOAD FORM -->
+            <!-- DIRECT UPLOAD FORM SUPPORTING MULTIPLE URLS -->
             <div class="card">
                 <h3 id="formHeading"><i class="fas fa-edit"></i> Direct Product Upload</h3>
                 <form id="addProductForm">
@@ -54,14 +53,15 @@
                         <option value="phones">Phones</option>
                         <option value="fashion">Fashion</option>
                     </select>
-                    <input type="text" id="pImages" placeholder="Image URL" required>
+                    <!-- MULTI-IMAGE INPUT NOTE -->
+                    <textarea id="pImages" placeholder="Image URLs (Separate multiple links with commas)" rows="3" required></textarea>
                     <textarea id="pDesc" placeholder="Product Description"></textarea>
                     <button type="submit" id="submitFormBtn">Publish to Store</button>
                     <button type="button" id="cancelEditBtn" class="btn-warning" style="display:none; margin-top:8px;" onclick="resetAdminForm()">Cancel Edit</button>
                 </form>
             </div>
 
-            <!-- RESTORED AI SYSTEM ACTIVITY CARD -->
+            <!-- AI SYSTEM ACTIVITY -->
             <div class="card" style="border-top: 4px solid #6366f1;">
                 <h3><i class="fas fa-robot" style="color: #6366f1;"></i> AI System Activity Log</h3>
                 <div id="aiActivityFeed">
@@ -74,7 +74,7 @@
         </div>
 
         <div>
-            <!-- PENDING APPROVALS SECTION -->
+            <!-- PENDING APPROVALS -->
             <div class="card" style="border-left: 4px solid #f59e0b;">
                 <h3><i class="fas fa-clock" style="color: #f59e0b;"></i> Pending Submissions</h3>
                 <table>
@@ -126,7 +126,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, collection, onSnapshot, addDoc, deleteDoc, doc, updateDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
-        // Passcode Authentication check
         let adminSession = localStorage.getItem("isAdminLoggedIn");
         if (adminSession !== "true") {
             const enteredPasscode = prompt("Enter Secret Admin Passcode:");
@@ -165,16 +164,26 @@
             feed.prepend(item);
         }
 
-        // Admin Add / Edit Form Handler
+        // Helper to parse text into clean image array
+        function parseImageUrls(rawText) {
+            return rawText
+                .split(',')
+                .map(url => url.trim())
+                .filter(url => url.length > 0);
+        }
+
         document.getElementById("addProductForm").addEventListener("submit", async (e) => {
             e.preventDefault();
             const editId = document.getElementById("editDocId").value;
+            const rawImgInput = document.getElementById("pImages").value;
+            const imagesArray = parseImageUrls(rawImgInput);
+
             const productData = {
                 name: document.getElementById("pName").value,
                 price: Number(document.getElementById("pPrice").value),
                 deliveryFee: Number(document.getElementById("pDelivery").value) || 0,
                 category: document.getElementById("pCat").value,
-                images: [document.getElementById("pImages").value.trim()],
+                images: imagesArray,
                 description: document.getElementById("pDesc").value,
                 status: "approved",
                 timestamp: serverTimestamp()
@@ -183,11 +192,11 @@
             try {
                 if (editId) {
                     await updateDoc(doc(db, "products", editId), productData);
-                    logAiActivity(`Updated product <b>"${productData.name}"</b> in Firestore store inventory.`);
+                    logAiActivity(`Updated product <b>"${productData.name}"</b> with ${imagesArray.length} image(s).`);
                     alert("Product Updated Successfully!");
                 } else {
                     await addDoc(collection(db, "products"), productData);
-                    logAiActivity(`Published new product <b>"${productData.name}"</b> live to store catalog.`);
+                    logAiActivity(`Published <b>"${productData.name}"</b> with ${imagesArray.length} image(s).`);
                     alert("Product Published Live!");
                 }
                 resetAdminForm();
@@ -202,7 +211,6 @@
             document.getElementById("cancelEditBtn").style.display = "none";
         };
 
-        // Realtime Products Listener
         onSnapshot(query(collection(db, "products"), orderBy("timestamp", "desc")), (snap) => {
             const pendingBody = document.getElementById("pendingTableBody");
             const activeBody = document.getElementById("inventoryTableBody");
@@ -256,7 +264,15 @@
             document.getElementById("pPrice").value = p.price;
             document.getElementById("pDelivery").value = p.deliveryFee || 0;
             document.getElementById("pCat").value = p.category || "electronics";
-            document.getElementById("pImages").value = Array.isArray(p.images) ? p.images[0] : (p.imageUrl || "");
+            
+            // Format array back to comma-separated string for editing
+            let imgStr = "";
+            if (Array.isArray(p.images)) {
+                imgStr = p.images.join(", ");
+            } else if (p.imageUrl) {
+                imgStr = p.imageUrl;
+            }
+            document.getElementById("pImages").value = imgStr;
             document.getElementById("pDesc").value = p.description || "";
             
             document.getElementById("formHeading").innerHTML = `<i class="fas fa-edit"></i> Edit Selected Product`;
@@ -280,7 +296,6 @@
             }
         };
 
-        // Realtime Customer Orders Listener & AI Insights Trigger
         onSnapshot(query(collection(db, "orders"), orderBy("timestamp", "desc")), (snap) => {
             const body = document.getElementById("ordersTableBody");
             body.innerHTML = "";
