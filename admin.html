@@ -8,8 +8,8 @@
     <style>
         :root { --primary: #0f172a; --secondary: #059669; --bg: #f8fafc; --white: #ffffff; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, sans-serif; }
-        body { background: var(--bg); color: var(--primary); padding: 20px; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--white); padding: 15px 20px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        body { background: var(--bg); color: var(--primary); padding: 15px; }
+        .header { display: flex; justify-content: space-between; align-align: center; margin-bottom: 20px; background: var(--white); padding: 15px 20px; border-radius: 8px; border: 1px solid #e2e8f0; flex-wrap: wrap; gap: 10px; }
         .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
         @media(max-width: 768px) { .grid { grid-template-columns: 1fr; } }
         .card { background: var(--white); padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px; }
@@ -18,129 +18,156 @@
         button { background: var(--secondary); color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; }
         button.btn-danger { background: #ef4444; }
         button.btn-warning { background: #f59e0b; color: white; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
-        th, td { border: 1px solid #e2e8f0; padding: 8px; text-align: left; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
+        th, td { border: 1px solid #e2e8f0; padding: 6px; text-align: left; }
         th { background: #f1f5f9; }
+
+        /* AUTH MODAL FIX FOR MOBILE */
+        #authOverlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0f172a; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .auth-box { background: white; padding: 25px; border-radius: 12px; width: 100%; max-width: 360px; text-align: center; }
 
         .ai-log-item { background: #f8fafc; border-left: 3px solid #6366f1; padding: 8px 12px; margin-bottom: 8px; border-radius: 4px; font-size: 12px; }
         .ai-log-time { color: #64748b; font-size: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h2>Holuwafemi Store Management</h2>
-        <div>
-            <a href="index.html" style="margin-right: 15px; text-decoration: none; color: var(--primary); font-weight: bold;"><i class="fas fa-store"></i> View Storefront</a>
-            <button onclick="logoutAdmin()" class="btn-danger" style="width: auto; display: inline-block;">Logout</button>
+
+    <!-- RELIABLE IN-PAGE PASSCODE MODAL -->
+    <div id="authOverlay">
+        <div class="auth-box">
+            <i class="fas fa-lock" style="font-size:32px; color:var(--primary); margin-bottom:10px;"></i>
+            <h3 style="margin-bottom:10px;">Admin Verification</h3>
+            <input type="password" id="passcodeKey" placeholder="Enter Secret Passcode" style="text-align:center; font-size:16px;">
+            <button onclick="checkAdminKey()" style="background:var(--primary); margin-top:5px;">Unlock Dashboard</button>
         </div>
     </div>
 
-    <div class="grid">
-        <div>
-            <!-- DIRECT UPLOAD FORM SUPPORTING MULTIPLE URLS -->
-            <div class="card">
-                <h3 id="formHeading"><i class="fas fa-edit"></i> Direct Product Upload</h3>
-                <form id="addProductForm">
-                    <input type="hidden" id="editDocId" value="">
-                    <input type="text" id="pName" placeholder="Product Title" required>
-                    <input type="number" id="pPrice" placeholder="Price (₦)" required>
-                    <input type="number" id="pDelivery" placeholder="Delivery Fee (₦)" value="0">
-                    <select id="pCat">
-                        <option value="electronics">Electronics</option>
-                        <option value="solar">Solar</option>
-                        <option value="appliances">Appliances</option>
-                        <option value="computers">Computers</option>
-                        <option value="phones">Phones</option>
-                        <option value="fashion">Fashion</option>
-                    </select>
-                    <!-- MULTI-IMAGE INPUT NOTE -->
-                    <textarea id="pImages" placeholder="Image URLs (Separate multiple links with commas)" rows="3" required></textarea>
-                    <textarea id="pDesc" placeholder="Product Description"></textarea>
-                    <button type="submit" id="submitFormBtn">Publish to Store</button>
-                    <button type="button" id="cancelEditBtn" class="btn-warning" style="display:none; margin-top:8px;" onclick="resetAdminForm()">Cancel Edit</button>
-                </form>
+    <div id="adminMainContent" style="display:none;">
+        <div class="header">
+            <h2>Holuwafemi Store Management</h2>
+            <div>
+                <a href="index.html" style="margin-right: 15px; text-decoration: none; color: var(--primary); font-weight: bold;"><i class="fas fa-store"></i> Storefront</a>
+                <button onclick="logoutAdmin()" class="btn-danger" style="width: auto; display: inline-block;">Logout</button>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div>
+                <div class="card">
+                    <h3 id="formHeading"><i class="fas fa-edit"></i> Direct Product Upload</h3>
+                    <form id="addProductForm">
+                        <input type="hidden" id="editDocId" value="">
+                        <input type="text" id="pName" placeholder="Product Title" required>
+                        <input type="number" id="pPrice" placeholder="Price (₦)" required>
+                        <input type="number" id="pDelivery" placeholder="Delivery Fee (₦)" value="0">
+                        <select id="pCat">
+                            <option value="electronics">Electronics</option>
+                            <option value="solar">Solar</option>
+                            <option value="appliances">Appliances</option>
+                            <option value="computers">Computers</option>
+                            <option value="phones">Phones</option>
+                            <option value="fashion">Fashion</option>
+                        </select>
+                        <textarea id="pImages" placeholder="Image URLs (Separate multiple links with commas)" rows="3" required></textarea>
+                        <textarea id="pDesc" placeholder="Product Description"></textarea>
+                        <button type="submit" id="submitFormBtn">Publish to Store</button>
+                        <button type="button" id="cancelEditBtn" class="btn-warning" style="display:none; margin-top:8px;" onclick="resetAdminForm()">Cancel Edit</button>
+                    </form>
+                </div>
+
+                <div class="card" style="border-top: 4px solid #6366f1;">
+                    <h3><i class="fas fa-robot" style="color: #6366f1;"></i> AI Activity Log</h3>
+                    <div id="aiActivityFeed">
+                        <div class="ai-log-item">
+                            <div class="ai-log-time">System Active</div>
+                            <div>Monitoring database & multi-image uploads.</div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- AI SYSTEM ACTIVITY -->
-            <div class="card" style="border-top: 4px solid #6366f1;">
-                <h3><i class="fas fa-robot" style="color: #6366f1;"></i> AI System Activity Log</h3>
-                <div id="aiActivityFeed">
-                    <div class="ai-log-item">
-                        <div class="ai-log-time">System Init • Active</div>
-                        <div>AI Catalog Scanner monitoring live inventory & payment transactions.</div>
+            <div>
+                <div class="card" style="border-left: 4px solid #f59e0b;">
+                    <h3><i class="fas fa-clock" style="color: #f59e0b;"></i> Pending Submissions</h3>
+                    <div style="overflow-x:auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Price</th>
+                                    <th>Category</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pendingTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-receipt"></i> Live Customer Orders</h3>
+                    <div style="overflow-x:auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Customer</th>
+                                    <th>Contact / Address</th>
+                                    <th>Amount</th>
+                                    <th>Ref</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTableBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-boxes"></i> Active Store Inventory</h3>
+                    <div style="overflow-x:auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Price</th>
+                                    <th>Category</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventoryTableBody"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div>
-            <!-- PENDING APPROVALS -->
-            <div class="card" style="border-left: 4px solid #f59e0b;">
-                <h3><i class="fas fa-clock" style="color: #f59e0b;"></i> Pending Submissions</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Price</th>
-                            <th>Category</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="pendingTableBody"></tbody>
-                </table>
-            </div>
-
-            <div class="card">
-                <h3><i class="fas fa-receipt"></i> Live Customer Orders</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Customer</th>
-                            <th>Phone / Address</th>
-                            <th>Amount</th>
-                            <th>Ref</th>
-                        </tr>
-                    </thead>
-                    <tbody id="ordersTableBody"></tbody>
-                </table>
-            </div>
-
-            <div class="card">
-                <h3><i class="fas fa-boxes"></i> Active Store Inventory</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Price</th>
-                            <th>Category</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="inventoryTableBody"></tbody>
-                </table>
-            </div>
-        </div>
     </div>
+
+    <script>
+        // Check session on load
+        if (localStorage.getItem("isAdminLoggedIn") === "true") {
+            document.getElementById("authOverlay").style.display = "none";
+            document.getElementById("adminMainContent").style.display = "block";
+        }
+
+        function checkAdminKey() {
+            const inputKey = document.getElementById("passcodeKey").value;
+            if (inputKey === "1234") {
+                localStorage.setItem("isAdminLoggedIn", "true");
+                document.getElementById("authOverlay").style.display = "none";
+                document.getElementById("adminMainContent").style.display = "block";
+            } else {
+                alert("Incorrect Passcode!");
+            }
+        }
+
+        function logoutAdmin() {
+            localStorage.removeItem("isAdminLoggedIn");
+            window.location.reload();
+        }
+    </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getFirestore, collection, onSnapshot, addDoc, deleteDoc, doc, updateDoc, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-
-        let adminSession = localStorage.getItem("isAdminLoggedIn");
-        if (adminSession !== "true") {
-            const enteredPasscode = prompt("Enter Secret Admin Passcode:");
-            if (enteredPasscode === "1234") {
-                localStorage.setItem("isAdminLoggedIn", "true");
-            } else {
-                alert("Unauthorized access!");
-                window.location.href = "index.html";
-            }
-        }
-
-        window.logoutAdmin = () => {
-            localStorage.removeItem("isAdminLoggedIn");
-            window.location.href = "index.html";
-        };
 
         const firebaseConfig = {
             apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
@@ -155,21 +182,8 @@
 
         let productsMap = {};
 
-        function logAiActivity(msg) {
-            const feed = document.getElementById("aiActivityFeed");
-            const time = new Date().toLocaleTimeString();
-            const item = document.createElement("div");
-            item.className = "ai-log-item";
-            item.innerHTML = `<div class="ai-log-time">${time} • Automated Insight</div><div>${msg}</div>`;
-            feed.prepend(item);
-        }
-
-        // Helper to parse text into clean image array
         function parseImageUrls(rawText) {
-            return rawText
-                .split(',')
-                .map(url => url.trim())
-                .filter(url => url.length > 0);
+            return rawText.split(',').map(url => url.trim()).filter(url => url.length > 0);
         }
 
         document.getElementById("addProductForm").addEventListener("submit", async (e) => {
@@ -192,11 +206,9 @@
             try {
                 if (editId) {
                     await updateDoc(doc(db, "products", editId), productData);
-                    logAiActivity(`Updated product <b>"${productData.name}"</b> with ${imagesArray.length} image(s).`);
                     alert("Product Updated Successfully!");
                 } else {
                     await addDoc(collection(db, "products"), productData);
-                    logAiActivity(`Published <b>"${productData.name}"</b> with ${imagesArray.length} image(s).`);
                     alert("Product Published Live!");
                 }
                 resetAdminForm();
@@ -230,9 +242,8 @@
                         <td>₦${Number(p.price).toLocaleString()}</td>
                         <td>${p.category}</td>
                         <td>
-                            <button style="background:#059669; padding:4px 6px; font-size:11px; margin-right:2px;" onclick="approveProduct('${id}')">Approve</button>
-                            <button class="btn-warning" style="padding:4px 6px; font-size:11px; margin-right:2px;" onclick="editProduct('${id}')">Edit</button>
-                            <button class="btn-danger" style="padding:4px 6px; font-size:11px;" onclick="deleteProduct('${id}')">Decline</button>
+                            <button style="background:#059669; padding:4px 6px; font-size:10px; margin-bottom:2px;" onclick="approveProduct('${id}')">Approve</button>
+                            <button class="btn-warning" style="padding:4px 6px; font-size:10px;" onclick="editProduct('${id}')">Edit</button>
                         </td>
                     `;
                     pendingBody.appendChild(row);
@@ -243,17 +254,13 @@
                         <td>₦${Number(p.price).toLocaleString()}</td>
                         <td>${p.category}</td>
                         <td>
-                            <button class="btn-warning" style="padding:4px 6px; font-size:11px; margin-right:2px;" onclick="editProduct('${id}')">Edit</button>
-                            <button class="btn-danger" style="padding:4px 6px; font-size:11px;" onclick="deleteProduct('${id}')">Delete</button>
+                            <button class="btn-warning" style="padding:4px 6px; font-size:10px; margin-bottom:2px;" onclick="editProduct('${id}')">Edit</button>
+                            <button class="btn-danger" style="padding:4px 6px; font-size:10px;" onclick="deleteProduct('${id}')">Delete</button>
                         </td>
                     `;
                     activeBody.appendChild(row);
                 }
             });
-
-            if (pendingBody.children.length === 0) {
-                pendingBody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:#64748b;">No pending submissions.</td></tr>`;
-            }
         });
 
         window.editProduct = (id) => {
@@ -265,17 +272,11 @@
             document.getElementById("pDelivery").value = p.deliveryFee || 0;
             document.getElementById("pCat").value = p.category || "electronics";
             
-            // Format array back to comma-separated string for editing
-            let imgStr = "";
-            if (Array.isArray(p.images)) {
-                imgStr = p.images.join(", ");
-            } else if (p.imageUrl) {
-                imgStr = p.imageUrl;
-            }
+            let imgStr = Array.isArray(p.images) ? p.images.join(", ") : (p.imageUrl || "");
             document.getElementById("pImages").value = imgStr;
             document.getElementById("pDesc").value = p.description || "";
             
-            document.getElementById("formHeading").innerHTML = `<i class="fas fa-edit"></i> Edit Selected Product`;
+            document.getElementById("formHeading").innerHTML = `<i class="fas fa-edit"></i> Edit Product`;
             document.getElementById("submitFormBtn").innerText = "Save Changes";
             document.getElementById("cancelEditBtn").style.display = "block";
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -284,37 +285,30 @@
         window.approveProduct = async (id) => {
             try {
                 await updateDoc(doc(db, "products", id), { status: "approved" });
-                logAiActivity(`Approved pending item ID: <b>${id}</b>`);
-                alert("Product approved and published!");
+                alert("Approved!");
             } catch (err) { alert("Error: " + err.message); }
         };
 
         window.deleteProduct = async (id) => {
-            if (confirm("Remove this product?")) {
+            if (confirm("Remove product?")) {
                 await deleteDoc(doc(db, "products", id));
-                logAiActivity(`Removed product ID: <b>${id}</b>`);
             }
         };
 
         onSnapshot(query(collection(db, "orders"), orderBy("timestamp", "desc")), (snap) => {
             const body = document.getElementById("ordersTableBody");
             body.innerHTML = "";
-            let totalRev = 0;
             snap.forEach((docSnap) => {
                 const o = docSnap.data();
-                totalRev += Number(o.amountPaid || 0);
                 const row = document.createElement("tr");
                 row.innerHTML = `
-                    <td><b>${o.customerName}</b><br><small>${o.customerEmail}</small></td>
+                    <td><b>${o.customerName}</b></td>
                     <td>${o.customerPhone}<br><small>${o.deliveryAddress}</small></td>
                     <td>₦${Number(o.amountPaid).toLocaleString()}</td>
                     <td><small>${o.paystackReference}</small></td>
                 `;
                 body.appendChild(row);
             });
-            if (snap.docs.length > 0) {
-                logAiActivity(`Synced ${snap.docs.length} orders. Total Revenue: <b>₦${totalRev.toLocaleString()}</b>`);
-            }
         });
     </script>
 </body>
