@@ -6,7 +6,6 @@
 <title>Holuwafemi Mega Store</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
   :root{
     --navy:#1B2A4A;
@@ -34,7 +33,11 @@
   button{font-family:inherit;cursor:pointer;border:none;}
 
   /* ===== TOP BAR ===== */
-  .topbar{ background:var(--navy); color:#D9DEE8; font-size:13px; }
+  .topbar{
+    background:var(--navy);
+    color:#D9DEE8;
+    font-size:13px;
+  }
   .topbar-inner{
     max-width:1240px;margin:0 auto;padding:6px 20px;
     display:flex;justify-content:space-between;align-items:center;
@@ -42,21 +45,30 @@
   .topbar-inner span{opacity:.85}
 
   /* ===== HEADER ===== */
-  header{ background:var(--navy); padding:16px 0 0; }
+  header{
+    background:var(--navy);
+    padding:16px 0 0;
+  }
   .header-inner{
     max-width:1240px;margin:0 auto;padding:0 20px 16px;
     display:flex;align-items:center;gap:28px;
   }
-  .brand{ color:#fff;font-size:24px;font-weight:900;letter-spacing:-0.5px;white-space:nowrap; }
+  .brand{
+    color:#fff;font-size:24px;font-weight:900;letter-spacing:-0.5px;white-space:nowrap;
+  }
   .brand span{color:var(--amber);}
-  .search-bar{ flex:1;display:flex;background:#fff;border-radius:4px;overflow:hidden; }
+  .search-bar{
+    flex:1;display:flex;background:#fff;border-radius:4px;overflow:hidden;
+  }
   .search-bar input{
     flex:1;border:none;padding:12px 16px;font-size:14px;font-family:'Inter',sans-serif;outline:none;
   }
   .search-bar button{
     background:var(--amber);padding:0 22px;color:var(--navy);font-weight:700;font-size:15px;
   }
-  .header-actions{ display:flex;gap:22px;align-items:center;color:#fff;font-size:13px;font-weight:500; }
+  .header-actions{
+    display:flex;gap:22px;align-items:center;color:#fff;font-size:13px;font-weight:500;
+  }
   .header-actions .item{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:52px;position:relative;}
   .header-actions .icon{font-size:20px;}
   .cart-count{
@@ -65,17 +77,26 @@
   }
 
   /* ===== CATEGORY NAV ===== */
-  .catnav{ background:var(--navy-light); border-top:1px solid rgba(255,255,255,.08); }
-  .catnav-inner{ max-width:1240px;margin:0 auto;padding:0 20px; display:flex;gap:26px;overflow-x:auto; }
-  .catnav a{
-    color:#E5E9F0;font-size:13px;font-weight:600;padding:11px 0;white-space:nowrap; border-bottom:2px solid transparent;
+  .catnav{
+    background:var(--navy-light);
+    border-top:1px solid rgba(255,255,255,.08);
   }
-  .catnav a:hover, .catnav a.active{border-bottom-color:var(--amber);color:#fff;}
+  .catnav-inner{
+    max-width:1240px;margin:0 auto;padding:0 20px;
+    display:flex;gap:26px;overflow-x:auto;
+  }
+  .catnav a{
+    color:#E5E9F0;font-size:13px;font-weight:600;padding:11px 0;white-space:nowrap;
+    border-bottom:2px solid transparent;
+  }
+  .catnav a:hover{border-bottom-color:var(--amber);color:#fff;}
 
   main{max-width:1240px;margin:0 auto;padding:22px 20px 60px;}
 
   /* ===== HERO ===== */
-  .hero{ display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:28px; }
+  .hero{
+    display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:28px;
+  }
   .hero-main{
     background:linear-gradient(120deg,var(--navy) 55%,var(--navy-light));
     border-radius:8px;padding:44px 40px;color:#fff;
@@ -106,29 +127,77 @@
   .hero-side-card h3{font-size:19px;font-weight:800;}
   .hero-side-card .sub{font-size:13px;color:var(--ink-soft);}
 
-  /* ===== DYNAMIC PRODUCT GRID ===== */
-  .section-head{ display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px; }
-  .section-head h2{font-size:21px;font-weight:800;color:var(--navy);}
-  .grid-products{ display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:36px; }
+  /* ===== FLASH SALE ===== */
+  .flash{
+    background:var(--card);border-radius:8px;border:1px solid var(--line);
+    margin-bottom:30px;overflow:hidden;
+  }
+  .flash-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 22px;border-bottom:1px solid var(--line);
+  }
+  .flash-head-left{display:flex;align-items:center;gap:14px;}
+  .flash-head h2{font-size:20px;font-weight:800;color:var(--navy);}
+  .timer{display:flex;gap:6px;align-items:center;}
+  .timer .box{
+    background:var(--navy);color:#fff;font-weight:800;font-size:14px;
+    padding:5px 9px;border-radius:4px;min-width:30px;text-align:center;
+  }
+  .timer .colon{color:var(--navy);font-weight:800;}
+  .flash-head a{font-size:13px;font-weight:700;color:var(--amber-dark);}
+  .flash-grid{
+    display:grid;grid-template-columns:repeat(5,1fr);
+  }
 
   .pcard{
-    border:1px solid var(--line);border-radius:8px;background:var(--card);padding:14px;position:relative;
-    display:flex;flex-direction:column;justify-content:space-between;
+    padding:18px;border-right:1px solid var(--line);position:relative;
+    display:flex;flex-direction:column;justify-style:space-between;
+  }
+  .pcard:last-child{border-right:none;}
+  .pcard .badge{
+    position:absolute;top:14px;left:14px;background:var(--red);color:#fff;
+    font-size:11px;font-weight:800;padding:3px 8px;border-radius:3px;z-index:2;
   }
   .pcard .imgwrap{
     background:var(--bg);border-radius:6px;aspect-ratio:1;display:flex;
-    align-items:center;justify-content:center;margin-bottom:12px;overflow:hidden;
+    align-items:center;justify-content:center;margin-bottom:12px;font-size:38px;overflow:hidden;
   }
-  .pcard .imgwrap img{ width:100%;height:100%;object-fit:cover; }
+  .pcard .imgwrap img{width:100%;height:100%;object-fit:cover;}
   .pcard .name{
     font-size:13.5px;font-weight:600;margin-bottom:6px;
     display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:36px;
   }
-  .pcard .price-row{display:flex;align-items:baseline;gap:7px;margin-bottom:10px;}
+  .pcard .price-row{display:flex;align-items:baseline;gap:7px;margin-bottom:6px;}
   .pcard .price{font-size:16px;font-weight:800;color:var(--navy);}
-  .pcard button{
-    background:var(--navy);color:#fff;font-weight:700;font-size:12px;padding:8px;border-radius:4px;
-    width:100%;
+  .pcard .was{font-size:12px;color:var(--ink-soft);text-decoration:line-through;}
+  .pcard .off{font-size:11.5px;color:var(--red);font-weight:700;}
+  .barwrap{background:var(--line);border-radius:3px;height:5px;overflow:hidden;margin-top:8px;}
+  .bar{background:var(--amber);height:100%;}
+  .sold{font-size:11px;color:var(--ink-soft);margin-top:4px;}
+
+  /* ===== CATEGORY STRIP ===== */
+  .catstrip{
+    display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:32px;
+  }
+  .catstrip a{
+    background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:18px 10px;text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;
+  }
+  .catstrip .ic{font-size:28px;}
+  .catstrip .lb{font-size:12.5px;font-weight:700;color:var(--navy);}
+
+  /* ===== SECTION ===== */
+  .section{margin-bottom:36px;}
+  .section-head{
+    display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px;
+  }
+  .section-head h2{font-size:21px;font-weight:800;color:var(--navy);}
+  .section-head a{font-size:13px;font-weight:700;color:var(--amber-dark);}
+  .grid6{
+    display:grid;grid-template-columns:repeat(5,1fr);gap:14px;
+  }
+  .grid6 .pcard{
+    border:1px solid var(--line);border-radius:8px;background:var(--card);
   }
 
   /* ===== TRUST STRIP ===== */
@@ -141,7 +210,9 @@
   .trust .t h4{font-size:14px;font-weight:700;margin-bottom:3px;}
   .trust .t p{font-size:12px;color:#B9C1D2;}
 
-  footer{ background:var(--navy);color:#B9C1D2;padding:40px 0 20px;font-size:13px; }
+  footer{
+    background:var(--navy);color:#B9C1D2;padding:40px 0 20px;font-size:13px;
+  }
   .footer-inner{
     max-width:1240px;margin:0 auto;padding:0 20px;
     display:grid;grid-template-columns:repeat(4,1fr);gap:30px;margin-bottom:26px;
@@ -155,7 +226,10 @@
 
   @media (max-width:980px){
     .hero{grid-template-columns:1fr;}
-    .grid-products{grid-template-columns:repeat(2,1fr);}
+    .flash-grid{grid-template-columns:repeat(2,1fr);}
+    .pcard{border-right:none;border-bottom:1px solid var(--line);}
+    .catstrip{grid-template-columns:repeat(3,1fr);}
+    .grid6{grid-template-columns:repeat(2,1fr);}
     .trust{grid-template-columns:repeat(2,1fr);}
     .footer-inner{grid-template-columns:repeat(2,1fr);}
   }
@@ -165,8 +239,8 @@
 
 <div class="topbar">
   <div class="topbar-inner">
-    <span>Delivering across Nigeria — Lagos, Ibadan, Osogbo & more</span>
-    <span><a href="admin.html" style="color:#fff; text-decoration:underline;">Admin Panel</a> &nbsp;|&nbsp; Track Order &nbsp;|&nbsp; Help</span>
+    <span>Delivering across Nigeria — Lagos, Ibadan, Abuja & more</span>
+    <span>Sell on Holuwafemi &nbsp;|&nbsp; <a href="admin.html" style="color:#fff; text-decoration:underline;">Admin Dashboard</a> &nbsp;|&nbsp; Help</span>
   </div>
 </div>
 
@@ -175,22 +249,23 @@
     <div class="brand">Holuwafemi<span>.</span></div>
     <div class="search-bar">
       <input type="text" id="searchInput" placeholder="Search solar inverters, phones, appliances...">
-      <button onclick="filterStore()">Search</button>
+      <button onclick="searchStore()">Search</button>
     </div>
     <div class="header-actions">
-      <a href="admin.html" class="item"><span class="icon">👤</span>Admin</a>
+      <div class="item"><span class="icon">👤</span>Account</div>
       <div class="item"><span class="icon">🛒</span>Cart<span class="cart-count" id="cartCount">0</span></div>
     </div>
   </div>
   <nav class="catnav">
     <div class="catnav-inner">
-      <a href="#" onclick="filterCategory('all')" class="active">All Categories</a>
       <a href="#" onclick="filterCategory('electronics')">Electronics</a>
       <a href="#" onclick="filterCategory('solar')">Solar & Power</a>
       <a href="#" onclick="filterCategory('appliances')">Home Appliances</a>
       <a href="#" onclick="filterCategory('computers')">Computers</a>
       <a href="#" onclick="filterCategory('phones')">Phones & Tablets</a>
       <a href="#" onclick="filterCategory('fashion')">Fashion</a>
+      <a href="#">Flash Sales</a>
+      <a href="#">Holuwafemi Select</a>
     </div>
   </nav>
 </header>
@@ -219,14 +294,71 @@
     </div>
   </div>
 
-  <!-- LIVE FIREBASE PRODUCTS -->
-  <div class="section">
-    <div class="section-head">
-      <h2 id="sectionTitle">Store Products</h2>
+  <!-- FLASH SALE -->
+  <div class="flash">
+    <div class="flash-head">
+      <div class="flash-head-left">
+        <h2>Flash Sales</h2>
+        <div class="timer">
+          <div class="box">04</div><span class="colon">:</span>
+          <div class="box">18</div><span class="colon">:</span>
+          <div class="box">52</div>
+        </div>
+      </div>
+      <a href="#">See all deals →</a>
     </div>
-    <div class="grid-products" id="liveProductsGrid">
-      <p style="grid-column: 1/-1; text-align: center; color: var(--ink-soft);">Loading available inventory...</p>
+    <div class="flash-grid">
+      <div class="pcard">
+        <div class="badge">-22%</div>
+        <div class="imgwrap">🔋</div>
+        <div class="name">1000VA Solar Inverter + Battery Combo</div>
+        <div class="price-row"><span class="price">₦185,000</span><span class="was">₦238,000</span></div>
+        <div class="barwrap"><div class="bar" style="width:68%"></div></div>
+        <div class="sold">68% sold</div>
+      </div>
+      <div class="pcard">
+        <div class="badge">-15%</div>
+        <div class="imgwrap">📱</div>
+        <div class="name">Tecno Spark 20 — 8GB/128GB, Dual SIM</div>
+        <div class="price-row"><span class="price">₦148,500</span><span class="was">₦175,000</span></div>
+        <div class="barwrap"><div class="bar" style="width:41%"></div></div>
+        <div class="sold">41% sold</div>
+      </div>
+      <div class="pcard">
+        <div class="badge">-30%</div>
+        <div class="imgwrap">❄️</div>
+        <div class="name">LG 260L Double Door Refrigerator</div>
+        <div class="price-row"><span class="price">₦412,000</span><span class="was">₦589,000</span></div>
+        <div class="barwrap"><div class="bar" style="width:85%"></div></div>
+        <div class="sold">85% sold</div>
+      </div>
+      <div class="pcard">
+        <div class="badge">-18%</div>
+        <div class="imgwrap">💻</div>
+        <div class="name">HP EliteBook 840 — Core i5, 8GB RAM</div>
+        <div class="price-row"><span class="price">₦295,000</span><span class="was">₦360,000</span></div>
+        <div class="barwrap"><div class="bar" style="width:52%"></div></div>
+        <div class="sold">52% sold</div>
+      </div>
+      <div class="pcard">
+        <div class="badge">-25%</div>
+        <div class="imgwrap">👗</div>
+        <div class="name">Ankara Print Kaftan — Men's, sizes M–XXL</div>
+        <div class="price-row"><span class="price">₦12,900</span><span class="was">₦17,200</span></div>
+        <div class="barwrap"><div class="bar" style="width:29%"></div></div>
+        <div class="sold">29% sold</div>
+      </div>
     </div>
+  </div>
+
+  <!-- CATEGORY STRIP -->
+  <div class="catstrip">
+    <a href="#" onclick="filterCategory('solar')"><span class="ic">☀️</span><span class="lb">Solar & Power</span></a>
+    <a href="#" onclick="filterCategory('phones')"><span class="ic">📱</span><span class="lb">Phones</span></a>
+    <a href="#" onclick="filterCategory('computers')"><span class="ic">💻</span><span class="lb">Computers</span></a>
+    <a href="#" onclick="filterCategory('appliances')"><span class="ic">🧊</span><span class="lb">Appliances</span></a>
+    <a href="#" onclick="filterCategory('electronics')"><span class="ic">🎧</span><span class="lb">Electronics</span></a>
+    <a href="#" onclick="filterCategory('fashion')"><span class="ic">👕</span><span class="lb">Fashion</span></a>
   </div>
 
   <!-- TRUST STRIP -->
@@ -235,6 +367,41 @@
     <div class="t"><span class="ic">🚚</span><div><h4>Nationwide Delivery</h4><p>Lagos, Ibadan, Abuja & beyond</p></div></div>
     <div class="t"><span class="ic">↩️</span><div><h4>Easy Returns</h4><p>7-day return on eligible items</p></div></div>
     <div class="t"><span class="ic">💬</span><div><h4>WhatsApp Support</h4><p>Real answers, fast</p></div></div>
+  </div>
+
+  <!-- FEATURED: HOLUWAFEMI SELECT -->
+  <div class="section">
+    <div class="section-head">
+      <h2 id="sectionTitle">Holuwafemi Select — Premium Picks</h2>
+      <a href="#">View collection →</a>
+    </div>
+    <div class="grid6" id="productsGridContainer">
+      <div class="pcard">
+        <div class="imgwrap">🔊</div>
+        <div class="name">JBL PartyBox 310 Bluetooth Speaker</div>
+        <div class="price-row"><span class="price">₦265,000</span></div>
+      </div>
+      <div class="pcard">
+        <div class="imgwrap">📷</div>
+        <div class="name">Canon EOS 2000D DSLR Camera Kit</div>
+        <div class="price-row"><span class="price">₦398,000</span></div>
+      </div>
+      <div class="pcard">
+        <div class="imgwrap">⌚</div>
+        <div class="name">Samsung Galaxy Watch 6 — 44mm</div>
+        <div class="price-row"><span class="price">₦210,000</span></div>
+      </div>
+      <div class="pcard">
+        <div class="imgwrap">🖥️</div>
+        <div class="name">Dell UltraSharp 27" 4K Monitor</div>
+        <div class="price-row"><span class="price">₦325,000</span></div>
+      </div>
+      <div class="pcard">
+        <div class="imgwrap">🎒</div>
+        <div class="name">Leather Executive Laptop Bag</div>
+        <div class="price-row"><span class="price">₦34,500</span></div>
+      </div>
+    </div>
   </div>
 
 </main>
@@ -258,7 +425,7 @@
     <div>
       <h4>About Holuwafemi</h4>
       <a href="#">Our Story</a>
-      <a href="admin.html">Admin Access</a>
+      <a href="admin.html">Admin Management</a>
       <a href="#">Careers</a>
     </div>
     <div>
@@ -273,9 +440,10 @@
   </div>
 </footer>
 
+<!-- FIREBASE CONNECTOR SCRIPT -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-  import { getFirestore, collection, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+  import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
   const firebaseConfig = {
       apiKey: "AIzaSyAl6irx9QKiJeHJ2Xu2VUkNUJyNy2ud6cg",
@@ -285,73 +453,76 @@
       messagingSenderId: "1002214759367",
       appId: "1:1002214759367:web:0f3afecb88c0f8a0f397e2"
   };
-  
+
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  let allProducts = [];
+  let fetchedProducts = [];
+  let cart = [];
 
   onSnapshot(collection(db, "products"), (snap) => {
-    allProducts = [];
+    fetchedProducts = [];
     snap.forEach((docSnap) => {
       const p = docSnap.data();
       if (p.status === "approved" || !p.status) {
-        allProducts.push({ id: docSnap.id, ...p });
+        fetchedProducts.push({ id: docSnap.id, ...p });
       }
     });
-    renderProducts(allProducts);
+    if (fetchedProducts.length > 0) {
+      renderLiveProducts(fetchedProducts);
+    }
   });
 
-  function renderProducts(products) {
-    const grid = document.getElementById("liveProductsGrid");
-    grid.innerHTML = "";
-
-    if (products.length === 0) {
-      grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--ink-soft); padding: 20px;">No products available in this category.</p>`;
-      return;
-    }
-
+  function renderLiveProducts(products) {
+    const container = document.getElementById("productsGridContainer");
+    container.innerHTML = "";
+    
     products.forEach((p) => {
-      let mainImg = "https://via.placeholder.com/200?text=No+Image";
+      let imgSrc = "📦";
+      let isUrl = false;
+      
       if (Array.isArray(p.images) && p.images.length > 0) {
-        mainImg = p.images[0];
+        imgSrc = p.images[0];
+        isUrl = true;
       } else if (p.imageUrl) {
-        mainImg = p.imageUrl;
+        imgSrc = p.imageUrl;
+        isUrl = true;
       }
+
+      const imgHtml = isUrl 
+        ? `<img src="${imgSrc}" alt="${p.name}" onerror="this.onerror=null;this.parentNode.innerHTML='📦';">`
+        : imgSrc;
 
       const card = document.createElement("div");
       card.className = "pcard";
       card.innerHTML = `
-        <div class="imgwrap">
-          <img src="${mainImg}" alt="${p.name}" onerror="this.src='https://via.placeholder.com/200?text=Product'">
-        </div>
+        <div class="imgwrap">${imgHtml}</div>
         <div class="name">${p.name}</div>
-        <div class="price-row">
-          <span class="price">₦${Number(p.price).toLocaleString()}</span>
-        </div>
-        <button onclick="addToCart('${p.id}')">Add to Cart</button>
+        <div class="price-row"><span class="price">₦${Number(p.price).toLocaleString()}</span></div>
+        <button style="background:var(--navy); color:#fff; font-weight:700; font-size:12px; padding:8px; border-radius:4px; width:100%; margin-top:8px; cursor:pointer;" onclick="addToCart('${p.id}')">Add to Cart</button>
       `;
-      grid.appendChild(card);
+      container.appendChild(card);
     });
   }
 
-  window.filterCategory = (category) => {
-    document.getElementById("sectionTitle").innerText = category === 'all' ? "Store Products" : category.toUpperCase() + " Products";
-    if (category === 'all') {
-      renderProducts(allProducts);
+  window.filterCategory = (cat) => {
+    document.getElementById("sectionTitle").innerText = cat.toUpperCase() + " Collections";
+    const filtered = fetchedProducts.filter(p => p.category && p.category.toLowerCase() === cat.toLowerCase());
+    if (filtered.length > 0) {
+      renderLiveProducts(filtered);
     } else {
-      const filtered = allProducts.filter(p => p.category && p.category.toLowerCase() === category.toLowerCase());
-      renderProducts(filtered);
+      document.getElementById("productsGridContainer").innerHTML = `<p style="grid-column: 1/-1; padding:20px; text-align:center; color:var(--ink-soft);">No uploaded items found in this category yet.</p>`;
     }
   };
 
-  window.filterStore = () => {
-    const text = document.getElementById("searchInput").value.toLowerCase();
-    const filtered = allProducts.filter(p => p.name.toLowerCase().includes(text));
-    renderProducts(filtered);
+  window.searchStore = () => {
+    const q = document.getElementById("searchInput").value.toLowerCase();
+    const filtered = fetchedProducts.filter(p => p.name.toLowerCase().includes(q));
+    if (filtered.length > 0) {
+      renderLiveProducts(filtered);
+    }
   };
 
-  let cart = [];
   window.addToCart = (id) => {
     cart.push(id);
     document.getElementById("cartCount").innerText = cart.length;
