@@ -28,16 +28,12 @@
     line-height:1.4;
   }
   h1,h2,h3,.price,.brand{font-family:'Archivo',sans-serif;}
-  a{text-decoration:none;color:inherit;}
+  a{text-decoration:none;color:inherit;cursor:pointer;}
   img{display:block;max-width:100%;}
   button{font-family:inherit;cursor:pointer;border:none;}
 
   /* ===== TOP BAR ===== */
-  .topbar{
-    background:var(--navy);
-    color:#D9DEE8;
-    font-size:13px;
-  }
+  .topbar{ background:var(--navy); color:#D9DEE8; font-size:13px; }
   .topbar-inner{
     max-width:1240px;margin:0 auto;padding:6px 20px;
     display:flex;justify-content:space-between;align-items:center;
@@ -45,31 +41,22 @@
   .topbar-inner span{opacity:.85}
 
   /* ===== HEADER ===== */
-  header{
-    background:var(--navy);
-    padding:16px 0 0;
-  }
+  header{ background:var(--navy); padding:16px 0 0; }
   .header-inner{
     max-width:1240px;margin:0 auto;padding:0 20px 16px;
     display:flex;align-items:center;gap:28px;
   }
-  .brand{
-    color:#fff;font-size:24px;font-weight:900;letter-spacing:-0.5px;white-space:nowrap;
-  }
+  .brand{ color:#fff;font-size:24px;font-weight:900;letter-spacing:-0.5px;white-space:nowrap; }
   .brand span{color:var(--amber);}
-  .search-bar{
-    flex:1;display:flex;background:#fff;border-radius:4px;overflow:hidden;
-  }
+  .search-bar{ flex:1;display:flex;background:#fff;border-radius:4px;overflow:hidden; }
   .search-bar input{
     flex:1;border:none;padding:12px 16px;font-size:14px;font-family:'Inter',sans-serif;outline:none;
   }
   .search-bar button{
     background:var(--amber);padding:0 22px;color:var(--navy);font-weight:700;font-size:15px;
   }
-  .header-actions{
-    display:flex;gap:22px;align-items:center;color:#fff;font-size:13px;font-weight:500;
-  }
-  .header-actions .item{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:52px;position:relative;}
+  .header-actions{ display:flex;gap:22px;align-items:center;color:#fff;font-size:13px;font-weight:500; }
+  .header-actions .item{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:52px;position:relative;cursor:pointer;}
   .header-actions .icon{font-size:20px;}
   .cart-count{
     background:var(--amber);color:var(--navy);border-radius:10px;font-size:11px;
@@ -77,26 +64,17 @@
   }
 
   /* ===== CATEGORY NAV ===== */
-  .catnav{
-    background:var(--navy-light);
-    border-top:1px solid rgba(255,255,255,.08);
-  }
-  .catnav-inner{
-    max-width:1240px;margin:0 auto;padding:0 20px;
-    display:flex;gap:26px;overflow-x:auto;
-  }
+  .catnav{ background:var(--navy-light); border-top:1px solid rgba(255,255,255,.08); }
+  .catnav-inner{ max-width:1240px;margin:0 auto;padding:0 20px; display:flex;gap:26px;overflow-x:auto; }
   .catnav a{
-    color:#E5E9F0;font-size:13px;font-weight:600;padding:11px 0;white-space:nowrap;
-    border-bottom:2px solid transparent;
+    color:#E5E9F0;font-size:13px;font-weight:600;padding:11px 0;white-space:nowrap; border-bottom:2px solid transparent;
   }
   .catnav a:hover{border-bottom-color:var(--amber);color:#fff;}
 
   main{max-width:1240px;margin:0 auto;padding:22px 20px 60px;}
 
   /* ===== HERO ===== */
-  .hero{
-    display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:28px;
-  }
+  .hero{ display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:28px; }
   .hero-main{
     background:linear-gradient(120deg,var(--navy) 55%,var(--navy-light));
     border-radius:8px;padding:44px 40px;color:#fff;
@@ -128,101 +106,77 @@
   .hero-side-card .sub{font-size:13px;color:var(--ink-soft);}
 
   /* ===== FLASH SALE ===== */
-  .flash{
-    background:var(--card);border-radius:8px;border:1px solid var(--line);
-    margin-bottom:30px;overflow:hidden;
-  }
-  .flash-head{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:16px 22px;border-bottom:1px solid var(--line);
-  }
+  .flash{ background:var(--card);border-radius:8px;border:1px solid var(--line);margin-bottom:30px;overflow:hidden; }
+  .flash-head{ display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid var(--line); }
   .flash-head-left{display:flex;align-items:center;gap:14px;}
   .flash-head h2{font-size:20px;font-weight:800;color:var(--navy);}
   .timer{display:flex;gap:6px;align-items:center;}
-  .timer .box{
-    background:var(--navy);color:#fff;font-weight:800;font-size:14px;
-    padding:5px 9px;border-radius:4px;min-width:30px;text-align:center;
-  }
+  .timer .box{ background:var(--navy);color:#fff;font-weight:800;font-size:14px;padding:5px 9px;border-radius:4px;min-width:30px;text-align:center; }
   .timer .colon{color:var(--navy);font-weight:800;}
   .flash-head a{font-size:13px;font-weight:700;color:var(--amber-dark);}
-  .flash-grid{
-    display:grid;grid-template-columns:repeat(5,1fr);
-  }
+  .flash-grid{ display:grid;grid-template-columns:repeat(5,1fr); }
 
-  .pcard{
-    padding:18px;border-right:1px solid var(--line);position:relative;
-    display:flex;flex-direction:column;justify-style:space-between;
-  }
+  .pcard{ padding:18px;border-right:1px solid var(--line);position:relative;display:flex;flex-direction:column;justify-content:space-between; }
   .pcard:last-child{border-right:none;}
-  .pcard .badge{
-    position:absolute;top:14px;left:14px;background:var(--red);color:#fff;
-    font-size:11px;font-weight:800;padding:3px 8px;border-radius:3px;z-index:2;
-  }
-  .pcard .imgwrap{
-    background:var(--bg);border-radius:6px;aspect-ratio:1;display:flex;
-    align-items:center;justify-content:center;margin-bottom:12px;font-size:38px;overflow:hidden;
-  }
+  .pcard .badge{ position:absolute;top:14px;left:14px;background:var(--red);color:#fff;font-size:11px;font-weight:800;padding:3px 8px;border-radius:3px;z-index:2; }
+  .pcard .imgwrap{ background:var(--bg);border-radius:6px;aspect-ratio:1;display:flex;align-items:center;justify-content:center;margin-bottom:12px;font-size:38px;overflow:hidden; }
   .pcard .imgwrap img{width:100%;height:100%;object-fit:cover;}
-  .pcard .name{
-    font-size:13.5px;font-weight:600;margin-bottom:6px;
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:36px;
-  }
+  .pcard .name{ font-size:13.5px;font-weight:600;margin-bottom:6px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:36px; }
   .pcard .price-row{display:flex;align-items:baseline;gap:7px;margin-bottom:6px;}
   .pcard .price{font-size:16px;font-weight:800;color:var(--navy);}
   .pcard .was{font-size:12px;color:var(--ink-soft);text-decoration:line-through;}
-  .pcard .off{font-size:11.5px;color:var(--red);font-weight:700;}
   .barwrap{background:var(--line);border-radius:3px;height:5px;overflow:hidden;margin-top:8px;}
   .bar{background:var(--amber);height:100%;}
   .sold{font-size:11px;color:var(--ink-soft);margin-top:4px;}
 
   /* ===== CATEGORY STRIP ===== */
-  .catstrip{
-    display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:32px;
-  }
-  .catstrip a{
-    background:var(--card);border:1px solid var(--line);border-radius:8px;
-    padding:18px 10px;text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center;
-  }
+  .catstrip{ display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:32px; }
+  .catstrip a{ background:var(--card);border:1px solid var(--line);border-radius:8px;padding:18px 10px;text-align:center;display:flex;flex-direction:column;gap:10px;align-items:center; }
   .catstrip .ic{font-size:28px;}
   .catstrip .lb{font-size:12.5px;font-weight:700;color:var(--navy);}
 
   /* ===== SECTION ===== */
   .section{margin-bottom:36px;}
-  .section-head{
-    display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px;
-  }
+  .section-head{ display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px; }
   .section-head h2{font-size:21px;font-weight:800;color:var(--navy);}
   .section-head a{font-size:13px;font-weight:700;color:var(--amber-dark);}
-  .grid6{
-    display:grid;grid-template-columns:repeat(5,1fr);gap:14px;
-  }
-  .grid6 .pcard{
-    border:1px solid var(--line);border-radius:8px;background:var(--card);
-  }
+  .grid6{ display:grid;grid-template-columns:repeat(5,1fr);gap:14px; }
+  .grid6 .pcard{ border:1px solid var(--line);border-radius:8px;background:var(--card); }
 
   /* ===== TRUST STRIP ===== */
-  .trust{
-    display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
-    background:var(--navy);border-radius:8px;padding:26px;margin-bottom:30px;
-  }
+  .trust{ display:grid;grid-template-columns:repeat(4,1fr);gap:14px;background:var(--navy);border-radius:8px;padding:26px;margin-bottom:30px; }
   .trust .t{display:flex;gap:12px;align-items:flex-start;color:#fff;}
   .trust .t .ic{font-size:22px;}
   .trust .t h4{font-size:14px;font-weight:700;margin-bottom:3px;}
   .trust .t p{font-size:12px;color:#B9C1D2;}
 
-  footer{
-    background:var(--navy);color:#B9C1D2;padding:40px 0 20px;font-size:13px;
-  }
-  .footer-inner{
-    max-width:1240px;margin:0 auto;padding:0 20px;
-    display:grid;grid-template-columns:repeat(4,1fr);gap:30px;margin-bottom:26px;
-  }
+  footer{ background:var(--navy);color:#B9C1D2;padding:40px 0 20px;font-size:13px; }
+  .footer-inner{ max-width:1240px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:repeat(4,1fr);gap:30px;margin-bottom:26px; }
   .footer-inner h4{color:#fff;font-size:13px;font-weight:700;margin-bottom:14px;}
   .footer-inner a{display:block;color:#B9C1D2;margin-bottom:9px;}
-  .footer-bottom{
-    max-width:1240px;margin:0 auto;padding:18px 20px 0;border-top:1px solid rgba(255,255,255,.1);
-    display:flex;justify-content:space-between;color:#8994A8;font-size:12px;
+  .footer-bottom{ max-width:1240px;margin:0 auto;padding:18px 20px 0;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;color:#8994A8;font-size:12px; }
+
+  /* ===== OVERLAYS & MODALS ===== */
+  .modal-overlay{
+    position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.6);
+    display:none;align-items:center;justify-content:center;z-index:999;padding:20px;
   }
+  .modal-box{ background:#fff;padding:25px;border-radius:10px;max-width:400px;width:100%;box-shadow:0 10px 25px rgba(0,0,0,0.2); }
+  .modal-box h3{margin-bottom:12px;color:var(--navy);}
+  .modal-box input{width:100%;padding:10px;margin:10px 0;border:1px solid var(--line);border-radius:4px;}
+  .modal-box button{width:100%;padding:10px;background:var(--navy);color:#fff;border-radius:4px;font-weight:bold;}
+
+  /* ===== CART SIDEBAR ===== */
+  .cart-sidebar{
+    position:fixed;top:0;right:-380px;width:360px;height:100%;background:#fff;
+    box-shadow:-5px 0 25px rgba(0,0,0,0.15);z-index:1000;transition:0.3s ease;
+    display:flex;flex-direction:column;padding:20px;
+  }
+  .cart-sidebar.open{right:0;}
+  .cart-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:12px;}
+  .cart-items{flex:1;overflow-y:auto;padding:15px 0;}
+  .cart-item{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;border-bottom:1px solid var(--line);padding-bottom:8px;}
+  .cart-footer{border-top:1px solid var(--line);padding-top:15px;}
 
   @media (max-width:980px){
     .hero{grid-template-columns:1fr;}
@@ -240,32 +194,36 @@
 <div class="topbar">
   <div class="topbar-inner">
     <span>Delivering across Nigeria — Lagos, Ibadan, Abuja & more</span>
-    <span>Sell on Holuwafemi &nbsp;|&nbsp; <a href="admin.html" style="color:#fff; text-decoration:underline;">Admin Dashboard</a> &nbsp;|&nbsp; Help</span>
+    <span>
+      <a onclick="openModal('trackModal')">Track Order</a> &nbsp;|&nbsp; 
+      <a href="admin.html" style="color:#fff; text-decoration:underline;">Admin Dashboard</a> &nbsp;|&nbsp; 
+      <a onclick="openModal('helpModal')">Help</a>
+    </span>
   </div>
 </div>
 
 <header>
   <div class="header-inner">
-    <div class="brand">Holuwafemi<span>.</span></div>
+    <div class="brand" onclick="resetView()" style="cursor:pointer;">Holuwafemi<span>.</span></div>
     <div class="search-bar">
       <input type="text" id="searchInput" placeholder="Search solar inverters, phones, appliances...">
       <button onclick="searchStore()">Search</button>
     </div>
     <div class="header-actions">
-      <div class="item"><span class="icon">👤</span>Account</div>
-      <div class="item"><span class="icon">🛒</span>Cart<span class="cart-count" id="cartCount">0</span></div>
+      <div class="item" onclick="openModal('accountModal')"><span class="icon">👤</span>Account</div>
+      <div class="item" onclick="toggleCart()"><span class="icon">🛒</span>Cart<span class="cart-count" id="cartCount">0</span></div>
     </div>
   </div>
   <nav class="catnav">
     <div class="catnav-inner">
-      <a href="#" onclick="filterCategory('electronics')">Electronics</a>
-      <a href="#" onclick="filterCategory('solar')">Solar & Power</a>
-      <a href="#" onclick="filterCategory('appliances')">Home Appliances</a>
-      <a href="#" onclick="filterCategory('computers')">Computers</a>
-      <a href="#" onclick="filterCategory('phones')">Phones & Tablets</a>
-      <a href="#" onclick="filterCategory('fashion')">Fashion</a>
-      <a href="#">Flash Sales</a>
-      <a href="#">Holuwafemi Select</a>
+      <a onclick="filterCategory('electronics')">Electronics</a>
+      <a onclick="filterCategory('solar')">Solar & Power</a>
+      <a onclick="filterCategory('appliances')">Home Appliances</a>
+      <a onclick="filterCategory('computers')">Computers</a>
+      <a onclick="filterCategory('phones')">Phones & Tablets</a>
+      <a onclick="filterCategory('fashion')">Fashion</a>
+      <a onclick="scrollToSection('flashSaleSec')">Flash Sales</a>
+      <a onclick="scrollToSection('selectSec')">Holuwafemi Select</a>
     </div>
   </nav>
 </header>
@@ -278,7 +236,7 @@
       <div class="hero-tag">Back-up power season</div>
       <h1>Solar inverters &amp; batteries, ready before the next outage.</h1>
       <p>Complete solar kits from ₦180,000, installed and warrantied. Stop planning your day around NEPA.</p>
-      <a href="#" onclick="filterCategory('solar')" class="hero-cta">Shop Solar Kits</a>
+      <a onclick="filterCategory('solar')" class="hero-cta">Shop Solar Kits</a>
     </div>
     <div class="hero-side">
       <div class="hero-side-card">
@@ -295,7 +253,7 @@
   </div>
 
   <!-- FLASH SALE -->
-  <div class="flash">
+  <div class="flash" id="flashSaleSec">
     <div class="flash-head">
       <div class="flash-head-left">
         <h2>Flash Sales</h2>
@@ -305,133 +263,148 @@
           <div class="box">52</div>
         </div>
       </div>
-      <a href="#">See all deals →</a>
+      <a onclick="filterCategory('all')">See all deals →</a>
     </div>
     <div class="flash-grid">
       <div class="pcard">
         <div class="badge">-22%</div>
         <div class="imgwrap">🔋</div>
-        <div class="name">1000VA Solar Inverter + Battery Combo</div>
+        <div class="name">1000VA Solar Inverter Combo</div>
         <div class="price-row"><span class="price">₦185,000</span><span class="was">₦238,000</span></div>
-        <div class="barwrap"><div class="bar" style="width:68%"></div></div>
-        <div class="sold">68% sold</div>
+        <button style="background:var(--navy); color:#fff; padding:6px; border-radius:4px; font-weight:bold; font-size:12px;" onclick="addStaticToCart('1000VA Solar Inverter Combo', 185000)">Add to Cart</button>
       </div>
       <div class="pcard">
         <div class="badge">-15%</div>
         <div class="imgwrap">📱</div>
-        <div class="name">Tecno Spark 20 — 8GB/128GB, Dual SIM</div>
+        <div class="name">Tecno Spark 20 — 8GB/128GB</div>
         <div class="price-row"><span class="price">₦148,500</span><span class="was">₦175,000</span></div>
-        <div class="barwrap"><div class="bar" style="width:41%"></div></div>
-        <div class="sold">41% sold</div>
+        <button style="background:var(--navy); color:#fff; padding:6px; border-radius:4px; font-weight:bold; font-size:12px;" onclick="addStaticToCart('Tecno Spark 20', 148500)">Add to Cart</button>
       </div>
       <div class="pcard">
         <div class="badge">-30%</div>
         <div class="imgwrap">❄️</div>
         <div class="name">LG 260L Double Door Refrigerator</div>
         <div class="price-row"><span class="price">₦412,000</span><span class="was">₦589,000</span></div>
-        <div class="barwrap"><div class="bar" style="width:85%"></div></div>
-        <div class="sold">85% sold</div>
+        <button style="background:var(--navy); color:#fff; padding:6px; border-radius:4px; font-weight:bold; font-size:12px;" onclick="addStaticToCart('LG 260L Refrigerator', 412000)">Add to Cart</button>
       </div>
       <div class="pcard">
         <div class="badge">-18%</div>
         <div class="imgwrap">💻</div>
-        <div class="name">HP EliteBook 840 — Core i5, 8GB RAM</div>
+        <div class="name">HP EliteBook 840 — Core i5</div>
         <div class="price-row"><span class="price">₦295,000</span><span class="was">₦360,000</span></div>
-        <div class="barwrap"><div class="bar" style="width:52%"></div></div>
-        <div class="sold">52% sold</div>
+        <button style="background:var(--navy); color:#fff; padding:6px; border-radius:4px; font-weight:bold; font-size:12px;" onclick="addStaticToCart('HP EliteBook 840', 295000)">Add to Cart</button>
       </div>
       <div class="pcard">
         <div class="badge">-25%</div>
         <div class="imgwrap">👗</div>
-        <div class="name">Ankara Print Kaftan — Men's, sizes M–XXL</div>
+        <div class="name">Ankara Print Kaftan — Men's</div>
         <div class="price-row"><span class="price">₦12,900</span><span class="was">₦17,200</span></div>
-        <div class="barwrap"><div class="bar" style="width:29%"></div></div>
-        <div class="sold">29% sold</div>
+        <button style="background:var(--navy); color:#fff; padding:6px; border-radius:4px; font-weight:bold; font-size:12px;" onclick="addStaticToCart('Ankara Print Kaftan', 12900)">Add to Cart</button>
       </div>
     </div>
   </div>
 
   <!-- CATEGORY STRIP -->
   <div class="catstrip">
-    <a href="#" onclick="filterCategory('solar')"><span class="ic">☀️</span><span class="lb">Solar & Power</span></a>
-    <a href="#" onclick="filterCategory('phones')"><span class="ic">📱</span><span class="lb">Phones</span></a>
-    <a href="#" onclick="filterCategory('computers')"><span class="ic">💻</span><span class="lb">Computers</span></a>
-    <a href="#" onclick="filterCategory('appliances')"><span class="ic">🧊</span><span class="lb">Appliances</span></a>
-    <a href="#" onclick="filterCategory('electronics')"><span class="ic">🎧</span><span class="lb">Electronics</span></a>
-    <a href="#" onclick="filterCategory('fashion')"><span class="ic">👕</span><span class="lb">Fashion</span></a>
+    <a onclick="filterCategory('solar')"><span class="ic">☀️</span><span class="lb">Solar & Power</span></a>
+    <a onclick="filterCategory('phones')"><span class="ic">📱</span><span class="lb">Phones</span></a>
+    <a onclick="filterCategory('computers')"><span class="ic">💻</span><span class="lb">Computers</span></a>
+    <a onclick="filterCategory('appliances')"><span class="ic">🧊</span><span class="lb">Appliances</span></a>
+    <a onclick="filterCategory('electronics')"><span class="ic">🎧</span><span class="lb">Electronics</span></a>
+    <a onclick="filterCategory('fashion')"><span class="ic">👕</span><span class="lb">Fashion</span></a>
   </div>
 
   <!-- TRUST STRIP -->
   <div class="trust">
     <div class="t"><span class="ic">🔒</span><div><h4>Secure Payment</h4><p>Paystack-protected checkout</p></div></div>
-    <div class="t"><span class="ic">🚚</span><div><h4>Nationwide Delivery</h4><p>Lagos, Ibadan, Abuja & beyond</p></div></div>
+    <div class="t"><span class="ic">🚚</span><div><h4>Nationwide Delivery</h4><p>Lagos, Ibadan, Osogbo & beyond</p></div></div>
     <div class="t"><span class="ic">↩️</span><div><h4>Easy Returns</h4><p>7-day return on eligible items</p></div></div>
     <div class="t"><span class="ic">💬</span><div><h4>WhatsApp Support</h4><p>Real answers, fast</p></div></div>
   </div>
 
-  <!-- FEATURED: HOLUWAFEMI SELECT -->
-  <div class="section">
+  <!-- FEATURED: LIVE & SELECT -->
+  <div class="section" id="selectSec">
     <div class="section-head">
-      <h2 id="sectionTitle">Holuwafemi Select — Premium Picks</h2>
-      <a href="#">View collection →</a>
+      <h2 id="sectionTitle">Holuwafemi Select — Live Inventory</h2>
+      <a onclick="resetView()">Show All →</a>
     </div>
     <div class="grid6" id="productsGridContainer">
-      <div class="pcard">
-        <div class="imgwrap">🔊</div>
-        <div class="name">JBL PartyBox 310 Bluetooth Speaker</div>
-        <div class="price-row"><span class="price">₦265,000</span></div>
-      </div>
-      <div class="pcard">
-        <div class="imgwrap">📷</div>
-        <div class="name">Canon EOS 2000D DSLR Camera Kit</div>
-        <div class="price-row"><span class="price">₦398,000</span></div>
-      </div>
-      <div class="pcard">
-        <div class="imgwrap">⌚</div>
-        <div class="name">Samsung Galaxy Watch 6 — 44mm</div>
-        <div class="price-row"><span class="price">₦210,000</span></div>
-      </div>
-      <div class="pcard">
-        <div class="imgwrap">🖥️</div>
-        <div class="name">Dell UltraSharp 27" 4K Monitor</div>
-        <div class="price-row"><span class="price">₦325,000</span></div>
-      </div>
-      <div class="pcard">
-        <div class="imgwrap">🎒</div>
-        <div class="name">Leather Executive Laptop Bag</div>
-        <div class="price-row"><span class="price">₦34,500</span></div>
-      </div>
+      <p style="grid-column: 1/-1; text-align: center; color: var(--ink-soft); padding: 20px;">Loading live inventory...</p>
     </div>
   </div>
 
 </main>
 
+<!-- MODALS -->
+<div class="modal-overlay" id="trackModal">
+  <div class="modal-box">
+    <h3>Track Your Order</h3>
+    <p style="font-size:12px; color:var(--ink-soft);">Enter your Paystack or Order Reference below:</p>
+    <input type="text" id="trackInput" placeholder="e.g. REF-102938">
+    <button onclick="checkOrder()">Track Package</button>
+    <button onclick="closeModal('trackModal')" style="background:#e2e8f0; color:#333; margin-top:8px;">Close</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="accountModal">
+  <div class="modal-box">
+    <h3>Customer Account</h3>
+    <p style="font-size:13px; color:var(--ink-soft);">Manage your order history and profile details.</p>
+    <input type="email" placeholder="Email Address">
+    <button onclick="alert('Login link sent to email.')">Access Account</button>
+    <button onclick="closeModal('accountModal')" style="background:#e2e8f0; color:#333; margin-top:8px;">Close</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="helpModal">
+  <div class="modal-box">
+    <h3>Customer Support</h3>
+    <p style="font-size:13px; margin-bottom:10px;">Need quick assistance with an order?</p>
+    <button onclick="window.open('https://wa.me/2340000000000','_blank')" style="background:#25D366;">Chat on WhatsApp</button>
+    <button onclick="closeModal('helpModal')" style="background:#e2e8f0; color:#333; margin-top:8px;">Close</button>
+  </div>
+</div>
+
+<!-- CART SIDEBAR -->
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <h3>Your Shopping Cart</h3>
+    <button onclick="toggleCart()" style="background:none; font-size:18px;">✕</button>
+  </div>
+  <div class="cart-items" id="cartItemsList">
+    <p style="text-align:center; color:var(--ink-soft); margin-top:20px;">Your cart is empty.</p>
+  </div>
+  <div class="cart-footer">
+    <div style="display:flex; justify-content:space-between; font-weight:bold; margin-bottom:12px;">
+      <span>Total:</span>
+      <span id="cartTotal">₦0</span>
+    </div>
+    <button style="width:100%; padding:12px; background:var(--amber); color:var(--navy); font-weight:800; border-radius:4px;" onclick="checkout()">Proceed to Checkout</button>
+  </div>
+</div>
+
 <footer>
   <div class="footer-inner">
     <div>
       <h4>Shop</h4>
-      <a href="#" onclick="filterCategory('solar')">Solar & Power</a>
-      <a href="#" onclick="filterCategory('phones')">Phones & Tablets</a>
-      <a href="#" onclick="filterCategory('appliances')">Home Appliances</a>
-      <a href="#" onclick="filterCategory('fashion')">Fashion</a>
+      <a onclick="filterCategory('solar')">Solar & Power</a>
+      <a onclick="filterCategory('phones')">Phones & Tablets</a>
+      <a onclick="filterCategory('appliances')">Home Appliances</a>
+      <a onclick="filterCategory('fashion')">Fashion</a>
     </div>
     <div>
       <h4>Customer Care</h4>
-      <a href="#">Help Center</a>
-      <a href="#">Track My Order</a>
-      <a href="#">Returns Policy</a>
-      <a href="#">Contact via WhatsApp</a>
+      <a onclick="openModal('helpModal')">Help Center</a>
+      <a onclick="openModal('trackModal')">Track My Order</a>
+      <a onclick="openModal('helpModal')">WhatsApp Support</a>
     </div>
     <div>
       <h4>About Holuwafemi</h4>
-      <a href="#">Our Story</a>
       <a href="admin.html">Admin Management</a>
-      <a href="#">Careers</a>
     </div>
     <div>
       <h4>Payment</h4>
       <a href="#">Paystack Secure Checkout</a>
-      <a href="#">Pay on Delivery</a>
     </div>
   </div>
   <div class="footer-bottom">
@@ -440,7 +413,6 @@
   </div>
 </footer>
 
-<!-- FIREBASE CONNECTOR SCRIPT -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
   import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
@@ -468,15 +440,18 @@
         fetchedProducts.push({ id: docSnap.id, ...p });
       }
     });
-    if (fetchedProducts.length > 0) {
-      renderLiveProducts(fetchedProducts);
-    }
+    renderLiveProducts(fetchedProducts);
   });
 
   function renderLiveProducts(products) {
     const container = document.getElementById("productsGridContainer");
     container.innerHTML = "";
     
+    if(products.length === 0){
+      container.innerHTML = `<p style="grid-column: 1/-1; padding:20px; text-align:center; color:var(--ink-soft);">No uploaded items found.</p>`;
+      return;
+    }
+
     products.forEach((p) => {
       let imgSrc = "📦";
       let isUrl = false;
@@ -508,26 +483,90 @@
   window.filterCategory = (cat) => {
     document.getElementById("sectionTitle").innerText = cat.toUpperCase() + " Collections";
     const filtered = fetchedProducts.filter(p => p.category && p.category.toLowerCase() === cat.toLowerCase());
-    if (filtered.length > 0) {
-      renderLiveProducts(filtered);
-    } else {
-      document.getElementById("productsGridContainer").innerHTML = `<p style="grid-column: 1/-1; padding:20px; text-align:center; color:var(--ink-soft);">No uploaded items found in this category yet.</p>`;
-    }
+    renderLiveProducts(filtered);
+    scrollToSection('selectSec');
   };
 
   window.searchStore = () => {
     const q = document.getElementById("searchInput").value.toLowerCase();
     const filtered = fetchedProducts.filter(p => p.name.toLowerCase().includes(q));
-    if (filtered.length > 0) {
-      renderLiveProducts(filtered);
-    }
+    renderLiveProducts(filtered);
+    scrollToSection('selectSec');
+  };
+
+  window.resetView = () => {
+    document.getElementById("sectionTitle").innerText = "Holuwafemi Select — Live Inventory";
+    renderLiveProducts(fetchedProducts);
   };
 
   window.addToCart = (id) => {
-    cart.push(id);
-    document.getElementById("cartCount").innerText = cart.length;
-    alert("Item added to cart!");
+    const p = fetchedProducts.find(item => item.id === id);
+    if (p) {
+      cart.push({ name: p.name, price: Number(p.price) });
+      updateCartUI();
+      toggleCart(true);
+    }
   };
+
+  window.addStaticToCart = (name, price) => {
+    cart.push({ name, price: Number(price) });
+    updateCartUI();
+    toggleCart(true);
+  };
+
+  function updateCartUI() {
+    document.getElementById("cartCount").innerText = cart.length;
+    const list = document.getElementById("cartItemsList");
+    let total = 0;
+    list.innerHTML = "";
+
+    if (cart.length === 0) {
+      list.innerHTML = `<p style="text-align:center; color:var(--ink-soft); margin-top:20px;">Your cart is empty.</p>`;
+    } else {
+      cart.forEach((item, index) => {
+        total += item.price;
+        const row = document.createElement("div");
+        row.className = "cart-item";
+        row.innerHTML = `
+          <div>
+            <div style="font-size:13px; font-weight:bold;">${item.name}</div>
+            <div style="font-size:12px; color:var(--ink-soft);">₦${item.price.toLocaleString()}</div>
+          </div>
+          <button style="background:none; color:red; font-size:12px;" onclick="removeFromCart(${index})">Remove</button>
+        `;
+        list.appendChild(row);
+      });
+    }
+    document.getElementById("cartTotal").innerText = "₦" + total.toLocaleString();
+  }
+
+  window.removeFromCart = (index) => {
+    cart.splice(index, 1);
+    updateCartUI();
+  };
+
+  window.checkout = () => {
+    if (cart.length === 0) return alert("Your cart is empty!");
+    alert("Proceeding to Paystack Checkout...");
+  };
+</script>
+
+<script>
+  function openModal(id) { document.getElementById(id).style.display = "flex"; }
+  function closeModal(id) { document.getElementById(id).style.display = "none"; }
+  function toggleCart(forceOpen = false) {
+    const sidebar = document.getElementById("cartSidebar");
+    if (forceOpen) sidebar.classList.add("open");
+    else sidebar.classList.toggle("open");
+  }
+  function scrollToSection(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  }
+  function checkOrder() {
+    const ref = document.getElementById("trackInput").value;
+    if (!ref) return alert("Please enter a reference code.");
+    alert("Searching system for order reference: " + ref);
+  }
 </script>
 
 </body>
