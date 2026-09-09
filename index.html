@@ -125,9 +125,6 @@
   .pcard .price-row{display:flex;align-items:baseline;gap:7px;margin-bottom:6px;}
   .pcard .price{font-size:16px;font-weight:800;color:var(--navy);}
   .pcard .was{font-size:12px;color:var(--ink-soft);text-decoration:line-through;}
-  .barwrap{background:var(--line);border-radius:3px;height:5px;overflow:hidden;margin-top:8px;}
-  .bar{background:var(--amber);height:100%;}
-  .sold{font-size:11px;color:var(--ink-soft);margin-top:4px;}
 
   /* ===== CATEGORY STRIP ===== */
   .catstrip{ display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:32px; }
@@ -161,10 +158,11 @@
     position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,0.6);
     display:none;align-items:center;justify-content:center;z-index:999;padding:20px;
   }
-  .modal-box{ background:#fff;padding:25px;border-radius:10px;max-width:400px;width:100%;box-shadow:0 10px 25px rgba(0,0,0,0.2); }
-  .modal-box h3{margin-bottom:12px;color:var(--navy);}
-  .modal-box input{width:100%;padding:10px;margin:10px 0;border:1px solid var(--line);border-radius:4px;}
-  .modal-box button{width:100%;padding:10px;background:var(--navy);color:#fff;border-radius:4px;font-weight:bold;}
+  .modal-box{ background:#fff;padding:25px;border-radius:10px;max-width:420px;width:100%;box-shadow:0 10px 25px rgba(0,0,0,0.2); }
+  .modal-box h3{margin-bottom:8px;color:var(--navy);}
+  .modal-box p{font-size:13px;color:var(--ink-soft);margin-bottom:12px;}
+  .modal-box input, .modal-box textarea{width:100%;padding:10px;margin:6px 0 12px;border:1px solid var(--line);border-radius:4px;font-family:inherit;}
+  .modal-box button{width:100%;padding:11px;background:var(--navy);color:#fff;border-radius:4px;font-weight:bold;}
 
   /* ===== CART SIDEBAR ===== */
   .cart-sidebar{
@@ -193,10 +191,10 @@
 
 <div class="topbar">
   <div class="topbar-inner">
-    <span>Delivering across Nigeria — Lagos, Ibadan, Abuja & more</span>
+    <span>Delivering across Nigeria — Lagos, Ibadan, Osogbo & more</span>
     <span>
+      <a onclick="openModal('vendorModal')" style="color:var(--amber); font-weight:700;">Sell on Holuwafemi</a> &nbsp;|&nbsp; 
       <a onclick="openModal('trackModal')">Track Order</a> &nbsp;|&nbsp; 
-      <a href="admin.html" style="color:#fff; text-decoration:underline;">Admin Dashboard</a> &nbsp;|&nbsp; 
       <a onclick="openModal('helpModal')">Help</a>
     </span>
   </div>
@@ -336,10 +334,21 @@
 </main>
 
 <!-- MODALS -->
+<div class="modal-overlay" id="vendorModal">
+  <div class="modal-box">
+    <h3>Become a Seller on Holuwafemi</h3>
+    <p>Submit your details below to chat with our onboarding team. Once vetted, you will receive individual merchant portal access.</p>
+    <input type="text" id="vendorName" placeholder="Your Business / Full Name">
+    <input type="text" id="vendorProducts" placeholder="Products You Sell (e.g. Phones, Solar)">
+    <button onclick="submitVendorApplication()" style="background:var(--amber); color:var(--navy); font-weight:800; margin-bottom:8px;">Start Onboarding Chat (WhatsApp)</button>
+    <button onclick="closeModal('vendorModal')" style="background:#e2e8f0; color:#333;">Cancel</button>
+  </div>
+</div>
+
 <div class="modal-overlay" id="trackModal">
   <div class="modal-box">
     <h3>Track Your Order</h3>
-    <p style="font-size:12px; color:var(--ink-soft);">Enter your Paystack or Order Reference below:</p>
+    <p>Enter your Paystack or Order Reference below:</p>
     <input type="text" id="trackInput" placeholder="e.g. REF-102938">
     <button onclick="checkOrder()">Track Package</button>
     <button onclick="closeModal('trackModal')" style="background:#e2e8f0; color:#333; margin-top:8px;">Close</button>
@@ -349,7 +358,7 @@
 <div class="modal-overlay" id="accountModal">
   <div class="modal-box">
     <h3>Customer Account</h3>
-    <p style="font-size:13px; color:var(--ink-soft);">Manage your order history and profile details.</p>
+    <p>Manage your order history and profile details.</p>
     <input type="email" placeholder="Email Address">
     <button onclick="alert('Login link sent to email.')">Access Account</button>
     <button onclick="closeModal('accountModal')" style="background:#e2e8f0; color:#333; margin-top:8px;">Close</button>
@@ -359,8 +368,8 @@
 <div class="modal-overlay" id="helpModal">
   <div class="modal-box">
     <h3>Customer Support</h3>
-    <p style="font-size:13px; margin-bottom:10px;">Need quick assistance with an order?</p>
-    <button onclick="window.open('https://wa.me/2340000000000','_blank')" style="background:#25D366;">Chat on WhatsApp</button>
+    <p>Need quick assistance with an order or product?</p>
+    <button onclick="window.open('https://wa.me/2340000000000','_blank')" style="background:#25D366; font-weight:bold;">Chat on WhatsApp</button>
     <button onclick="closeModal('helpModal')" style="background:#e2e8f0; color:#333; margin-top:8px;">Close</button>
   </div>
 </div>
@@ -399,8 +408,8 @@
       <a onclick="openModal('helpModal')">WhatsApp Support</a>
     </div>
     <div>
-      <h4>About Holuwafemi</h4>
-      <a href="admin.html">Admin Management</a>
+      <h4>Sellers & Merchants</h4>
+      <a onclick="openModal('vendorModal')">Apply to Sell</a>
     </div>
     <div>
       <h4>Payment</h4>
@@ -566,6 +575,14 @@
     const ref = document.getElementById("trackInput").value;
     if (!ref) return alert("Please enter a reference code.");
     alert("Searching system for order reference: " + ref);
+  }
+  function submitVendorApplication() {
+    const name = document.getElementById("vendorName").value;
+    const products = document.getElementById("vendorProducts").value;
+    if (!name || !products) return alert("Please fill in both fields.");
+    const text = encodeURIComponent(`Hello Holuwafemi Store, I want to apply as a seller.\nName: ${name}\nProducts: ${products}`);
+    window.open(`https://wa.me/2340000000000?text=${text}`, '_blank');
+    closeModal('vendorModal');
   }
 </script>
 
